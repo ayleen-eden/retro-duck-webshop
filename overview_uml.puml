@@ -1,0 +1,134 @@
+@startuml
+
+
+UserxService -- "1" UserxRepository : userRepository
+UserxService -- "1" PasswordEncoder : passwordEncoder
+UserxService -- "1" AuthenticatedUserService : authenticatedUserService
+
+AuthenicationService -- "1" AuthenticationManager : authenticationManager
+AuthenicationService -- "1" JwtTokenProvider : tokenProvider
+
+AuthenticatedUserService -- "1" UserxRepository : userRepository
+
+interface UserxRepository extends AbstractRepository
+interface AbstractRepository extends Serializable, Repository
+
+class Userx implements Persistable {
+  - id : Long
+  - createDate : LocalDateTime
+  - updateDate : LocalDateTime
+  - username : String
+  - password : String
+  - firstName : String
+  - lastName : String
+  - email : String
+  - phone : String
+  - roles : Set<UserxRole>
+  enabled : boolean
+  
+}
+
+Userx -- "1" Userx : createUser
+Userx -- "1" Userx : updateUser
+
+enum UserxRole implements GrantedAuthority {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+class UserxMapper implements DTOMapper {}
+
+UserxMapper -- "1" UserxService : userxService
+
+
+class UserxCreateMapper implements DTOMapper {}
+
+interface DTOMapper
+
+
+UserxController -- "1" UserxMapper : userMapper
+UserxController -- "1" UserxService : userService
+
+AuthenticationController -- "1" AuthenicationService : authenticationService
+
+AdminController -- "1" UserxCreateMapper : userCreateMapper
+AdminController -- "1" UserxMapper : userMapper
+AdminController -- "1" UserxService : userService
+
+class Product implements Persistable {
+ - id : Long
+ - name : String
+ - stock : Long
+ - price : Double
+ - discount : Double
+ - description : String
+}
+
+ProductService -- "1" ProductRepository : productRepository
+
+class ProductMapper implements DTOMapper 
+ProductMapper -- "1" ProductService : productService
+
+interface ProductRepository implements AbstractRepository
+
+class ShoppingCart implements Persistable {
+ - id : Long
+ - products : Set<Integer, Product>
+}
+
+note top of ShoppingCart: Saving ShoppingCart in database\nto ensure it stays after logout/shutdown
+
+ShoppingCart -- "1" UserxService : user
+
+ShoppingCartService -- "1" ShoppingCartRepository : shoppingCartRepository
+
+class ShoppingCartMapper implements DTOMapper 
+ShoppingCartMapper -- "1" ShoppingCartService : shoppingCartService
+
+interface ShoppingCartRepository implements AbstractRepository
+
+class Order implements Persistable {
+  - id : Long
+  - products : Collection<Products>
+  - totalPrice : Double
+}
+
+Order "many orders" -- "1 user" Userx
+
+OrderService -- "1" OrderRepository : orderRepository 
+
+interface OrderRepository implements AbstractRepository
+
+class OrderMapper implements DTOMapper
+OrderMapper -- "1" OrderService : orderService
+
+class Rating implements Persistable {
+  - id : Long
+  - comment : String
+  - rating : RatingScale
+  - timestamp : LocalDateTime
+}
+
+Rating -- "1" Userx : author
+Rating "many ratings" -- "1 product" Product 
+
+enum RatingScale {
+  1
+  2
+  3
+  4
+  5
+}
+
+interface RatingRepository implements AbstractRepository
+
+class RatingMapper implements DTOMapper
+RatingMapper -- "1" RatingService : ratingService
+
+RatingService -- "1" RatingRepository : ratingRepository
+
+note "We plan on using Springs\nbuilt-in Observer for notifications.\nWe won't be using a notification-entity\nthe observers only 'send' the different notifications." as N1
+
+
+@enduml
