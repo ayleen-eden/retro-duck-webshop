@@ -79,7 +79,7 @@ class ShoppingCart implements Persistable {
 
 note top of ShoppingCart: Saving ShoppingCart in database\nto ensure it stays after logout/shutdown
 
-ShoppingCart -- "1" UserxService : user
+ShoppingCart "1 shoppingCart"  -- "1 user" Userx
 
 ShoppingCartService -- "1" ShoppingCartRepository : shoppingCartRepository
 
@@ -94,7 +94,7 @@ class Order implements Persistable {
   - totalPrice : Double
 }
 
-Order "many orders" -- "1 user" Userx
+Order "0..* orders" -- "1 user" Userx
 
 OrderService -- "1" OrderRepository : orderRepository 
 
@@ -111,7 +111,7 @@ class Rating implements Persistable {
 }
 
 Rating -- "1" Userx : author
-Rating "many ratings" -- "1 product" Product 
+Rating "0..* ratings" -- "1 product" Product 
 
 enum RatingScale {
   1
@@ -129,6 +129,5 @@ RatingMapper -- "1" RatingService : ratingService
 RatingService -- "1" RatingRepository : ratingRepository
 
 note "We plan on using Springs\nbuilt-in Observer for notifications.\nWe won't be using a notification-entity\nthe observers only 'send' the different notifications." as N1
-
 
 @enduml

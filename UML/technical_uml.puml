@@ -1,0 +1,73 @@
+@startuml
+
+class Userx {
+  - id : Long
+  - createDate : LocalDateTime
+  - updateDate : LocalDateTime
+  - username : String
+  - password : String
+  - firstName : String
+  - lastName : String
+  - email : String
+  - phone : String
+  - roles : Set<UserxRole>
+  enabled : boolean
+  
+}
+
+Userx -- "1" Userx : createUser
+Userx -- "1" Userx : updateUser
+
+enum UserxRole {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+class Product {
+ - id : Long
+ - name : String
+ - stock : Long
+ - price : Double
+ - discount : Double
+ - description : String
+}
+
+
+class ShoppingCart {
+ - id : Long
+ - products : Set<Integer, Product>
+}
+
+ShoppingCart "1 shoppingCart"  -- "1 user" Userx
+
+class Order {
+  - id : Long
+  - products : Collection<Products>
+  - totalPrice : Double
+}
+
+Order "0..* orders" -- "1 user" Userx
+
+class Rating {
+  - id : Long
+  - comment : String
+  - rating : RatingScale
+  - timestamp : LocalDateTime
+}
+
+Rating -- "1" Userx : author
+Rating "0..* ratings" -- "1 product" Product 
+
+enum RatingScale {
+  1
+  2
+  3
+  4
+  5
+}
+
+note "We plan on using Springs\nbuilt-in Observer for notifications.\nWe won't be using a notification-entity.\nThe observers only 'send' the different notifications." as N1
+
+
+@enduml
