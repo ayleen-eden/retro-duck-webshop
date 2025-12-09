@@ -10,6 +10,7 @@ class Userx {
   - lastName : String
   - email : String
   - phone : String
+  - deliveryAddress : String
   - roles : Set<UserxRole>
   enabled : boolean
   

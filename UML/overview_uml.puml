@@ -23,6 +23,7 @@ class Userx implements Persistable {
   - lastName : String
   - email : String
   - phone : String
+  - deliveryAddress : String
   - roles : Set<UserxRole>
   enabled : boolean
   
