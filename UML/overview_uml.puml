@@ -73,12 +73,25 @@ ProductMapper -- "1" ProductService : productService
 
 interface ProductRepository implements AbstractRepository
 
+class CartItem implements Persistable {
+  - id : Long
+  - amount : Integer
+}
+CartItem -- "1" Product : product
+CartItem "0..* items" -- "1 shoppingCart" ShoppingCart
+
+CartItemService -- "1" CartItemRepository : cartItemRepository
+
+class CartItemMapper implements DTOMapper
+CartItemMapper -- "1" CartItemService : cartItemService
+
+interface CartItemRepository implements AbstractRepository
+
 class ShoppingCart implements Persistable {
  - id : Long
- - products : Set<Integer, Product>
 }
 
-note top of ShoppingCart: Saving ShoppingCart in database\nto ensure it stays after logout/shutdown
+note top of ShoppingCart: Saving ShoppingCart in database\nto ensure it stays after logout/shutdown.
 
 ShoppingCart "1 shoppingCart"  -- "1 user" Userx
 
