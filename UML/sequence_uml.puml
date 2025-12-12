@@ -1,18 +1,62 @@
 @startuml
 
-actor User as User
+actor "Ragnhild die Große" as User
 
-User -> ShoppingCart : processOrder()
-activate ShoppingCart
-ShoppingCart -> Order : addProduct()
-activate Order
-Order -> Product : getStock()
-activate Product
-Product --> Order : getStock(): stock == 0
-deactivate Product
-Order --> ShoppingCart : addProduct: false
-deactivate Order
-ShoppingCart --> User : processOrder(): false
-deactivate ShoppingCart
+group loop [while adding products == true]
+
+  note over User : User im Frontend drückt auf\n"Add to cart"-Button auf der\nSeite des Produkts.
+  
+  User -> Product : addToCart()
+  
+  Product -> ShoppingCart : addItem(Product)
+  
+  note over ShoppingCart : ShoppingCart erstellt CartItem und\nfügt es seiner Liste hinzu.
+  
+
+end
+
+note over User : User im Frontend drückt auf\n"Place order"-Button auf der\nSeite seines ShoppingCarts.
+
+User -> ShoppingCart : placeOrder()
+
+ShoppingCart --> Order ** : create
+
+group loop [for each CartItem in ShoppingCart]
+  
+  ShoppingCart -> Product : getStock()
+  
+  Product --> ShoppingCart : stock = getStock()
+    
+  group alt [if stock != 0]
+  
+    ShoppingCart -> Order : addItem()
+    
+  else else
+  
+    ShoppingCart -> User : throw OutOfStockException
+    
+    note over User : Der User bekommt die Option die\nBestellung abzubrechen durch\neinen "Proceed anyway?"-Button.
+    
+    ShoppingCart -> User : askToProceed()
+    
+    User --> ShoppingCart : answer = askToProceed()
+    
+    group alt [if answer == true]
+    
+      ShoppingCart -> Order : checkOut()
+      
+      Order -> Order : createReceipt()
+      
+      note right : Hier erstellt Order einen String,\nin dem alle Products mit amount\nund price gelistet werden und dann\nals .txt-Datei gespeichert wird.
+    
+    end
+    
+  end
+
+end
+
+ShoppingCart -> Order : checkOut()
+  
+Order -> Order : createReceipt()
 
 @enduml

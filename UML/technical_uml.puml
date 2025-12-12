@@ -45,6 +45,13 @@ class Order {
   - id : Long
   - products : Collection<Products>
   - totalPrice : Double
+  - status : OrderStatus
+}
+
+enum OrderStatus {
+  NEW
+  IN_PROGRESS
+  DONE
 }
 
 Order "0..* orders" -- "1 user" Userx
