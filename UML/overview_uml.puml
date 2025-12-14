@@ -106,6 +106,7 @@ class Order implements Persistable {
   - id : Long
   - products : Collection<Products>
   - totalPrice : Double
+  - timestamp : LocalDateTime
   - status : OrderStatus
 }
 

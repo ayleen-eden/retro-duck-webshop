@@ -45,6 +45,7 @@ class Order {
   - id : Long
   - products : Collection<Products>
   - totalPrice : Double
+  - timestamp : LocalDateTime
   - status : OrderStatus
 }
 
