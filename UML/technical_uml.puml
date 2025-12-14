@@ -43,7 +43,6 @@ ShoppingCart "1 shoppingCart"  -- "1 user" Userx
 
 class Order {
   - id : Long
-  - products : Collection<Products>
   - totalPrice : Double
   - timestamp : LocalDateTime
   - status : OrderStatus
@@ -56,6 +55,16 @@ enum OrderStatus {
 }
 
 Order "0..* orders" -- "1 user" Userx
+
+class OrderItem {
+  - id : Long
+  - amount : Integer
+  - priceAtOrder : Double
+  - discountAtOrder : Double
+}
+
+OrderItem -- "1" Product : product
+OrderItem "0..* items" -- "1 order" Order
 
 class Rating {
   - id : Long

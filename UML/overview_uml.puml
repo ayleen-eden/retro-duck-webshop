@@ -104,7 +104,6 @@ interface ShoppingCartRepository implements AbstractRepository
 
 class Order implements Persistable {
   - id : Long
-  - products : Collection<Products>
   - totalPrice : Double
   - timestamp : LocalDateTime
   - status : OrderStatus
@@ -124,6 +123,23 @@ interface OrderRepository implements AbstractRepository
 
 class OrderMapper implements DTOMapper
 OrderMapper -- "1" OrderService : orderService
+
+class OrderItem implements Persistable {
+  - id : Long
+  - amount : Integer
+  - priceAtOrder : Double
+  - discountAtOrder : Double
+}
+
+OrderItem -- "1" Product : product
+OrderItem "0..* items" -- "1 order" Order
+
+OrderItemService -- "1" OrderItemRepository : orderItemRepository
+
+class OrderItemMapper implements DTOMapper
+OrderItemMapper -- "1" OrderItemService : orderItemService
+
+interface OrderItemRepository implements AbstractRepository
 
 class Rating implements Persistable {
   - id : Long
