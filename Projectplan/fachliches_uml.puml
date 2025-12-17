@@ -1,0 +1,94 @@
+@startuml
+
+class Userx {
+  - id : Long
+  - createDate : LocalDateTime
+  - updateDate : LocalDateTime
+  - username : String
+  - password : String
+  - firstName : String
+  - lastName : String
+  - email : String
+  - phone : String
+  - deliveryAddress : String
+  - roles : Set<UserxRole>
+  enabled : boolean
+  
+}
+
+Userx -- "1" Userx : createUser
+Userx -- "1" Userx : updateUser
+
+enum UserxRole {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+class Product {
+ - id : Long
+ - name : String
+ - stock : Long
+ - price : Double
+ - discount : Double
+ - description : String
+ - categories : Set<ProductCategory>
+}
+
+enum ProductCategory {
+  SALE
+  OUT_OF_STOCK
+}
+
+Product "1 product" -- "0..* ratings" Rating
+
+class Rating {
+  - id : Long
+  - comment : String
+  - rating : RatingScale
+  - timestamp : LocalDateTime
+}
+
+enum RatingScale {
+  1
+  2
+  3
+  4
+  5
+}
+
+Rating -- "1" Userx : author
+
+class UserSubscription {
+  - id : Long
+}
+
+UserSubscription -- "1" Userx : user
+UserSubscription -- "1" Product : product
+
+class Order {
+  - id : Long
+  - totalPrice : Double
+  - timestamp : LocalDateTime
+  - status : OrderStatus
+}
+
+Order "0..* orders" -- "1 user" Userx
+OrderItem "0..* items" -- "1 order" Order
+
+enum OrderStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+}
+
+class OrderItem {
+  - id : Long
+  - amount : Integer
+  - pricePerUnitAtOrder : Double
+  - totalPrice : Double
+}
+
+OrderItem -- "1" Product : product
+
+@enduml
