@@ -5,5 +5,5 @@ export interface CartItemDTO {
 }
 
 export interface CartDTO {
-    items?: CartItemDTO[]
+    items: CartItemDTO[]
 }
