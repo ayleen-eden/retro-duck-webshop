@@ -22,7 +22,7 @@ public class Rating implements Persistable<Long>, Serializable {
     private String comment;
     @OneToOne
     private Userx author;
-    //TODO: Add products
+    //TODO: Add products @ManyToOne
 
     public void setId(Long id) {
         this.id = id;
