@@ -46,7 +46,7 @@ public class CartValidationService {
             if (actualPrice.equals(item.pricePerUnit())) { // ? How is discount implemented
                 updatedItems.add(item);
             } else {
-                updatedItems.add(new CartItemDTO(item.productId(), actualPrice, item.amount()));
+                updatedItems.add(new CartItemDTO(item.productId(), item.productName(), item.productImage(), actualPrice, item.amount()));
             }
         }
 
