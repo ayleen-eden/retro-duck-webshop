@@ -20,5 +20,7 @@ export const menuConfig: MenuItemConfig[] = [
         }]
     }, {
         label: "Logout", icon: "pi pi-sign-out", route: ROUTES.LOGOUT
+    }, {
+        label: "Shopping cart", icon: "pi pi-shopping-cart", route: ROUTES.CART
     }
 ];
