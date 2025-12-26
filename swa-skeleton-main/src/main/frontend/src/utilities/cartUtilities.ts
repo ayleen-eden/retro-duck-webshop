@@ -1,6 +1,6 @@
-import {CartDTO} from "../DTO/cart.types";
+import {CartDTO, CartItemDTO} from "../DTO/cart.types";
 
-function getCart(): CartDTO {
+export function getCart(): CartDTO {
     const cartString = localStorage.getItem('cart');
 
     if (cartString === null) {
@@ -14,34 +14,62 @@ function saveCart(cart: CartDTO) {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-function addToCart(product: ProductDTO, quantity: number) {
+export function addToCart(product: ProductDTO | CartItemDTO, quantity: number): CartDTO {
     const cart = getCart();
-    const existingItem = cart.items.find(item => item.productId === product.id);
+
+    const productId = 'id' in product ? product.id : product.productId;
+    const pricePerUnit = 'price' in product ? product.price : product.pricePerUnit;
+    const productName = 'name' in product ? product.name : product.productName;
+    const productImage = 'image' in product ? product.image : product.productImage;
+
+    const existingItem = cart.items.find(item => item.productId === productId);
+
+    let updatedCart: CartDTO;
 
     if (existingItem) {
-        existingItem.amount += quantity;
+        updatedCart = {
+            ...cart,
+            items: cart.items.map(item =>
+                item.productId === productId
+                    ? { ...item, amount: Math.max(item.amount + quantity, 0) }
+                    : item
+            )
+        };
     } else {
-        cart.items.push({
-            productId: product.id,
-            pricePerUnit: product.price,
-            amount: quantity
-        });
+        updatedCart = {
+            ...cart,
+            items: [...cart.items, { productId, productName, productImage, pricePerUnit, amount: quantity }]
+        };
     }
 
-    saveCart(cart);
+    saveCart(updatedCart);
+    return updatedCart;
 }
 
-function removeFromCart(product: ProductDTO, quantity?: number) {
+export function removeFromCart(product: ProductDTO | CartItemDTO, quantity?: number): CartDTO {
     const cart = getCart();
+    const productId = 'id' in product ? product.id : product.productId;
 
-    let item = cart.items.find(item => item.productId === product.id);
-    if (!item) return;
+    let updatedCart: CartDTO;
 
     if (quantity != null) {
-        item.amount -= quantity;
+        updatedCart = {
+            ...cart,
+            items: cart.items
+                .map(item =>
+                    item.productId === productId
+                        ? { ...item, amount: Math.max(item.amount - quantity, 0) }
+                        : item
+                )
+                .filter(item => item.amount > 0)
+        };
     } else {
-        cart.items.filter(item => item.productId !== product.id);
+        updatedCart = {
+            ...cart,
+            items: cart.items.filter(item => item.productId !== productId)
+        };
     }
-    
-    saveCart(cart);
+
+    saveCart(updatedCart);
+    return updatedCart;
 }
