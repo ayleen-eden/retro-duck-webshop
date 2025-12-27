@@ -14,62 +14,46 @@ function saveCart(cart: CartDTO) {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-export function addToCart(product: ProductDTO | CartItemDTO, quantity: number): CartDTO {
-    const cart = getCart();
+export function addToCart(cart: CartDTO, product: ProductDTO | CartItemDTO, quantity: number): CartDTO {
 
     const productId = 'id' in product ? product.id : product.productId;
     const pricePerUnit = 'price' in product ? product.price : product.pricePerUnit;
     const productName = 'name' in product ? product.name : product.productName;
     const productImage = 'image' in product ? product.image : product.productImage;
 
-    const existingItem = cart.items.find(item => item.productId === productId);
+    const existingItem = cart.items.find(i => i.productId === productId);
 
-    let updatedCart: CartDTO;
+    const items = existingItem
+        ? cart.items.map(item =>
+            item.productId === productId
+                ? { ...item, amount: item.amount + quantity }
+                : item
+        )
+        : [...cart.items, { productId, productName, productImage, pricePerUnit, amount: quantity }];
 
-    if (existingItem) {
-        updatedCart = {
-            ...cart,
-            items: cart.items.map(item =>
-                item.productId === productId
-                    ? { ...item, amount: Math.max(item.amount + quantity, 0) }
+    const updatedCart = {
+        ...cart,
+        items: items.filter(item => item.amount > 0)
+    };
+
+    saveCart(updatedCart);
+    return updatedCart;
+}
+
+export function removeFromCart(cart: CartDTO, product: CartItemDTO, quantity: number): CartDTO {
+
+    const updatedCart: CartDTO = {
+        ...cart,
+        items: cart.items
+            .map(item =>
+                item.productId === product.productId
+                    ? { ...item, amount: item.amount - quantity }
                     : item
             )
-        };
-    } else {
-        updatedCart = {
-            ...cart,
-            items: [...cart.items, { productId, productName, productImage, pricePerUnit, amount: quantity }]
-        };
-    }
+            .filter(item => item.amount > 0)
+    };
 
     saveCart(updatedCart);
     return updatedCart;
 }
 
-export function removeFromCart(product: ProductDTO | CartItemDTO, quantity?: number): CartDTO {
-    const cart = getCart();
-    const productId = 'id' in product ? product.id : product.productId;
-
-    let updatedCart: CartDTO;
-
-    if (quantity != null) {
-        updatedCart = {
-            ...cart,
-            items: cart.items
-                .map(item =>
-                    item.productId === productId
-                        ? { ...item, amount: Math.max(item.amount - quantity, 0) }
-                        : item
-                )
-                .filter(item => item.amount > 0)
-        };
-    } else {
-        updatedCart = {
-            ...cart,
-            items: cart.items.filter(item => item.productId !== productId)
-        };
-    }
-
-    saveCart(updatedCart);
-    return updatedCart;
-}
