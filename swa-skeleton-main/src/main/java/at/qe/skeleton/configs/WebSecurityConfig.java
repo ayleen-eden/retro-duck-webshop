@@ -77,6 +77,14 @@ public class WebSecurityConfig {
                     .authorizeHttpRequests(authorize -> authorize
                             .requestMatchers("/h2-console/**").access(devOnly())
                             .requestMatchers("/authentication/**").permitAll()
+
+                            // PRODUCTS
+                            // Read (for everyone)
+                            .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products/**").permitAll()
+                            // Edit (Admin, Manager only)
+                            // TODO: Check if role-names (manager,admin) match
+                            .requestMatchers("/api/products/**").hasAnyAuthority("MANAGER", "ADMIN")
+
                             .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                             .requestMatchers("/api/**").authenticated()
                             .anyRequest().authenticated()
