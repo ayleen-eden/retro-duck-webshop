@@ -7,6 +7,7 @@ import HomePage from "./views/HomePage";
 import ManageUsers from "./views/ManageUsers";
 import Login from "./views/Login";
 import Logout from "./views/Logout";
+import Cart from "./views/Cart";
 import {ROUTES} from "./utilities/routes.paths";
 
 /**
@@ -29,5 +30,10 @@ export const LoginsRoute = {
 export const LogoutsRoute = {
     url: ROUTES.LOGOUT,
     component: Logout
+}
+
+export const CartRoute = {
+    url: ROUTES.CART,
+    component: Cart
 }
 
