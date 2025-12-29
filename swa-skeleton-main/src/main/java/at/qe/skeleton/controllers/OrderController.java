@@ -1,54 +1,81 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.CartDTO;
-import at.qe.skeleton.dtos.CartItemDTO;
-import at.qe.skeleton.services.CartValidationService;
+import at.qe.skeleton.dtos.OrderDTO;
+import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.services.OrderService;
+import at.qe.skeleton.services.AuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final CartValidationService cartValidationService;
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
-    public OrderController(CartValidationService cartValidationService) {
-        this.cartValidationService = cartValidationService;
+    private AuthenticatedUserService authenticatedUserService;
+
+    @GetMapping("/")
+    public ResponseEntity<Collection<OrderDTO>> getAllOrders() {
+        Userx currentUser = authenticatedUserService.getAuthenticatedUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(orderService.getOrderHistory(currentUser));
     }
 
-    /*
-    ! Please adjust method according to the implementation of `Order`
-    * All cart-related classes that are still needed here can be found in feature/shopping-cart
-    */
-
-    @PostMapping("/checkout")
-    public ResponseEntity<Order> checkout(@RequestBody CartDTO cart) {
-        Optional<CartDTO> validCart = cartValidationService.validateCart(cart);
-
-        if (validCart.isEmpty()) {
+    @PostMapping("/")
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody CartDTO cartDto) {
+        try {
+            Userx currentUser = authenticatedUserService.getAuthenticatedUser();
+            if (currentUser == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            OrderDTO orderDto = orderService.placeOrder(currentUser, cartDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
 
-        CartDTO finalCart = validCart.get();
-        Order order = new Order();
-
-        for (CartItemDTO item : finalCart.items()) {
-
-            /*
-            ! Create OrderItemDTO from CartItemDTO if necessary
-            * addItem() should decrease product stock
-            */
-
-            order.addItem(item);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrderById(@PathVariable Long id) {
+        Userx currentUser = authenticatedUserService.getAuthenticatedUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        try {
+            OrderDTO order = orderService.getOrderById(id, currentUser);
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Access denied")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
-        return ResponseEntity.ok(order);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+        Userx currentUser = authenticatedUserService.getAuthenticatedUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            orderService.deleteOrder(id, currentUser);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Access denied")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
