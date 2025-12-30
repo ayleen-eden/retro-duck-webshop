@@ -3,7 +3,6 @@ package at.qe.skeleton.dtos;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.ProductCategory;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 

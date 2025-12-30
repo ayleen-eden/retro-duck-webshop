@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.dtos.CartDTO;
 import at.qe.skeleton.dtos.CartItemDTO;
+import at.qe.skeleton.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,11 @@ import java.util.Optional;
 @Service
 public class CartValidationService {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Autowired
-    public CartValidationService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public CartValidationService(ProductService productService) {
+        this.productService = productService;
     }
 
     /*
@@ -30,7 +31,7 @@ public class CartValidationService {
         Collection<CartItemDTO> updatedItems = new ArrayList<>();
 
         for (CartItemDTO item : cart.items()) {
-            Optional<Product> optionalProduct = productRepository.findById(item.productId());
+            Optional<Product> optionalProduct = productService.getProductById(item.productId());
 
             if (optionalProduct.isEmpty()) {
                 return Optional.empty();
