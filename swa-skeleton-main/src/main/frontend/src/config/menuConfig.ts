@@ -13,12 +13,14 @@ export const menuConfig: MenuItemConfig[] = [
     {
         label: 'Home', icon: 'pi pi-home', route: ROUTES.HOME
     }, {
-        label: 'Admin Submenu', icon: 'pi pi-star',
+        label: 'Admin Submenu', icon: 'pi pi-shield',
         roles: [UserxRole.ADMIN],
         items: [{
-            label: 'Manage Users', icon: 'pi pi-star', route: ROUTES.MANAGE_USERS, roles: [UserxRole.ADMIN]
+            label: 'Manage Users', icon: 'pi pi-users', route: ROUTES.MANAGE_USERS, roles: [UserxRole.ADMIN]
         }]
     }, {
         label: "Logout", icon: "pi pi-sign-out", route: ROUTES.LOGOUT
+    }, {
+        label: "Shopping cart", icon: "pi pi-shopping-cart", route: ROUTES.CART
     }
 ];
