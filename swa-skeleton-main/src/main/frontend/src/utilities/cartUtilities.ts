@@ -1,4 +1,5 @@
-import {CartDTO, CartItemDTO} from "../DTO/cart.types";
+import { CartDTO, CartItemDTO } from "../DTO/cart.types";
+import { ProductDTO } from "../DTO/product.types";
 
 export function getCart(): CartDTO {
     const cartString = localStorage.getItem('cart');

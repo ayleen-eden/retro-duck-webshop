@@ -10,9 +10,10 @@ import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { ScrollTop } from "primereact/scrolltop";
 import { dummyCart } from "./DebugDummyCart";
 import { Message } from "primereact/message";
+import { createOrder } from "../utilities/orderApi";
 
 const CartComponent: React.FC = () => {
-    const USE_DUMMY = false;
+    const USE_DUMMY = true;
 
     const [cart, setCart] = useState<CartDTO>(
         USE_DUMMY ? dummyCart : getCart()
@@ -28,7 +29,7 @@ const CartComponent: React.FC = () => {
         setCart(prev => addToCart(prev, item, 1));
     };
 
-    const handleDecrease = (event: React.MouseEvent, item: CartItemDTO) => {
+    const handleDecrease = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         if (item.amount == 1) {
             confirmDelete(event, item)
         } else {
@@ -36,7 +37,7 @@ const CartComponent: React.FC = () => {
         }
     };
 
-    const confirmDelete = (event: React.MouseEvent, item: CartItemDTO) => {
+    const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         confirmPopup({
             target: event.currentTarget,
             message:`Are you sure you want to remove ${item.productName}?`,
@@ -163,6 +164,7 @@ const CartComponent: React.FC = () => {
                         size="large"
                         severity="success"
                         raised
+                        onClick={() => createOrder(cart).then(() => alert("Successfully created order!")).catch(() => alert("Failed to create order, try again!"))}
                     />
                 </Divider>
             </>
