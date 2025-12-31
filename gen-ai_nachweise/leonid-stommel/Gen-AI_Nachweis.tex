@@ -1,0 +1,78 @@
+\documentclass[12pt, a4paper]{scrreprt}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	urlcolor=blue,
+	citecolor=blue
+}
+
+% Formatierung
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+
+\title{Softwarearchitektur Projektarbeit}
+\subtitle{Gen-AI Nachweis}
+\author{Gruppe 1 - Team 2\\Leonid Georg Mikhailovic Stommel}
+\date{WS 2025/26}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\titlehead{
+	\raggedright
+	\vspace*{3cm}
+	\includegraphics[width=0.6\textwidth]{logo.jpg}
+}
+
+\begin{document}
+	\maketitle
+	
+	\tableofcontents
+	
+	\chapter{Einführung}
+	
+
+	Die Arbeit mit Künstlicher Intelligenz (KI) und Large Language Models (LLMs) wird immer wichtiger und unumgänglicher. Damit wird es auch immer wichtiger zu lernen wie man verantwortungsvoll mit KI umgeht. Im Optimalfall sollte man nach einem gewissenhaften Prompt in der Softwareentwicklung nicht nur einen schlaueren Code sondern auch einen schlaueren Kopf haben, so dass man es als Hilfsmittel für ein besseres Verständnis für ein Thema einsetzt. 
+		
+	In diesem Dokument dokumentiere ich relevante Prompts, welche mir in der Softwarearchitektur Projektarbeit weitergeholfen haben.
+	
+	\chapter{Relevante Prompts}
+	
+	\section{Library-Problem bei API-UnitTests}
+	
+	\href{https://gemini.google.com/share/6b4ea303c9ce}{Link zum Chat}.
+	
+	\subsection{Prompting}
+
+		Die Unit-Tests, welche API-Calls für das Feature ``Products` testet, schlugen fehl und ich konnte bei den sehr langen Fehlermeldungen nicht durchblicken woran es lag, da ich dort sehr schnell die Übersicht verlor.
+
+		Der LLM habe ich nach Erklärung des Softwarekontextes mein Problem beschrieben und sowohl den Source-Code der Datei \texttt{ProductController.java}, als auch die Fehlermeldungen für alle fehlgeschlagenen Tests mitgegeben.
+	
+	\subsection{LLM-Ausgabe}
+	
+	Die LLM schlug mir vor, den \texttt{JwtTokenProvider} als Mock einzubinden. Doch es gab wiederum eine Fehlermeldung, ebenso lang und unübersichtlich. Diese habe ich dann als Antwort geschickt und den Vorschlag bekommen ebenso noch \texttt{JwtConfig} einzubinden. Daraufhin hat es funktioniert. 
+	
+	Abschließend habe ich die LLM noch nach einem Fazit der Problemlösung und was ich daraus gedanklich mitnehmen kann gefragt.
+		
+	\subsection{Lernergebnisse}
+
+	Daraus habe ich gelernt:
+
+	\begin{itemize}
+		\item Erkennen von Kausalitäten bei bestimmten Statements, \linebreak z.B. wenn
+		\texttt{@WebMvcTest(ProductController.}\texttt{class)} nur einen abgekapselten Teil
+		lädt, bedeutet dies auch, dass andere Komponenten fehlen, die explizit
+		eingebunden werden müssen, sofern sie für den Test benötigt werden.
+	
+		\item Besseres Verständnis des Mocking-Systems (es werden nicht nur
+		eigene Klassen gemockt, sondern auch weniger offensichtliche Abhängigkeiten).
+	
+		\item Sich nicht von jeder Fehlermeldung abschrecken zu lassen und
+		Fehlerausgaben selbst genauer zu analysieren.
+	\end{itemize}
+	
+\end{document}
