@@ -17,12 +17,14 @@ public class Rating implements Persistable<Long>, Serializable {
     private Long id;
     @Timestamp
     private LocalDateTime timestamp;
+    @Enumerated(EnumType.STRING)
     private RatingScale rating;
-    @Column(unique = true, nullable = false, length = 50000)
+    @Column(nullable = false, length = 50000)
     private String comment;
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Userx author;
-    //TODO: Add products @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
 
     public void setId(Long id) {
         this.id = id;
@@ -58,6 +60,14 @@ public class Rating implements Persistable<Long>, Serializable {
 
     public void setAuthor(Userx author) {
         this.author = author;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override

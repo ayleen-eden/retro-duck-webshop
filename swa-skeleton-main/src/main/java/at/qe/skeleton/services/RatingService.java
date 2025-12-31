@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.RatingAlreadyExistsException;
+import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.Rating;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.RatingRepository;
@@ -23,16 +24,16 @@ public class RatingService {
         this.authenticatedUserService = authenticatedUserService;
     }
 
+    //Can be used for a manager view. Otherwise used for testing
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public Collection<Rating> getAllRatings() { return ratingRepository.findAll(); }
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public Rating saveRating(Rating rating) {
         if (rating.isNew()) {
-            if (ratingRepository.existsRatingByAuthor(rating.getAuthor())) {
+            if (ratingRepository.existsRatingByAuthorAndProduct(rating.getAuthor(), rating.getProduct())) {
                 throw new RatingAlreadyExistsException("User " + rating.getAuthor().getUsername() + "already submitted a rating");
             }
-            rating.setAuthor(authenticatedUserService.getAuthenticatedUser());
         } else {
             rating.setTimestamp(LocalDateTime.now());
         }
@@ -46,14 +47,18 @@ public class RatingService {
     }
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    public Optional<Rating> loadRating(Long id) {
-        return ratingRepository.findById(id);
+    public Optional<Rating> loadRating(Long productId, Long ratingId) {
+        return ratingRepository.findRatingByProduct_IdAndId(productId, ratingId);
     }
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    //TODO: Rating by product and author!
-    public Optional<Rating> loadRating(Userx author) {
-        return ratingRepository.findRatingByAuthor(author);
+    public Optional<Rating> loadRatingByAuthor(Long productId, Long authorId) {
+        return ratingRepository.findRatingByProduct_idAndAuthor_Id(productId, authorId);
+    }
+
+    @PreAuthorize("hasAuthority('CUSTOMER')")
+    public Collection<Rating> getAllRatingsByProduct(Product product) {
+        return ratingRepository.getAllByProduct(product);
     }
 }
 
