@@ -3,14 +3,13 @@ package at.qe.skeleton.repositories;
 import at.qe.skeleton.model.Notification;
 import at.qe.skeleton.model.NotificationType;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends AbstractRepository<Notification, Long> {
 
     Collection<Notification> findByType(NotificationType type);
 
