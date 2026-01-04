@@ -87,7 +87,7 @@ public class RatingServiceTest {
     public void testUpdateRating() {
         Userx author = authenticatedUserService.getAuthenticatedUser();
         Optional<Rating> toBeChangedRatingOpt = ratingService.loadRatingByAuthor(product1.getId(), author.getId());
-        Assertions.assertNotNull(toBeChangedRatingOpt, "Rating loud not be loaded from repository");
+        Assertions.assertNotNull(toBeChangedRatingOpt, "Rating could not be loaded from repository");
 
         Rating toBeChangedRating = toBeChangedRatingOpt.get();
 

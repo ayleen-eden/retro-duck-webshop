@@ -25,8 +25,8 @@ public class RatingMapper implements DTOMapper<Rating, RatingDTO>{
                 rating.getTimestamp(),
                 rating.getRating(),
                 rating.getComment(),
-                rating.getAuthor(),
-                rating.getProduct()
+                rating.getAuthor().getId(),
+                rating.getProduct().getId()
         );
 
         return dto;
@@ -39,14 +39,13 @@ public class RatingMapper implements DTOMapper<Rating, RatingDTO>{
         }
         Rating rating;
         if (null != ratingDto.id()) {
-            rating = ratingService.loadRating(ratingDto.product().getId(), ratingDto.id()).orElse(new Rating());
+            rating = ratingService.loadRating(ratingDto.productId(), ratingDto.id()).orElse(new Rating());
         } else {
             rating = new Rating();
         }
         rating.setRating(ratingDto.rating());
         rating.setComment(ratingDto.comment());
-        rating.setAuthor(ratingDto.author());
-        rating.setProduct(ratingDto.product());
+        //TODO: Check if productId and author needs to be assigned
 
         return rating;
     }
