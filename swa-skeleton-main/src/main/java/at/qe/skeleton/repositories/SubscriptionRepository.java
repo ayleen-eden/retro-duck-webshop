@@ -5,6 +5,7 @@ import at.qe.skeleton.model.Subscription;
 import at.qe.skeleton.model.Userx;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface SubscriptionRepository extends AbstractRepository<Subscription, Long> {
 
@@ -12,5 +13,5 @@ public interface SubscriptionRepository extends AbstractRepository<Subscription,
 
     Collection<Subscription> findByProduct(Product product);
 
-    Collection<Subscription> findByUserAndProduct(Userx user, Product product);
+    Optional<Subscription> findByUserAndProduct(Userx user, Product product);
 }

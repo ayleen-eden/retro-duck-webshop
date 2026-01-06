@@ -54,15 +54,17 @@ public class SubscriptionController {
         return ResponseEntity.ok(subscriptionDTO);
     }
 
+    @DeleteMapping("")
+    public ResponseEntity<Void> unsubscribe(@RequestParam Long userId, @RequestParam Long productId) {
+        Userx user = userService.loadUser(userId).orElse(null);
+        Product product = productService.getProductById(productId).orElse(null);
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> unsubscribe(@PathVariable Long id) {
-        Optional<Subscription> subscription = subscriptionService.getSubscriptionById(id);
-        if (subscription.isPresent()) {
-            subscriptionService.deleteSubscription(subscription.get());
-            return ResponseEntity.ok().build();
-        } else {
+        if (user == null || product == null) {
             return ResponseEntity.notFound().build();
         }
+
+        subscriptionService.deleteSubscription(subscriptionService.getSubscriptionByUserAndProduct(user, product).orElse(null));
+
+        return ResponseEntity.noContent().build();
     }
 }

@@ -44,20 +44,24 @@ public class SubscriptionService {
         return subscriptionRepository.findByProduct(product);
     }
 
-    public Collection<Subscription> getSubscriptionByUserAndProduct(Userx user, Product product) {
+    public Optional<Subscription> getSubscriptionByUserAndProduct(Userx user, Product product) {
         return subscriptionRepository.findByUserAndProduct(user, product);
     }
 
-    public Subscription createSubscription(Userx user, Product product) {
-        Collection<Subscription> subscriptions = getSubscriptionByUserAndProduct(user, product);
+    public void deleteSubscriptionById(Subscription subscription) {
+        subscriptionRepository.delete(subscription);
+    }
 
-        if (subscriptions.isEmpty()) {
-            Subscription subscription = new Subscription();
-            subscription.setUser(user);
-            subscription.setProduct(product);
-            return subscriptionRepository.save(subscription);
+    public Subscription createSubscription(Userx user, Product product) {
+        Subscription subscription = getSubscriptionByUserAndProduct(user, product).orElse(null);
+
+        if (subscription == null) {
+            Subscription sub = new Subscription();
+            sub.setUser(user);
+            sub.setProduct(product);
+            return subscriptionRepository.save(sub);
         } else {
-            return subscriptions.stream().findFirst().get();
+            return subscription;
         }
     }
 }
