@@ -4,7 +4,7 @@ import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.ProductCategory;
 import java.util.Set;
 import java.util.HashSet;
-
+// commit-test #1
 public class ProductDTO {
     private Long id;
     private String name;
