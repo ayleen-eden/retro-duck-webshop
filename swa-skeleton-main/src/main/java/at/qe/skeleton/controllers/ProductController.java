@@ -5,6 +5,7 @@ import at.qe.skeleton.dtos.ProductDTO;
 import at.qe.skeleton.events.ProductOutOfStockEvent;
 import at.qe.skeleton.events.ProductRestockEvent;
 import at.qe.skeleton.events.ProductSaleEvent;
+import at.qe.skeleton.mappers.ProductMapper;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.services.ProductService;
 import jakarta.validation.Valid;
@@ -21,14 +22,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private ProductService productService;
-
-    private ApplicationEventPublisher publisher;
+    private final ProductService productService;
+    private final ApplicationEventPublisher publisher;
+    private final ProductMapper productMapper;
 
     @Autowired
-    public ProductController(ProductService productService, ApplicationEventPublisher publisher) {
+    public ProductController(ProductService productService, ApplicationEventPublisher publisher, ProductMapper productMapper) {
         this.productService = productService;
         this.publisher = publisher;
+        this.productMapper = productMapper;
     }
 
     // ===== GET =====
@@ -37,7 +39,7 @@ public class ProductController {
     @GetMapping("/")
     public Collection<ProductDTO> getAllProducts() {
         return productService.getAllProducts().stream()
-                .map(ProductDTO::new)
+                .map(productMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +48,7 @@ public class ProductController {
     public ProductDTO getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        return new ProductDTO(product);
+        return productMapper.mapToDTO(product);
     }
 
 
@@ -56,9 +58,9 @@ public class ProductController {
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDTO createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
-        Product product = productCreateDTO.toEntity();
+        Product product = productMapper.mapToEntity(productCreateDTO);
         Product savedProduct = productService.saveProduct(product);
-        return new ProductDTO(savedProduct);
+        return productMapper.mapToDTO(savedProduct);
     }
 
 
@@ -70,12 +72,10 @@ public class ProductController {
         Product existingProduct = productService.getProductById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
-        // Simples Update Mapping
         if (productDTO.name() != null) existingProduct.setName(productDTO.name());
         if (productDTO.description() != null) existingProduct.setDescription(productDTO.description());
-        if (productDTO.price() >= 0) existingProduct.setPrice(productDTO.price());
-
-        if (productDTO.stock() >= 0) {
+        if (productDTO.price() != null && productDTO.price() >= 0) existingProduct.setPrice(productDTO.price());
+        if (productDTO.stock() != null && productDTO.stock() >= 0) {
             if (productDTO.stock() > existingProduct.getStock()) {
                 publisher.publishEvent(
                         new ProductRestockEvent(this, existingProduct.getId())
@@ -100,10 +100,9 @@ public class ProductController {
 
             existingProduct.setDiscount(productDTO.discount());
         }
-        // TODO: Further mapping
 
         Product updatedProduct = productService.saveProduct(existingProduct);
-        return new ProductDTO(updatedProduct);
+        return productMapper.mapToDTO(updatedProduct);
     }
 
 
@@ -113,7 +112,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
-        if (!productService.getProductById(id).isPresent()) {
+        if (productService.getProductById(id).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         }
         productService.deleteProductById(id);

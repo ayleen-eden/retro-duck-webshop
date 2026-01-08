@@ -7,5 +7,6 @@ public enum ProductCategory {
     WII,
     SWITCH_2,
     PS3,
-    PC
+    PC,
+    NES
 }
