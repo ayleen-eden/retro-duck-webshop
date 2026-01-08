@@ -1,6 +1,11 @@
 package at.qe.skeleton.model;
 
 public enum ProductCategory {
-    // TODO: Find category-names
-    WE, NEED, BETTER, CATEGORYNAMES
+    N64,
+    GCN,
+    GB,
+    WII,
+    SWITCH_2,
+    PS3,
+    PC
 }

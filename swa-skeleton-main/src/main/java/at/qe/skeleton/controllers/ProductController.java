@@ -2,10 +2,14 @@ package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ProductCreateDTO;
 import at.qe.skeleton.dtos.ProductDTO;
+import at.qe.skeleton.events.ProductOutOfStockEvent;
+import at.qe.skeleton.events.ProductRestockEvent;
+import at.qe.skeleton.events.ProductSaleEvent;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,8 +21,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
     private ProductService productService;
+
+    private ApplicationEventPublisher publisher;
+
+    @Autowired
+    public ProductController(ProductService productService, ApplicationEventPublisher publisher) {
+        this.productService = productService;
+        this.publisher = publisher;
+    }
 
     // ===== GET =====
 
@@ -60,10 +71,35 @@ public class ProductController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
         // Simples Update Mapping
-        if (productDTO.getName() != null) existingProduct.setName(productDTO.getName());
-        if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
-        if (productDTO.getPrice() >= 0) existingProduct.setPrice(productDTO.getPrice());
-        if (productDTO.getStock() >= 0) existingProduct.setStock(productDTO.getStock());
+        if (productDTO.name() != null) existingProduct.setName(productDTO.name());
+        if (productDTO.description() != null) existingProduct.setDescription(productDTO.description());
+        if (productDTO.price() >= 0) existingProduct.setPrice(productDTO.price());
+
+        if (productDTO.stock() >= 0) {
+            if (productDTO.stock() > existingProduct.getStock()) {
+                publisher.publishEvent(
+                        new ProductRestockEvent(this, existingProduct.getId())
+                );
+            }
+
+            if (productDTO.stock() == 0) {
+                publisher.publishEvent(
+                        new ProductOutOfStockEvent(this, existingProduct.getId())
+                );
+            }
+
+            existingProduct.setStock(productDTO.stock());
+        }
+
+        if (productDTO.discount() != null) {
+            if (productDTO.discount() > existingProduct.getDiscount()) {
+                publisher.publishEvent(
+                    new ProductSaleEvent(this, existingProduct.getId())
+                );
+            }
+
+            existingProduct.setDiscount(productDTO.discount());
+        }
         // TODO: Further mapping
 
         Product updatedProduct = productService.saveProduct(existingProduct);

@@ -10,33 +10,46 @@ import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { ScrollTop } from "primereact/scrolltop";
 import { dummyCart } from "./DebugDummyCart";
 import { Message } from "primereact/message";
+import { createOrder } from "../utilities/orderApi";
+import { FilterService } from "primereact/api";
+import { InputNumber } from "primereact/inputnumber";
+
+FilterService.register('custom_range', (value, filters) => {
+    const [from, to] = filters ?? [null, null];
+    if (from === null && to === null) return true;
+    if (from !== null && to === null) return from <= value;
+    if (from === null && to !== null) return value <= to;
+    return from <= value && value <= to;
+});
 
 const CartComponent: React.FC = () => {
-    const USE_DUMMY = false;
+    const USE_DUMMY = true;
 
     const [cart, setCart] = useState<CartDTO>(
         USE_DUMMY ? dummyCart : getCart()
     );
+
+    const cartWithTotals = cart.items.map(item => ({
+        ...item,
+        totalPrice: item.amount * item.pricePerUnit
+    }));
 
     const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit, 0).toFixed(2);
 
     const handleRemove = (item: CartItemDTO) => {
         setCart(prev => removeFromCart(prev, item, item.amount));
     };
-
     const handleIncrease = (item: CartItemDTO) => {
         setCart(prev => addToCart(prev, item, 1));
     };
-
-    const handleDecrease = (event: React.MouseEvent, item: CartItemDTO) => {
+    const handleDecrease = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         if (item.amount == 1) {
             confirmDelete(event, item)
         } else {
             setCart(prev => removeFromCart(prev, item, 1));
         }
     };
-
-    const confirmDelete = (event: React.MouseEvent, item: CartItemDTO) => {
+    const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         confirmPopup({
             target: event.currentTarget,
             message:`Are you sure you want to remove ${item.productName}?`,
@@ -70,104 +83,136 @@ const CartComponent: React.FC = () => {
     const priceBodyTemplate = (rowData: CartItemDTO) => `${rowData.pricePerUnit.toFixed(2)} €`;
     const totalBodyTemplate = (rowData: CartItemDTO) => `${(rowData.amount * rowData.pricePerUnit).toFixed(2)} €`;
 
+    const numericRangeFilterTemplate = (options: any) => {
+        const [from, to] = options.value ?? [null, null];
+
+        return (
+            <div className="flex gap-1">
+                <InputNumber value={from} onChange={(e) => options.filterApplyCallback([e.value, to])} placeholder="from" allowEmpty style={{ width: '6rem' }}/>
+                <InputNumber value={to} onChange={(e) => options.filterApplyCallback([from, e.value])} placeholder="to" allowEmpty style={{ width: '6rem' }}/>
+            </div>
+        );
+    };
+
+
     return (<Card title="Shopping cart" className="m-4">
-        <ConfirmPopup/>
-        <ScrollTop/>
-        <div>
-            {cart.items.length === 0 ? (
-                <div style={{
-                    display:"flex",
-                    justifyContent:"center",
-                    alignItems:"center"
-                }}>
+            <ConfirmPopup/>
+            <ScrollTop/>
+            <div>
+                {cart.items.length === 0 ? (
                     <div style={{
-                        textAlign:"center",
-                        marginTop:"50px",
-                        padding:"40px",
-                        backgroundColor:"ghostwhite",
-                        maxWidth:"400px",
-                        boxShadow:"0 4px 8px rgba(0,0,0,0.1)"}}
-                    >
-                        <i className="pi pi-shopping-cart" style={{ fontSize: '2.5rem' }}/>
-                        <h2>Your cart is empty!</h2>
-                        <p>Looks like you haven’t added anything yet.</p>
-                        <Divider type="dashed"/>
-                        <Button
-                            label="Go shopping"
-                            icon="pi pi-cart-plus"
-                            severity="success"
-                            onClick={() => window.location.href = "/"}
-                            text raised
-                            rounded
-                        />
+                        display:"flex",
+                        justifyContent:"center",
+                        alignItems:"center"
+                    }}>
+                        <div style={{
+                            textAlign:"center",
+                            marginTop:"50px",
+                            padding:"40px",
+                            backgroundColor:"ghostwhite",
+                            maxWidth:"400px",
+                            boxShadow:"0 4px 8px rgba(0,0,0,0.1)"}}
+                        >
+                            <i className="pi pi-shopping-cart" style={{ fontSize: '2.5rem' }}/>
+                            <h2>Your cart is empty!</h2>
+                            <p>Looks like you haven’t added anything yet.</p>
+                            <Divider type="dashed"/>
+                            <Button
+                                label="Go shopping"
+                                icon="pi pi-cart-plus"
+                                severity="success"
+                                onClick={() => window.location.href = "/"}
+                                text raised
+                                rounded
+                            />
+                        </div>
                     </div>
-                </div>
-            ) : (
-            <>
-                <div style={{
-                    display:"flex",
-                    justifyContent:"center",
-                    alignItems:"center",
-                    marginBottom:"30px"
-                }}>
-                    <i className="pi pi-shopping-cart" style={{ fontSize: '4rem', color: 'var(--primary-color)' }} />
-                </div>
-                <DataTable value={cart.items} dataKey="productId" stripedRows>
-                        <Column
-                            field="productName"
-                            header="Product"
-                        />
-                        <Column
-                            header="Image"
-                            body={imageBodyTemplate}
-                        />
-                        <Column
-                            header="Amount"
-                            body={amountBodyTemplate}
-                            sortable
-                        />
-                        <Column
-                            header="Price per unit"
-                            body={priceBodyTemplate}
-                            sortable
-                        />
-                        <Column
-                            header="Total price"
-                            body={totalBodyTemplate}
-                            sortable
-                        />
-                        <Column
-                            body={actionBodyTemplate}
-                        />
-                </DataTable>
-                <Divider type="dashed"/>
-                <div style={{
-                    display:"flex",
-                    justifyContent:"center",
-                    alignItems:"center"
-                }}>
-                    <Message
-                        severity="info"
-                        content={
-                            <div>
-                                <i className="pi pi-wallet text-xl"></i>
-                                <b> Total: {totalPrice} €</b>
-                            </div>
-                        }
-                    />
-                </div>
-                <Divider type="dashed" align="center">
-                    <Button
-                        icon="pi pi-money-bill"
-                        label="Proceed to checkout"
-                        size="large"
-                        severity="success"
-                        raised
-                    />
-                </Divider>
-            </>
-            )}
-        </div>
+                ) : (
+                    <>
+                        <div style={{
+                            display:"flex",
+                            justifyContent:"center",
+                            alignItems:"center",
+                            marginBottom:"30px"
+                        }}>
+                            <i className="pi pi-shopping-cart" style={{ fontSize: '4rem', color: 'var(--primary-color)' }} />
+                        </div>
+                        <DataTable value={cartWithTotals} dataKey="productId" stripedRows filterDisplay="row" emptyMessage="Nothing found.">
+                            <Column
+                                field="productName"
+                                header="Product"
+                                sortable
+                            />
+                            <Column
+                                header="Image"
+                                body={imageBodyTemplate}
+                            />
+                            <Column
+                                field="amount"
+                                header="Amount"
+                                body={amountBodyTemplate}
+                                sortable
+                                filter
+                                showFilterMenu={false}
+                                showClearButton={false}
+                                filterMatchMode="custom_range"
+                                filterElement={numericRangeFilterTemplate}
+                            />
+                            <Column
+                                field="pricePerUnit"
+                                header="Price per unit"
+                                body={priceBodyTemplate}
+                                sortable
+                                filter
+                                showFilterMenu={false}
+                                showClearButton={false}
+                                filterMatchMode="custom_range"
+                                filterElement={numericRangeFilterTemplate}
+                            />
+                            <Column
+                                field="totalPrice"
+                                header="Total price"
+                                body={totalBodyTemplate}
+                                sortable
+                                filter
+                                showFilterMenu={false}
+                                showClearButton={false}
+                                filterMatchMode="custom_range"
+                                filterElement={numericRangeFilterTemplate}
+                            />
+                            <Column
+                                body={actionBodyTemplate}
+                            />
+                        </DataTable>
+                        <Divider type="dashed"/>
+                        <div style={{
+                            display:"flex",
+                            justifyContent:"center",
+                            alignItems:"center"
+                        }}>
+                            <Message
+                                severity="info"
+                                content={
+                                    <div>
+                                        <i className="pi pi-wallet text-xl"></i>
+                                        <b> Total: {totalPrice} €</b>
+                                    </div>
+                                }
+                            />
+                        </div>
+                        <Divider type="dashed" align="center">
+                            <Button
+                                icon="pi pi-money-bill"
+                                label="Proceed to checkout"
+                                size="large"
+                                severity="success"
+                                raised
+                                onClick={ () => createOrder(cart).then(() => alert("Order created! Thank you for shopping with us!")).catch(() => alert("Failed to create order, please try again!")) }
+                            />
+                        </Divider>
+                    </>
+                )}
+            </div>
         </Card>
     );
 };
