@@ -15,20 +15,20 @@ const fetchAllRatingsByProduct = async (productId: number): Promise<RatingDTO[]>
 const createRating = async (productId: number, ratingToCreate: RatingDTO): Promise<RatingTypes> => {
     try {
         const ratingInstance = createRatingFromInterfaces(ratingToCreate);
-        const response = await globalAxios.post(`/api/products/${productId}/ratings/`);
+        const response = await globalAxios.post(`/api/products/${productId}/ratings/`, ratingInstance.toCreateJSON());
         return RatingTypes.fromJSON(response.data);
     } catch (err: any) {
         throw new Error('Error creating rating ${err?.message ?? String(err)}');
     }
 }
 
-const updateUser = async (productId: number, ratingId: number, ratingToUpdate: RatingDTO): Promise<RatingDTO> => {
+const updateRating = async (productId: number, ratingId: number, ratingToUpdate: RatingDTO): Promise<RatingDTO> => {
     try {
         const ratingInstance = createRatingFromInterfaces(ratingToUpdate);
         const response = await globalAxios.patch(`api/products/${productId}/ratings/${ratingId}`, ratingInstance.toUpdateJSON());
         return RatingTypes.fromJSON(response.data);
     } catch (err: any) {
-        throw new Error('Error updating rating: ${err?.message ?? String(err)}');
+        throw new Error(`Error updating rating: ${err?.message ?? String(err)}`);
     }
 }
 
@@ -47,4 +47,12 @@ const getRating = async (productId: number, ratingId: number): Promise<RatingDTO
     } catch (err: any) {
         throw new Error('Error getting rating: ${err?.message ?? String(err)}');
     }
+}
+
+export const RatingApi = {
+    createRating,
+    updateRating,
+    deleteRating,
+    fetchAllRatingsByProduct,
+    getRating,
 }
