@@ -1,13 +1,13 @@
 package at.qe.skeleton.mappers;
 
-import at.qe.skeleton.dtos.ProductCreateDTO;
 import at.qe.skeleton.dtos.ProductDTO;
 import at.qe.skeleton.model.Product;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductMapper {
-    public Product mapToEntity(ProductCreateDTO dto) {
+public class ProductMapper implements DTOMapper<Product, ProductDTO> {
+
+    public Product mapFrom(ProductDTO dto) {
         Product product = new Product();
         product.setName(dto.name()); // Bei Records: .name() statt .getName()
         product.setDescription(dto.description());
@@ -19,7 +19,7 @@ public class ProductMapper {
         return product;
     }
 
-    public ProductDTO mapToDTO(Product product) {
+    public ProductDTO mapTo(Product product) {
         return new ProductDTO(
                 product.getId(),
                 product.getName(),

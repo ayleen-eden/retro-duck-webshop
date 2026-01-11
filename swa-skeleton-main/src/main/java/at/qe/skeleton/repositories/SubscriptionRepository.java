@@ -1,17 +1,14 @@
 package at.qe.skeleton.repositories;
 
-import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.Subscription;
-import at.qe.skeleton.model.Userx;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface SubscriptionRepository extends AbstractRepository<Subscription, Long> {
 
-    Collection<Subscription> findByUser(Userx user);
+    Collection<Subscription> findByUserId(Long id);
 
-    Collection<Subscription> findByProduct(Product product);
+    Collection<Subscription> findByProductId(Long id);
 
-    Optional<Subscription> findByUserAndProduct(Userx user, Product product);
+    Subscription findByUserIdAndProductId(Long userId, Long productId);
 }
