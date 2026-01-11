@@ -4,6 +4,7 @@ export interface CartItemDTO {
     productImage:string,
     pricePerUnit: number,
     amount: number
+    totalPrice?: number; //optional field for Datatable in CartComponent.tsx
 }
 
 export interface CartDTO {

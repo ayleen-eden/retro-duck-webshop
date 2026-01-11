@@ -67,7 +67,7 @@ public class OrderServiceTest {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(orderMapper.toDto(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of()));
+        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of()));
 
         OrderDTO result = orderService.placeOrder(testUser, testCart);
 
@@ -113,7 +113,7 @@ public class OrderServiceTest {
 
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
-        when(orderMapper.toDto(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of()));
+        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of()));
 
         OrderDTO result = orderService.placeOrder(testUser, cartWithDiscount);
 
@@ -204,7 +204,7 @@ public class OrderServiceTest {
         List<Order> orders = List.of(order1, order2);
         when(orderRepository.findByUser(testUser)).thenReturn(orders);
 
-        when(orderMapper.toDto(any(Order.class))).thenReturn(new OrderDTO(null, null, null, 0.0, List.of()));
+        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(null, null, null, 0.0, List.of()));
 
         List<OrderDTO> result = (List<OrderDTO>) orderService.getOrderHistory(testUser);
 
