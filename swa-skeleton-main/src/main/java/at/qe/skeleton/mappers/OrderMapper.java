@@ -3,14 +3,14 @@ package at.qe.skeleton.mappers;
 import at.qe.skeleton.dtos.OrderDTO;
 import at.qe.skeleton.dtos.OrderItemDTO;
 import at.qe.skeleton.model.Order;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-@Component
-public class OrderMapper {
+@Service
+public class OrderMapper implements DTOMapper<Order, OrderDTO> {
 
-    public OrderDTO toDto(Order order) {
+    public OrderDTO mapTo(Order order) {
         return new OrderDTO(
                 order.getId(),
                 order.getOrderDate(),
@@ -24,5 +24,10 @@ public class OrderMapper {
                         item.getDiscountAtPurchase()
                 )).collect(Collectors.toList())
         );
+    }
+
+    public Order mapFrom(OrderDTO dto) {
+        //TODO
+        return null;
     }
 }
