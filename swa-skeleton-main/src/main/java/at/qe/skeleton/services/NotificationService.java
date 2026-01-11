@@ -36,11 +36,15 @@ public class NotificationService {
         notificationRepository.delete(notification);
     }
 
-    public Collection<Notification> getNotifcationsByType(NotificationType type) {
+    public Collection<Notification> getNotificationsByType(NotificationType type) {
         return notificationRepository.findByType(type);
     }
 
     public Collection<Notification> getNotificationsBetween(LocalDateTime from, LocalDateTime to) {
         return notificationRepository.findByTimestampBetween(from, to);
+    }
+
+    public Collection<Notification> getNotificationsByUserId(Long id) {
+        return notificationRepository.findByUserId(id);
     }
 }

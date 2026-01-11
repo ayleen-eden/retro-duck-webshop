@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
+@Table(name = "subscription", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class Subscription {
 
     @Id
@@ -13,11 +13,9 @@ public class Subscription {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
     private Userx user;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     public Long getId() {

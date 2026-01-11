@@ -14,4 +14,6 @@ public interface NotificationRepository extends AbstractRepository<Notification,
     Collection<Notification> findByType(NotificationType type);
 
     Collection<Notification> findByTimestampBetween(LocalDateTime from, LocalDateTime to);
+
+    Collection<Notification> findByUserId(Long id);
 }

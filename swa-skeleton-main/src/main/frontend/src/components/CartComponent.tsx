@@ -10,9 +10,11 @@ import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { ScrollTop } from "primereact/scrolltop";
 import { dummyCart } from "./DebugDummyCart";
 import { Message } from "primereact/message";
-import { createOrder } from "../utilities/orderApi";
+import { OrderApi } from "../utilities/orderApi";
 import { FilterService } from "primereact/api";
 import { InputNumber } from "primereact/inputnumber";
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from "../utilities/routes.paths";
 
 FilterService.register('custom_range', (value, filters) => {
     const [from, to] = filters ?? [null, null];
@@ -23,18 +25,33 @@ FilterService.register('custom_range', (value, filters) => {
 });
 
 const CartComponent: React.FC = () => {
-    const USE_DUMMY = true;
+    const USE_DUMMY = false;
+
+    const navigate = useNavigate();
 
     const [cart, setCart] = useState<CartDTO>(
         USE_DUMMY ? dummyCart : getCart()
     );
 
-    const cartWithTotals = cart.items.map(item => ({
+    const cartWithTotals: CartItemDTO[] = cart.items.map(item => ({
         ...item,
         totalPrice: item.amount * item.pricePerUnit
     }));
 
     const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit, 0).toFixed(2);
+
+    const handleCheckout = async () => {
+        try {
+            await OrderApi.createOrder(cart);
+            localStorage.removeItem('cart');
+            setCart({ items: [] });
+            alert("Order created! Thank you for shopping with us!");
+            navigate(ROUTES.ORDERS);
+        } catch (err: any) {
+            console.error("Order creation failed:", err);
+            alert("Failed to create order: " + (err.message || "Unknown error"));
+        }
+    };
 
     const handleRemove = (item: CartItemDTO) => {
         setCart(prev => removeFromCart(prev, item, item.amount));
@@ -43,7 +60,7 @@ const CartComponent: React.FC = () => {
         setCart(prev => addToCart(prev, item, 1));
     };
     const handleDecrease = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
-        if (item.amount == 1) {
+        if (item.amount === 1) {
             confirmDelete(event, item)
         } else {
             setCart(prev => removeFromCart(prev, item, 1));
@@ -94,7 +111,6 @@ const CartComponent: React.FC = () => {
         );
     };
 
-
     return (<Card title="Shopping cart" className="m-4">
             <ConfirmPopup/>
             <ScrollTop/>
@@ -137,7 +153,13 @@ const CartComponent: React.FC = () => {
                         }}>
                             <i className="pi pi-shopping-cart" style={{ fontSize: '4rem', color: 'var(--primary-color)' }} />
                         </div>
-                        <DataTable value={cartWithTotals} dataKey="productId" stripedRows filterDisplay="row" emptyMessage="Nothing found.">
+                        <DataTable<CartItemDTO[]>
+                            value={cartWithTotals}
+                            dataKey="productId"
+                            stripedRows
+                            filterDisplay="row"
+                            emptyMessage="Nothing found."
+                        >
                             <Column
                                 field="productName"
                                 header="Product"
@@ -207,7 +229,7 @@ const CartComponent: React.FC = () => {
                                 size="large"
                                 severity="success"
                                 raised
-                                onClick={ () => createOrder(cart).then(() => alert("Order created! Thank you for shopping with us!")).catch(() => alert("Failed to create order, please try again!")) }
+                                onClick={handleCheckout}
                             />
                         </Divider>
                     </>

@@ -6,7 +6,7 @@ import './styles/App.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import React, {Suspense} from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {CartRoute, HomePageRoute, LoginsRoute, LogoutsRoute, ManageUsersRoute} from "./routes";
+import {OrderHistoryRoute, CartRoute, HomePageRoute, LoginsRoute, LogoutsRoute, ManageUsersRoute} from "./routes";
 import PrivateRoute from './components/PrivateRoute';
 import {UserProvider} from "./Contexts/authenticatedUserContext";
 
@@ -24,6 +24,7 @@ const App: React.FC = () => {
                         <Route element={<PrivateRoute/>}>
                             <Route path={ManageUsersRoute.url} Component={ManageUsersRoute.component}/>
                             <Route path={LogoutsRoute.url} Component={LogoutsRoute.component}/>
+                            <Route path={OrderHistoryRoute.url} Component={OrderHistoryRoute.component}/>
                         </Route>
                         {/* end of protected routes */}
                     </Routes>

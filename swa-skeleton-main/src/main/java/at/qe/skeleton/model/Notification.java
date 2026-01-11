@@ -16,7 +16,7 @@ public class Notification {
     private Product product;
 
     @ManyToOne
-    private Userx userx;
+    private Userx user;
 
     private String description;
 
@@ -75,12 +75,12 @@ public class Notification {
         this.timestamp = timestamp;
     }
 
-    public Userx getUserx() {
-        return userx;
+    public Userx getUser() {
+        return user;
     }
 
-    public void setUserx(Userx userx) {
-        this.userx = userx;
+    public void setUser(Userx user) {
+        this.user = user;
     }
 
     @Override

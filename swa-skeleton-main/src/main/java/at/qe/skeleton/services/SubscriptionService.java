@@ -36,16 +36,16 @@ public class SubscriptionService {
         return subscriptionRepository.findAll();
     }
 
-    public Collection<Subscription> getSubscriptionByUser(Userx user) {
-        return subscriptionRepository.findByUser(user);
+    public Collection<Subscription> getSubscriptionByUserId(Long id) {
+        return subscriptionRepository.findByUserId(id);
     }
 
-    public Collection<Subscription> getSubscriptionByProduct(Product product) {
-        return subscriptionRepository.findByProduct(product);
+    public Collection<Subscription> getSubscriptionByProductId(Long id) {
+        return subscriptionRepository.findByProductId(id);
     }
 
-    public Optional<Subscription> getSubscriptionByUserAndProduct(Userx user, Product product) {
-        return subscriptionRepository.findByUserAndProduct(user, product);
+    public Subscription getSubscriptionByUserIdAndProductId(Long userId, Long productId) {
+        return subscriptionRepository.findByUserIdAndProductId(userId, productId);
     }
 
     public void deleteSubscriptionById(Subscription subscription) {
@@ -53,7 +53,7 @@ public class SubscriptionService {
     }
 
     public Subscription createSubscription(Userx user, Product product) {
-        Subscription subscription = getSubscriptionByUserAndProduct(user, product).orElse(null);
+        Subscription subscription = getSubscriptionByUserIdAndProductId(user.getId(), product.getId());
 
         if (subscription == null) {
             Subscription sub = new Subscription();
