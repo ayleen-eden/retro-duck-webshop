@@ -7,10 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class OrderMapper implements DTOMapper<Order, OrderDTO> {
 
+    @Override
     public OrderDTO mapTo(Order order) {
+        if (order == null) {
+            return null;
+        }
         return new OrderDTO(
                 order.getId(),
                 order.getOrderDate(),
@@ -26,8 +30,16 @@ public class OrderMapper implements DTOMapper<Order, OrderDTO> {
         );
     }
 
+    @Override
     public Order mapFrom(OrderDTO dto) {
-        //TODO
-        return null;
+        if (dto == null) {
+            return null;
+        }
+        Order order = new Order();
+        order.setId(dto.id());
+        order.setOrderDate(dto.orderDate());
+        order.setStatus(dto.status());
+        order.setTotalPrice(dto.totalPrice());
+        return order;
     }
 }
