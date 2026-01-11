@@ -4,5 +4,6 @@ export const ROUTES = {
     LOGIN: '/login',
     LOGOUT: '/logout',
     CART: '/cart',
+    PRODUCT_PAGE: '/product_id/:productId',
     ORDERS: '/orders'
 } as const;
