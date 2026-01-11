@@ -1,6 +1,14 @@
 package at.qe.skeleton.model;
 
 public enum ProductCategory {
-    // TODO: Find category-names
-    NES, SNES
+    N64,
+    GCN,
+    GB,
+    WII,
+    SWITCH_2,
+    PS3,
+    PC,
+    NES,
+    SNES,
+    WII_U
 }

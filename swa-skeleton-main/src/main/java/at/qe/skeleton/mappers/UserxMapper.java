@@ -22,7 +22,7 @@ public class UserxMapper implements DTOMapper<Userx, UserxDTO>{
         this.userxService = userxService;
     }
     
-   @Override
+    @Override
     public UserxDTO mapTo(Userx user) {
         if (user == null) {
             return null;
