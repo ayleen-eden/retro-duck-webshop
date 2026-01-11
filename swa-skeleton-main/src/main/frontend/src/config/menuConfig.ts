@@ -19,7 +19,7 @@ export const menuConfig: MenuItemConfig[] = [
             label: 'Manage Users', icon: 'pi pi-users', route: ROUTES.MANAGE_USERS, roles: [UserxRole.ADMIN]
         }]
     }, {
-        label: "Logout", icon: "pi pi-sign-out", route: ROUTES.LOGOUT
+        label: "Logout", icon: "pi pi-sign-out", route: ROUTES.LOGOUT, roles: [UserxRole.CUSTOMER]
     }, {
         label: "Shopping cart", icon: "pi pi-shopping-cart", route: ROUTES.CART
     }
