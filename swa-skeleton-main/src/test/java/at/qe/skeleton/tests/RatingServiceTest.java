@@ -2,9 +2,7 @@ package at.qe.skeleton.tests;
 
 import at.qe.skeleton.exceptions.RatingAlreadyExistsException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.services.AuthenticatedUserService;
-import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.ProductService;
 import at.qe.skeleton.services.RatingService;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -64,7 +61,7 @@ public class RatingServiceTest {
         ratingToInsert1.setAuthor(author);
         ratingToInsert1.setComment(ratingComment1);
         ratingToInsert1.setProduct(product1);
-        Rating savedRating1 = ratingService.saveRating(ratingToInsert1);
+        Rating savedRating = ratingService.saveRating(ratingToInsert1);
 
         Rating ratingToInsert2 = new Rating();
         RatingScale ratingScale2 = RatingScale.FOUR_STARS;
@@ -73,10 +70,10 @@ public class RatingServiceTest {
         ratingToInsert2.setAuthor(author);
         ratingToInsert2.setComment(ratingComment2);
         ratingToInsert2.setProduct(product2);
-        Rating savedRating2 = ratingService.saveRating(ratingToInsert2);
+        ratingService.saveRating(ratingToInsert2);
 
         Assertions.assertEquals(2, ratingService.getAllRatings().size());
-        Optional<Rating> freshlyCreatedRatingOpt = ratingService.loadRating(savedRating1.getId(), product1.getId());
+        Optional<Rating> freshlyCreatedRatingOpt = ratingService.loadRating(savedRating.getId(), product1.getId());
         Assertions.assertFalse(freshlyCreatedRatingOpt.isEmpty(),
                 "New rating could not be loaded from test data source after being saved");
         Rating freshlyCreatedRating = freshlyCreatedRatingOpt.get();
@@ -90,7 +87,7 @@ public class RatingServiceTest {
     public void testUpdateRating() {
         Userx author = authenticatedUserService.getAuthenticatedUser();
         Optional<Rating> toBeChangedRatingOpt = ratingService.loadRatingByAuthor(product1.getId(), author.getId());
-        Assertions.assertNotNull(toBeChangedRatingOpt, "Rating loud not be loaded from repository");
+        Assertions.assertNotNull(toBeChangedRatingOpt, "Rating could not be loaded from repository");
 
         Rating toBeChangedRating = toBeChangedRatingOpt.get();
 

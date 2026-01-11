@@ -1,9 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.RatingAlreadyExistsException;
-import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.Rating;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,12 +14,10 @@ import java.util.Optional;
 @Service
 public class RatingService {
     private final RatingRepository ratingRepository;
-    private final AuthenticatedUserService authenticatedUserService;
 
     @Autowired
-    public RatingService(RatingRepository ratingRepository, AuthenticatedUserService authenticatedUserService) {
+    public RatingService(RatingRepository ratingRepository) {
         this.ratingRepository = ratingRepository;
-        this.authenticatedUserService = authenticatedUserService;
     }
 
     //Can be used for a manager view. Otherwise used for testing
@@ -57,8 +53,8 @@ public class RatingService {
     }
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    public Collection<Rating> getAllRatingsByProduct(Product product) {
-        return ratingRepository.getAllByProduct(product);
+    public Collection<Rating> getAllRatingsByProduct(Long productId) {
+        return ratingRepository.getAllByProduct_Id(productId);
     }
 }
 
