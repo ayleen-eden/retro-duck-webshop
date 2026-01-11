@@ -5,6 +5,7 @@ import at.qe.skeleton.configs.JwtTokenProvider;
 import at.qe.skeleton.configs.WebSecurityConfig;
 import at.qe.skeleton.dtos.ProductCreateDTO;
 import at.qe.skeleton.mappers.ProductMapper; // <--- WICHTIG
+import at.qe.skeleton.mappers.ProductCreateMapper;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.services.ProductService;
 import at.qe.skeleton.services.UserxService;
@@ -48,6 +49,9 @@ public class ProductControllerTest {
     @MockitoBean
     private ProductMapper productMapper;
 
+    @MockitoBean
+    private ProductCreateMapper productCreateMapper;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -85,7 +89,7 @@ public class ProductControllerTest {
         Product savedProduct = new Product();
         savedProduct.setId(1L);
         savedProduct.setName("My supernew Product");
-        Mockito.when(productMapper.mapToEntity(dto)).thenReturn(savedProduct);
+        Mockito.when(productCreateMapper.mapFrom(dto)).thenReturn(savedProduct);
         Mockito.when(productService.saveProduct(Mockito.any(Product.class))).thenReturn(savedProduct);
 
         mockMvc.perform(post("/api/products/")

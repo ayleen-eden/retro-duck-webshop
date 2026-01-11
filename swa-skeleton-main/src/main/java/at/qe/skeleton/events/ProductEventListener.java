@@ -37,7 +37,7 @@ public class ProductEventListener {
         String productName = product.getName();
         Long productStock = product.getStock();
 
-        Collection<Subscription> subs = subscriptionService.getSubscriptionByProduct(product);
+        Collection<Subscription> subs = subscriptionService.getSubscriptionByProductId(product.getId());
 
         for (Subscription sub : subs) {
             Notification notification = new Notification();
@@ -46,7 +46,7 @@ public class ProductEventListener {
             notification.setProduct(product);
             notification.setTimestamp(LocalDateTime.now());
             notification.setType(NotificationType.RESTOCK);
-            notification.setUserx(sub.getUser());
+            notification.setUser(sub.getUser());
 
             notificationService.saveNotification(notification);
         }
@@ -61,7 +61,7 @@ public class ProductEventListener {
         Double productDiscount = product.getDiscount();
         Double newProductPrice = productPrice * (1 - productDiscount);
 
-        Collection<Subscription> subs = subscriptionService.getSubscriptionByProduct(product);
+        Collection<Subscription> subs = subscriptionService.getSubscriptionByProductId(product.getId());
 
         for (Subscription sub : subs) {
             Notification notification = new Notification();
@@ -70,7 +70,7 @@ public class ProductEventListener {
             notification.setProduct(product);
             notification.setTimestamp(LocalDateTime.now());
             notification.setType(NotificationType.SALE);
-            notification.setUserx(sub.getUser());
+            notification.setUser(sub.getUser());
 
             notificationService.saveNotification(notification);
         }
@@ -82,7 +82,7 @@ public class ProductEventListener {
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
         String productName = product.getName();
 
-        Collection<Subscription> subs = subscriptionService.getSubscriptionByProduct(product);
+        Collection<Subscription> subs = subscriptionService.getSubscriptionByProductId(product.getId());
 
         for (Subscription sub : subs) {
             Notification notification = new Notification();
@@ -91,7 +91,7 @@ public class ProductEventListener {
             notification.setProduct(product);
             notification.setTimestamp(LocalDateTime.now());
             notification.setType(NotificationType.OUT_OF_STOCK);
-            notification.setUserx(sub.getUser());
+            notification.setUser(sub.getUser());
 
             notificationService.saveNotification(notification);
         }
