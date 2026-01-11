@@ -24,5 +24,7 @@ export const menuConfig: MenuItemConfig[] = [
         label: "Shopping cart", icon: "pi pi-shopping-cart", route: ROUTES.CART
     }, {
         label: 'My Orders', icon: 'pi pi-list', route: ROUTES.ORDERS
+    }, {
+        label: "Single Product Page (DEMO)", icon: "pi pi-barcode", route: ROUTES.PRODUCT_PAGE
     }
 ];
