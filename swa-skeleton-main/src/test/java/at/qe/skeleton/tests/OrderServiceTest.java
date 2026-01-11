@@ -56,7 +56,7 @@ public class OrderServiceTest {
         testProduct.setName("Laptop");
         testProduct.setPrice(1000.0);
         testProduct.setDiscount(1.0); // Kein Rabatt
-        testProduct.setStock(5L);
+        testProduct.setStock(5);
 
         CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
         testCart = new CartDTO(List.of(item));
@@ -67,7 +67,7 @@ public class OrderServiceTest {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of()));
+        when(orderMapper.toDto(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of()));
 
         OrderDTO result = orderService.placeOrder(testUser, testCart);
 
@@ -79,7 +79,7 @@ public class OrderServiceTest {
 
     @Test
     void testPlaceOrderInsufficientStock() {
-        testProduct.setStock(1L); // Zu wenig
+        testProduct.setStock(1); // Zu wenig
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
 
@@ -103,7 +103,7 @@ public class OrderServiceTest {
     void testPlaceOrderCalculatesTotalPriceWithDiscount() {
         testProduct.setPrice(1000.0);
         testProduct.setDiscount(0.8);
-        testProduct.setStock(10L);
+        testProduct.setStock(10);
 
         CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
         CartDTO cartWithDiscount = new CartDTO(List.of(item));
@@ -113,7 +113,7 @@ public class OrderServiceTest {
 
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
-        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of()));
+        when(orderMapper.toDto(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of()));
 
         OrderDTO result = orderService.placeOrder(testUser, cartWithDiscount);
 
@@ -204,7 +204,7 @@ public class OrderServiceTest {
         List<Order> orders = List.of(order1, order2);
         when(orderRepository.findByUser(testUser)).thenReturn(orders);
 
-        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(null, null, null, 0.0, List.of()));
+        when(orderMapper.toDto(any(Order.class))).thenReturn(new OrderDTO(null, null, null, 0.0, List.of()));
 
         List<OrderDTO> result = (List<OrderDTO>) orderService.getOrderHistory(testUser);
 
