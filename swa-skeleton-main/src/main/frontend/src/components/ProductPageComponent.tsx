@@ -14,14 +14,6 @@ import {Tag} from "primereact/tag";
 import {Rating} from "primereact/rating";
 import RatingComponent from "./RatingComponent";
 
-FilterService.register('custom_range', (value, filters) => {
-    const [from, to] = filters ?? [null, null];
-    if (from === null && to === null) return true;
-    if (from !== null && to === null) return from <= value;
-    if (from === null && to !== null) return value <= to;
-    return from <= value && value <= to;
-});
-
 const ProductPageComponent: React.FC = () => {
     const {productId} = useParams<{productId: string}>();
     const USE_DUMMY = true;
@@ -42,9 +34,10 @@ const ProductPageComponent: React.FC = () => {
             >
                 <div>
                     <img
+                        style={{ width: 500, height: 500 }}
                         src={`/images/kiryu_duck.png`}
                         alt="Kiryu Duck"
-                        style={{ width: 500, height: 500 }}
+
                     />
                 </div>
 

@@ -5,7 +5,7 @@ import {createRatingFromInterfaces} from "./ratingUtilities";
 
 const fetchAllRatingsByProduct = async (productId: number): Promise<RatingDTO[]> => {
     try {
-        const response = await globalAxios.get(`/api/products/${productId}/ratings/`);
+        const response = await globalAxios.get(`/api/products/${productId}/ratings`);
         return response.data;
     } catch (err: any) {
         throw new Error(`Error fetching ratings for product: ${err?.message ?? String(err)}`);
@@ -15,10 +15,10 @@ const fetchAllRatingsByProduct = async (productId: number): Promise<RatingDTO[]>
 const createRating = async (productId: number, ratingToCreate: RatingDTO): Promise<RatingTypes> => {
     try {
         const ratingInstance = createRatingFromInterfaces(ratingToCreate);
-        const response = await globalAxios.post(`/api/products/${productId}/ratings/`, ratingInstance.toCreateJSON());
+        const response = await globalAxios.post(`/api/products/${productId}/ratings`, ratingInstance.toCreateJSON());
         return RatingTypes.fromJSON(response.data);
     } catch (err: any) {
-        throw new Error('Error creating rating ${err?.message ?? String(err)}');
+        throw new Error(`Error creating rating ${err?.message ?? String(err)}`);
     }
 }
 

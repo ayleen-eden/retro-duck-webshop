@@ -23,6 +23,6 @@ export const menuConfig: MenuItemConfig[] = [
     }, {
         label: "Shopping cart", icon: "pi pi-shopping-cart", route: ROUTES.CART
     }, {
-        label: "Product Overview", icon: "pi pi-barcode", route: ROUTES.PRODUCT_PAGE
+        label: "Single Product Page (DEMO)", icon: "pi pi-barcode", route: ROUTES.PRODUCT_PAGE
     }
 ];

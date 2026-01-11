@@ -8,6 +8,18 @@ import { Fieldset } from "primereact/fieldset";
 import {Avatar} from "primereact/avatar";
 import {Divider} from "primereact/divider";
 import {Rating} from "primereact/rating";
+import {Tag} from "primereact/tag";
+import {InputTextarea} from "primereact/inputtextarea";
+import {Button} from "primereact/button";
+import {FilterService} from "primereact/api";
+
+FilterService.register('custom_range', (value, filters) => {
+    const [from, to] = filters ?? [null, null];
+    if (from === null && to === null) return true;
+    if (from !== null && to === null) return from <= value;
+    if (from === null && to !== null) return value <= to;
+    return from <= value && value <= to;
+});
 
 interface RatingComponentProps {
     productId: number;
@@ -15,12 +27,10 @@ interface RatingComponentProps {
 
 const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const [ratings, setRatings] = useState<RatingTypes[]>([]);
+    const [ratingValue, setRatingValue] = useState<number | undefined>();
+    const [comment, setComment] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedRating, setRating] = useState<RatingDTO | null>({
-        productId: productId,
-        comment: '',
-        rating: null
-    });
+    const [selectedRating, setRating] = useState<RatingDTO>(RatingTypes.empty);
 
     //Unused
     //const [isNewRating, setIsNewRating] = useState<boolean>(false);
@@ -42,6 +52,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     }, [productId]);
 
     useEffect(() => {
+        if (loading) return;
         const loadUserRating = async () => {
             const author: UserxTypes = await UserxApi.getCurrentUser();
             const existingRating = ratings.find(rating => rating.authorId === author.id);
@@ -49,29 +60,26 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
             if (existingRating) {
                 setRating(existingRating);
             } else {
-                setRating({
-                    rating: null,
-                    comment: ''
-                });
+                setRating(RatingTypes.empty());
             }
-        };
-    }, [ratings, productId]);
+        }
+        void loadUserRating();
+    }, [ratings, productId, loading]);
 
     const createRating = async () => {
-        if (!selectedRating?.rating || !selectedRating.comment.trim()) {
+        if (selectedRating.id !== undefined) {
             return;
         }
         const author: UserxTypes = await UserxApi.getCurrentUser();
         const ratingToSave = new RatingTypes({
             ...selectedRating,
+            rating: ratingValue,
+            comment: comment,
             authorId: author.id,
+            productId: 1 //hardcoded
         });
         await RatingApi.createRating(productId, ratingToSave.toCreateJSON());
-
-        setRating({
-            rating: null,
-            comment: ''
-        });
+        setRating(ratingToSave);
     };
 
     const updateRating = async () => {
@@ -90,15 +98,12 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     }
 
     const deleteRating = async () => {
-        if(!selectedRating?.id) return;
+        if(!selectedRating.id) return;
 
         try {
             await RatingApi.deleteRating(productId, selectedRating);
             setRatings(prevState => prevState.filter(prev => prev.id !== selectedRating.id))
-            setRating({
-                rating: null,
-                comment: ''
-            });
+            setRating(RatingTypes.empty);
         } catch (err: any) {
             console.error('Error deleting Rating:', err);
         }
@@ -114,14 +119,31 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
 
     return (
         <div className="card">
-            <Divider align="center">
-                <span className="p-tag">What other Users think of this product</span>
+            <Divider align="left">
+                <Tag value="Tell us what you think of this product!" />
             </Divider>
-            <Fieldset legend={legendTemplate}>
-                <p className="m-0">
-                    KIRYU-DUCK!
-                </p>
-            </Fieldset>
+            <div className="card flex flex-wrap justify-content-center gap-3">
+                <Rating style={{display: 'inline-flex', marginLeft: '2rem', marginBottom: '1.5rem'}} value={ratingValue} onChange={(e) => setRatingValue(e.value ?? undefined)}/>
+                <Button style={{marginLeft: '6rem', marginBottom: '0.75rem'}} size="small" label="Submit" icon="pi pi-check" iconPos="right" onClick={createRating} />
+            </div>
+            <InputTextarea style={{marginLeft: '2rem'}} placeholder="Enter your comment here" autoResize value={comment} onChange={(e) => setComment(e.target.value)} rows={5} cols={30} />
+
+            {selectedRating.id !== undefined && (
+            <div>
+                <Button style={{marginLeft: '18rem', marginTop: '1rem'}} className="p-button-danger" size="small" label="Delete" icon="pi pi-trash" iconPos="right" onClick={deleteRating} />
+            </div>
+            )}
+            <Divider align="center">
+                <Tag value="What other Users think of this product" />
+            </Divider>
+            <div style={{textAlign: "center"}}>
+                {ratings.length === 0 ? (
+                    <h2>Be the first to voice your opinion!</h2>
+                ) : (
+                    <p>Rating is present</p>
+                )}
+            </div>
+            <Fieldset legend={legendTemplate}> <p className="m-0"> KIRYU-DUCK! </p> </Fieldset>
         </div>
     )
 }

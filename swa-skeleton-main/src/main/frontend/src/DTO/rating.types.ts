@@ -3,11 +3,11 @@
  */
 
 export enum RatingScale {
-    ONE_STAR = '⭐',
-    TWO_STARS = '⭐⭐',
-    THREE_STARS = '⭐⭐⭐',
-    FOUR_STARS = '⭐⭐⭐⭐',
-    FIVE_STARS = '⭐⭐⭐⭐⭐'
+    ONE_STAR = 1,
+    TWO_STARS = 2,
+    THREE_STARS = 3,
+    FOUR_STARS = 4,
+    FIVE_STARS = 5
 }
 
 
@@ -20,8 +20,8 @@ export interface RatingDTO {
     timestamp?: Date | null;
     rating?: RatingScale | null;
     comment: String;
-    authorId?: number | null;
-    productId?: number | null;
+    authorId?: number;
+    productId: number | null;
 }
 
 export class RatingTypes implements RatingDTO {
@@ -29,15 +29,15 @@ export class RatingTypes implements RatingDTO {
     timestamp?: Date | null;
     rating?: RatingScale | null;
     comment: String;
-    authorId?: number | null;
-    productId?: number | null;
+    authorId?: number;
+    productId: number | null;
 
     constructor(data: RatingDTO) {
         this.id = data.id;
         this.timestamp = data.timestamp ? new Date(data.timestamp): null;
         this.rating = data.rating;
         this.comment = data.comment;
-        this.authorId = data.authorId ?? null;
+        this.authorId = data.authorId;
         this.productId = data.productId;
     }
 
@@ -52,10 +52,12 @@ export class RatingTypes implements RatingDTO {
         };
     }
 
-    toCreateJSON(): Pick<RatingDTO, 'rating' | 'comment'> {
+    toCreateJSON(): Pick<RatingDTO, 'rating' | 'comment' | 'authorId' | 'productId'> {
         return {
             rating: this.rating,
-            comment: this.comment
+            comment: this.comment,
+            authorId: this.authorId,
+            productId: this.productId
         };
     }
 
@@ -73,7 +75,7 @@ export class RatingTypes implements RatingDTO {
             timestamp: null,
             rating: null,
             comment: '',
-            authorId: null,
+            authorId: undefined,
             productId: null
         });
     }
