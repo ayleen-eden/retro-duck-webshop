@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class OrderMapper implements DTOMapper<Order, OrderDTO> {
 
     @Override
