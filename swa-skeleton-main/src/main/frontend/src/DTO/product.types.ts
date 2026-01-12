@@ -1,6 +1,10 @@
 export interface ProductDTO {
-    id: number,
-    price: number,
-    name: string,
-    image: string
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    discount: number;
+    imageUrl: string;
+    categories: string[];
 }
