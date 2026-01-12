@@ -2,11 +2,14 @@ package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ProductCreateDTO;
 import at.qe.skeleton.dtos.ProductDTO;
+import at.qe.skeleton.mappers.ProductCreateMapper;
+import at.qe.skeleton.mappers.ProductMapper;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,25 +20,33 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/products")
 public class ProductController {
 
+    private final ProductService productService;
+    private final ProductMapper productMapper;
+    private final ProductCreateMapper productCreateMapper;
+
     @Autowired
-    private ProductService productService;
+    public ProductController(ProductService productService, ProductMapper productMapper, ProductCreateMapper productCreateMapper) {
+        this.productService = productService;
+        this.productMapper = productMapper;
+        this.productCreateMapper = productCreateMapper;
+    }
 
     // ===== GET =====
 
     // Load all products (allowed: everyone)
     @GetMapping("/")
-    public Collection<ProductDTO> getAllProducts() {
-        return productService.getAllProducts().stream()
-                .map(ProductDTO::new)
-                .collect(Collectors.toList());
+    public ResponseEntity<Collection<ProductDTO>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts().stream()
+                .map(productMapper::mapTo)
+                .collect(Collectors.toList()));
     }
 
     // Load single product (allowed: everyone)
     @GetMapping("/{id}")
-    public ProductDTO getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        return new ProductDTO(product);
+        return ResponseEntity.ok(productMapper.mapTo(product));
     }
 
 
@@ -44,10 +55,10 @@ public class ProductController {
     // Create product (allowed: admin, manager)
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
-        Product product = productCreateDTO.toEntity();
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
+        Product product = productCreateMapper.mapFrom(productCreateDTO);
         Product savedProduct = productService.saveProduct(product);
-        return new ProductDTO(savedProduct);
+        return ResponseEntity.ok(productMapper.mapTo(savedProduct));
     }
 
 
@@ -55,19 +66,8 @@ public class ProductController {
 
     // Edit product (allowed: admin, manager)
     @PatchMapping("/{id}")
-    public ProductDTO updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        Product existingProduct = productService.getProductById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-
-        // Simples Update Mapping
-        if (productDTO.getName() != null) existingProduct.setName(productDTO.getName());
-        if (productDTO.getDescription() != null) existingProduct.setDescription(productDTO.getDescription());
-        if (productDTO.getPrice() >= 0) existingProduct.setPrice(productDTO.getPrice());
-        if (productDTO.getStock() >= 0) existingProduct.setStock(productDTO.getStock());
-        // TODO: Further mapping
-
-        Product updatedProduct = productService.saveProduct(existingProduct);
-        return new ProductDTO(updatedProduct);
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        return ResponseEntity.ok(productService.updateProduct(id, productDTO));
     }
 
 
@@ -77,7 +77,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
-        if (!productService.getProductById(id).isPresent()) {
+        if (productService.getProductById(id).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         }
         productService.deleteProductById(id);
