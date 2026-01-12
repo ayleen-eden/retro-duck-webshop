@@ -3,5 +3,7 @@ export const ROUTES = {
     MANAGE_USERS: '/manage-users',
     LOGIN: '/login',
     LOGOUT: '/logout',
-    CART: '/cart'
+    CART: '/cart',
+    PRODUCT_PAGE: '/product_id/:productId',
+    ORDERS: '/orders'
 } as const;
