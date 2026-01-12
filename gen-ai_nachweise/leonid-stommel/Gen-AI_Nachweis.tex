@@ -42,6 +42,7 @@
 	
 	\chapter{Relevante Prompts}
 	
+	% Prompt 1
 	\section{Library-Problem bei API-UnitTests}
 	
 	\href{https://gemini.google.com/share/6b4ea303c9ce}{Link zum Chat}.
@@ -61,7 +62,7 @@
 	\subsection{Lernergebnisse}
 
 	Daraus habe ich gelernt:
-
+	
 	\begin{itemize}
 		\item Erkennen von Kausalitäten bei bestimmten Statements, \linebreak z.B. wenn
 		\texttt{@WebMvcTest(ProductController.}\texttt{class)} nur einen abgekapselten Teil
@@ -73,6 +74,33 @@
 	
 		\item Sich nicht von jeder Fehlermeldung abschrecken zu lassen und
 		Fehlerausgaben selbst genauer zu analysieren.
+	\end{itemize}
+	
+	% Prompt 2
+	\section{Generierung von Dummy-Produkten}
+	
+	\href{https://gemini.google.com/share/154e58452bd1}{Link zum Chat}.
+	
+	\subsection{Prompting}
+
+	Dummy-Daten sind bereits in der Entwicklung einer Software sinnvoll, damit sich so zukünftige Daten visualisieren lassen, die Software getestet wird und auftretende Fehler entlarvt werden können.
+	
+	Wir haben uns dazu entschieden Videospiele als Produkte zu nehmen. Für das Einpflegen von Dummy-Daten könnte ich jetzt bei jedem Videospiel alle Metadaten raussuchen, was sehr zeitintensiv wäre und sich je nach Anzahl der Produkte sehr repetitiv und als nicht besonders fordernde Arbeit entlarven würde.
+	
+	Was ich stattdessen gemacht habe, ist der LLM 100 Spiele generieren zu lassen. Dabei hatte ich einige Favoriten, wo ich die Titel genannt habe, den Rest habe ich der LLM überlassen.
+	
+	\subsection{LLM-Ausgabe}
+	
+	Das generieren der Titel und Beschreibungen und auch passende Lageranzahl war sehr zufriedenstellend. Das Problem waren die Bilder. Da ich nicht jedes Spiel-Artwork für's testen auf den Server laden wollte, wollte ich, dass die LLM auf öffentliche Ressourcen zugreift. Die Ausgabe sah auch sehr vielversprechend aus, da es Links von wikimedia waren (frei zugänglich). Doch waren davon viele Links ungültig und es konnte kein Bild angezeigt werden. Außerdem wollte die LLM anfänglich ein eigenes Fallback implementieren, bei dem ohne Bild lediglich der Name des Spieletitels angezeigt wird. Jedoch war dies überflüssig, da ich bereits ein Sample-Bild als Fallback für ein fehlendes Bild implementiert habe.
+	 		
+	\subsection{Lernergebnisse}
+
+	Daraus habe ich gelernt:
+
+	\begin{itemize}
+		\item 	LLMs können gut schriftliche Dummy-Informationen generieren.
+		\item 	LLMs generieren oftmals Weblinks, die überhaupt nicht existieren. 
+		\item   LLMs machen oftmals zu viel, was oftmals nicht gut ist. 
 	\end{itemize}
 	
 \end{document}
