@@ -11,6 +11,8 @@ import {DataTable} from "primereact/datatable";
 import {UserxTypes} from "../DTO/userx.types";
 import {Checkbox} from "primereact/checkbox";
 import {rolesBodyTemplate} from "./rolesBodyTemplate";
+import styles from "./PixelButton.module.css"
+
 
 interface UserListProps {
     users: UserxTypes[];
@@ -37,6 +39,7 @@ const UserListComponent: React.FC<UserListProps> = ({ users, loading, onEditUser
             icon="pi pi-external-link"
             onClick={() => onEditUser(rowData)}
             aria-label={`Details for ${rowData.username}`}
+            className={`${styles.btn} ${styles.btn_yellow}`}
         />);
     };
 
@@ -48,7 +51,7 @@ const UserListComponent: React.FC<UserListProps> = ({ users, loading, onEditUser
     const enableButtonTemplate = (rowData: UserxTypes) => {
         return (
             <Checkbox checked={rowData.enabled} disabled={true}
-                      className="p-mr-2"/>
+                      className="pixel-checkbox"/>
         )
     }
 

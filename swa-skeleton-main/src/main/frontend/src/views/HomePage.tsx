@@ -18,6 +18,7 @@ import {IconField} from 'primereact/iconfield';
 import {InputIcon} from 'primereact/inputicon';
 import {ProductDTO} from '../DTO/product.types';
 import {useNavigate} from 'react-router-dom';
+import styles from "../components/PixelButton.module.css"
 
 const HomePage: React.FC = () => {
     // --- STATE ---
@@ -162,7 +163,8 @@ const HomePage: React.FC = () => {
             <div className="main-content" style={{flex: 1, padding: '2rem', paddingBottom: '7rem'}}>
                 <header className="App-header" style={{minHeight: 'auto', marginBottom: '3rem', padding: '2rem'}}>
                     <img src={logo} className="App-logo" alt="logo" style={{height: '80px'}}/>
-                    <h1>Welcome to the maybe not best, but duckiest videogame shop on the internet</h1>
+                    <h1>Duck'n'Go / The Retro Duck</h1>
+                    <h3>Welcome to - maybe not the best, but - the duck-iest videogame shop on the internet!</h3>
                     <p>We like ducks. And we like videogames. And we like ducks.</p>
                 </header>
 
@@ -228,7 +230,7 @@ const HomePage: React.FC = () => {
                         <Button
                             icon="pi pi-times"
                             label="Reset"
-                            className="p-button-outlined p-button-secondary"
+                            className={`${styles.btn} ${styles.btn_grey}`}
                             onClick={() => {
                                 setSortKey('');
                                 setStockFilter('all');

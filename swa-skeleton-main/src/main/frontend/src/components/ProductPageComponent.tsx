@@ -10,6 +10,7 @@ import {Rating} from "primereact/rating";
 import RatingComponent from "./RatingComponent";
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
+import styles from "./PixelButton.module.css"
 
 const ProductPageComponent: React.FC = () => {
     // Get ID from URL
@@ -61,7 +62,7 @@ const ProductPageComponent: React.FC = () => {
 
     return (
         <div className="p-4">
-            <Card>
+            <Card className="product-card-interactive">
                 <div style={{display: 'flex', gap: '2rem', flexWrap: 'wrap'}}>
                     <div style={{
                         flex: '0 0 auto',
@@ -88,7 +89,7 @@ const ProductPageComponent: React.FC = () => {
 
                         <p className="mb-4 text-lg">{product.description}</p>
 
-                        <div className="mb-4">
+                        <div className="mb-4" style={{marginBottom: 10}}>
                             {hasDiscount ? (
                                 <>
                                     <span style={{
@@ -103,7 +104,7 @@ const ProductPageComponent: React.FC = () => {
                                         {discountedPrice} €
                                     </span>
                                     <Tag value={`-${(product.discount * 100).toFixed(0)}% Sale`} severity="warning"
-                                         className="ml-2"/>
+                                         className="pixel-tag pixel-tag-yellow"/>
                                 </>
                             ) : (
                                 <span style={{fontSize: '2rem', fontWeight: 'bold'}}>
@@ -117,7 +118,7 @@ const ProductPageComponent: React.FC = () => {
                             <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                                 <Button
                                     icon="pi pi-minus"
-                                    className="p-button-rounded p-button-outlined"
+                                    className={`${styles.btn} ${styles.btn_red}`}
                                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                     disabled={product.stock <= 0}
                                 />
@@ -126,7 +127,7 @@ const ProductPageComponent: React.FC = () => {
                                 </span>
                                 <Button
                                     icon="pi pi-plus"
-                                    className="p-button-rounded p-button-outlined"
+                                    className={`${styles.btn} ${styles.btn_green}`}
                                     onClick={() => setQuantity(quantity + 1)}
                                     disabled={product.stock <= 0}
                                 />
@@ -150,11 +151,12 @@ const ProductPageComponent: React.FC = () => {
                                     disabled={product.stock <= 0}
                                     size="large"
                                     onClick={ () => addToCart(getCart(), product, quantity) }
+                                    className={`${styles.btn} ${styles.btn_green}`}
                                 />
                                 <Button
                                     icon="pi pi-bell"
                                     label="Notify me"
-                                    className="p-button-warning p-button-outlined"
+                                    className={`${styles.btn} ${styles.btn_grey}`}
                                     size="large"
                                 />
                             </div>
@@ -162,7 +164,7 @@ const ProductPageComponent: React.FC = () => {
 
                         <div className="mt-4 flex gap-2">
                             {product.categories && product.categories.map(cat => (
-                                <Tag key={cat} value={cat} severity="info"/>
+                                <Tag className="pixel-tag pixel-tag-blue" key={cat} value={cat} severity="info" style={{marginTop: 5, marginRight: 5}}/>
                             ))}
                         </div>
                     </div>
