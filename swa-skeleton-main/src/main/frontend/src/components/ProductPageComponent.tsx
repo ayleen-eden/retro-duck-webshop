@@ -9,6 +9,7 @@ import {Tag} from "primereact/tag";
 import {Rating} from "primereact/rating";
 import RatingComponent from "./RatingComponent";
 import {ProgressSpinner} from 'primereact/progressspinner';
+import {addToCart, getCart} from "../utilities/cartUtilities";
 
 const ProductPageComponent: React.FC = () => {
     // Get ID from URL
@@ -148,6 +149,7 @@ const ProductPageComponent: React.FC = () => {
                                     icon="pi pi-cart-plus"
                                     disabled={product.stock <= 0}
                                     size="large"
+                                    onClick={ () => addToCart(getCart(), product, quantity) }
                                 />
                                 <Button
                                     icon="pi pi-bell"
