@@ -42,3 +42,31 @@
   }
 }
 
+/* Product Card interaction */
+.product-card-interactive {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card-interactive:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
+}
+
+
+/* Product filter */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+}
+.filter-bar-element {
+  margin: 1rem;
+}
+
+/* Always show the navbar */
+.sticky-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}

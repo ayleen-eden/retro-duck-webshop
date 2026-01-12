@@ -3,6 +3,7 @@ package at.qe.skeleton.mappers;
 import at.qe.skeleton.dtos.OrderDTO;
 import at.qe.skeleton.dtos.OrderItemDTO;
 import at.qe.skeleton.model.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
