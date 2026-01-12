@@ -78,7 +78,7 @@ public class OrderService {
 
         sendInvoiceEmail(savedOrder);
 
-        return orderMapper.toDto(savedOrder);
+        return orderMapper.mapTo(savedOrder);
     }
 
     /**
@@ -104,13 +104,13 @@ public class OrderService {
         if (!order.getUser().equals(user)) {
             throw new RuntimeException("Access denied: You are not allowed to view this order");
         }
-        return orderMapper.toDto(order);
+        return orderMapper.mapTo(order);
     }
 
     public Collection<OrderDTO> getOrderHistory(Userx user) {
         return orderRepository.findByUser(user)
                 .stream()
-                .map(orderMapper::toDto)
+                .map(orderMapper::mapTo)
                 .collect(Collectors.toList());
     }
 
