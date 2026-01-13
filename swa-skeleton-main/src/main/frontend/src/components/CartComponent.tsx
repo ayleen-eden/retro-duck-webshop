@@ -114,7 +114,7 @@ const CartComponent: React.FC = () => {
         );
     };
 
-    return (<Card title="MY SHOPPING CART" className="product-card-interactive">
+    return (<Card title="MY SHOPPING CART" className="product-card">
             <ConfirmPopup/>
             <ScrollTop/>
             <div>
@@ -133,7 +133,7 @@ const CartComponent: React.FC = () => {
                             boxShadow:"0 4px 8px rgba(0,0,0,0.1)"}}
                         >
                             <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue" style={{ fontSize: '2.5rem' }}/>
-                            <h2>Your cart is empty!</h2>
+                            <h2 style={{color: 'black'}}> Your cart is empty!</h2>
                             <p>Looks like you haven’t added anything yet.</p>
                             <Divider className="pixel-divider-dashed"/>
                             <Button

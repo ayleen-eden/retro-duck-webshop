@@ -1,3 +1,5 @@
+/* ===== APP ===== */
+
 .App {
   text-align: center;
   font-family: 'Press Start 2P', monospace;
@@ -47,7 +49,9 @@
   }
 }
 
-.product-card-interactive {
+/* ===== CARD ===== */
+
+.product-card {
   font-family: 'Press Start 2P', monospace;
 
   background: #1e1e2e;
@@ -56,6 +60,58 @@
   box-shadow: 4px 4px 0 #000;
   transition: none;
 }
+
+.product-card h1,
+.product-card h2,
+.product-card h3 {
+  margin: 0.5rem 0;
+  text-transform: uppercase;
+  color: white;
+}
+
+.product-card-interactive {
+  background: #1e1e2e;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: white;
+  padding: 1rem;
+  transition: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.product-card-interactive:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 #000;
+  border-color: #3b82f6;
+}
+
+.product-card-interactive:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #000;
+  border-color: #FFE135;
+}
+
+.product-card-interactive img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border: 2px solid white;
+  image-rendering: pixelated;
+  margin-bottom: 0.5rem;
+}
+
+.product-card-interactive h2,
+.product-card-interactive h3 {
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  text-transform: uppercase;
+}
+
+/* ===== FLTER BAR ===== */
 
 .filter-bar {
   display: flex;
@@ -68,6 +124,8 @@
 .filter-bar-element {
   margin: 0.5rem;
 }
+
+/* ===== NAVBAR ===== */
 
 .sticky-navbar {
   position: sticky;
@@ -90,6 +148,8 @@
   color: #3b82f6;
 }
 
+/* ===== INPUTTEXT ===== */
+
 .p-inputtext {
   font-family: 'Press Start 2P', monospace;
   font-size: 12px;
@@ -102,6 +162,8 @@
   padding: 0.5rem;
   text-align: center;
 }
+
+/* ===== DATATABLE ===== */
 
 .p-datatable {
   border: 4px solid white !important;
@@ -122,6 +184,8 @@
   border-top: 4px solid white !important;
 }
 
+/* ===== DIVIDER ===== */
+
 .pixel-divider {
   border: 0;
   height: 4px;
@@ -136,6 +200,8 @@
   margin: 2rem 0;
   box-shadow: 2px 2px 0 #000;
 }
+
+/* ===== MESSAGE ===== */
 
 .pixel-message {
   font-family: 'Press Start 2P', monospace;
@@ -156,6 +222,8 @@
 .pixel-message-warning { background: #FFD700; color: black; }
 .pixel-message-error { background: #ff3b3b; color: black; }
 
+/* ===== LINK ===== */
+
 .pixel-link {
   font-family: 'Press Start 2P', monospace;
   font-size: 0.8rem;
@@ -172,6 +240,8 @@
   transition: none;
 }
 
+/* ===== ICON ===== */
+
 .pixel-icon {
   font-family: 'Press Start 2P', monospace;
   font-size: 1.2rem;
@@ -186,6 +256,8 @@
 .pixel-icon-red { color: #ff3b3b; }
 .pixel-icon-yellow { color: #FFD700; }
 .pixel-icon-blue { color: #3b82f6; }
+
+/* ===== CONFIRM POPUP ===== */
 
 .pixel-confirmpopup {
   font-family: 'Press Start 2P', monospace;
@@ -230,6 +302,8 @@
   color: #3b82f6;
 }
 
+/* ===== CHECKBOX ===== */
+
 .pixel-checkbox .p-checkbox-box {
   width: 20px;
   height: 20px;
@@ -245,6 +319,8 @@
   box-shadow: 2px 2px 0 #000;
   cursor: not-allowed;
 }
+
+/* ===== TAG ===== */
 
 .pixel-tag {
   display: inline-block;
@@ -274,6 +350,8 @@
   background: #3B82F6;
   color: white;
 }
+
+/* ===== FIELDSET ===== */
 
 .pixel-fieldset {
   border: 4px solid white;
@@ -315,4 +393,171 @@
 .pixel-fieldset textarea:focus {
   border-color: #FFD700;
   box-shadow: 2px 2px 0 #000;
+}
+
+/* ===== MULTISELECT ===== */
+
+.p-multiselect.pixel-multiselect {
+  background: #0f0f1a;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  color: white;
+  min-height: 3rem;
+}
+
+.p-multiselect-label {
+  padding: 0.7rem 1rem;
+  color: white;
+}
+
+.p-multiselect-label.p-placeholder {
+  color: #888;
+}
+
+.p-multiselect-trigger {
+  border-left: 4px solid white;
+  width: 3rem;
+}
+
+.p-multiselect-trigger .pi {
+  color: #FFD700;
+  font-size: 1rem;
+}
+
+.p-multiselect.p-focus {
+  border-color: #FFD700;
+}
+
+.p-multiselect-panel {
+  background: #1e1e2e;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.p-multiselect-header {
+  background: #0f0f1a;
+  border-bottom: 4px solid white;
+  padding: 0.7rem;
+}
+
+.p-multiselect-item {
+  padding: 0.7rem 1rem;
+  border-bottom: 2px solid #333;
+  color: white;
+  font-size: 0.7rem;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.p-multiselect-item:hover {
+  background: #3B82F6;
+  color: black;
+}
+
+.p-multiselect-item.p-highlight {
+  background: #3B82F6;
+  color: white;
+}
+
+.p-multiselect-checkbox .p-checkbox-box {
+  border: 3px solid white;
+  background: #FFD700;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.p-multiselect-token {
+  background: #3B82F6;
+  color: black;
+  border: 3px solid white;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #000;
+  font-size: 0.6rem;
+  padding: 0.3rem 0.6rem;
+}
+
+.p-multiselect-token-icon {
+  color: black;
+}
+
+/* ===== DROPDOWN ===== */
+
+.p-dropdown.pixel-dropdown {
+  background: #0f0f1a;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  color: white;
+  min-height: 3rem;
+}
+
+.p-dropdown-label {
+  padding: 0.7rem 1rem;
+  color: white;
+}
+
+.p-dropdown-label.p-placeholder {
+  color: #888;
+}
+
+.p-dropdown-trigger {
+  border-left: 4px solid white;
+  width: 3rem;
+}
+
+.p-dropdown-panel {
+  background: #1e1e2e;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.p-dropdown-item {
+  padding: 0.7rem 1rem;
+  border-bottom: 2px solid #333;
+  font-size: 0.7rem;
+  color: white;
+}
+
+.p-dropdown-item:hover {
+  background: #3B82F6;
+  color: black;
+}
+
+.p-dropdown-item.p-highlight {
+  background: #FFD700;
+  color: white;
+}
+
+.p-dropdown *,
+.p-dropdown-panel * {
+  transition: none !important;
+}
+
+/* ===== BTN TOOLTIP ===== */
+
+.p-tooltip.pixel-tooltip {
+  background: #0f0f1a;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  color: #FFD700;
+  padding: 0.4rem 0.8rem;
+  max-width: 200px;
+  text-align: center;
+  margin-left: 1rem;
+}
+
+.p-tooltip,
+.p-tooltip * {
+  transition: none !important;
 }

@@ -62,7 +62,7 @@ const ProductPageComponent: React.FC = () => {
 
     return (
         <div className="p-4">
-            <Card className="product-card-interactive">
+            <Card className="product-card">
                 <div style={{display: 'flex', gap: '2rem', flexWrap: 'wrap'}}>
                     <div style={{
                         flex: '0 0 auto',
@@ -84,16 +84,17 @@ const ProductPageComponent: React.FC = () => {
 
                         <div className="mb-3">
                             {/* Fixed Rating */}
-                            <Rating value={5} readOnly cancel={false}/>
+                            <Rating value={5} readOnly disabled cancel={false}/>
                         </div>
 
-                        <p className="mb-4 text-lg">{product.description}</p>
+                        <p className="mb-4 text-lg" style={{color: 'white'}}>{product.description}</p>
 
                         <div className="mb-4" style={{marginBottom: 10}}>
                             {hasDiscount ? (
                                 <>
                                     <span style={{
                                         textDecoration: 'line-through',
+                                        textDecorationThickness: '3px',
                                         color: '#999',
                                         marginRight: '1rem',
                                         fontSize: '1.2rem'
@@ -107,7 +108,7 @@ const ProductPageComponent: React.FC = () => {
                                          className="pixel-tag pixel-tag-yellow"/>
                                 </>
                             ) : (
-                                <span style={{fontSize: '2rem', fontWeight: 'bold'}}>
+                                <span style={{fontSize: '2rem', fontWeight: 'bold', color: 'white'}}>
                                     {currentPrice.toFixed(2)} €
                                 </span>
                             )}
@@ -122,7 +123,7 @@ const ProductPageComponent: React.FC = () => {
                                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                     disabled={product.stock <= 0}
                                 />
-                                <span className="font-bold text-2xl" style={{minWidth: '3rem', textAlign: 'center'}}>
+                                <span className="font-bold text-2xl" style={{minWidth: '3rem', textAlign: 'center', color: 'white'}}>
                                     {quantity}
                                 </span>
                                 <Button

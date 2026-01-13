@@ -58,7 +58,7 @@ const OrderHistory: React.FC = () => {
     return (
         <div>
             <NavbarComponent />
-            <Card title="MY ORDER HISTORY" className="product-card-interactive">
+            <Card title="MY ORDER HISTORY" className="product-card">
                 <DataTable<OrderDTO[]> value={orders} loading={loading} stripedRows emptyMessage="No orders found.">
                     <Column field="id" header="Order ID" sortable />
                     <Column header="Date" body={dateBodyTemplate} sortable />

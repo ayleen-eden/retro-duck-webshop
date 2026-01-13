@@ -16,16 +16,19 @@
     border: 4px solid white;
     box-shadow: 4px 4px 0 #000;
     border-radius: 0;
+
+    color: #FFD700;
 }
 
 .input-field {
     width: 100%;
-    height: 100%;
+    height: 50px;
     margin-bottom: 1rem;
 }
 
 .input-field input {
     width: 100%;
+    height: 50px;
     padding: 1rem;
     background: #0f0f1a;
     color: white;
@@ -35,20 +38,14 @@
     font-size: 12px;
     box-shadow: 2px 2px 0 #000;
 
-    height: 100%;
     box-sizing: border-box;
-}
-
-.input-field input:focus {
-    border-color: #FFD700;
-    box-shadow: 2px 2px 0 #000;
 }
 
 .loginButton {
     margin-top: 25px;
     float: right;
     background: #1e1e2e;
-    color: #00c853;
+    color: #FFD700;
     border: 4px solid white;
     padding: 0.7rem 1.5rem;
     font-family: 'Press Start 2P', monospace;
@@ -58,7 +55,6 @@
     transition: none;
 }
 
-/* Button hover */
 .loginButton:hover {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0 #000;
