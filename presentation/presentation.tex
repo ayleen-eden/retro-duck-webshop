@@ -1,0 +1,45 @@
+\documentclass[10pt]{beamer}
+%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usetheme{focus}
+\usepackage{xcolor}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+
+\definecolor{main}{RGB}{50, 138, 168}
+\definecolor{background}{RGB}{255, 255, 255}    
+\setbeamerfont{title}{size=\LARGE}
+\setbeamerfont{caption}{size=\small}
+\AtBeginSection{}
+
+\begin{document}
+	\author{\small Autoren }
+			% Das ist eine unsaubere Lösung und produziert eine Warnung
+	\title{Titel}
+	\subtitle{Anlass}
+	\institute{\small Universität Innsbruck}
+	\date{\small \today, Ort}
+	
+	%\setbeamercovered{transparent}
+	%\setbeamertemplate{navigation symbols}{}
+	\begin{frame}[plain]
+		\titlepage
+		\begin{minipage}{0.6\textwidth}
+			\small
+			Lehrveranstaltung 
+			
+		\end{minipage}
+		\hfill
+		\begin{minipage}{0.35\textwidth}
+			\begin{flushright}
+			\includegraphics[width=3.0cm]{universitaet-innsbruck-logo-cmyk-farbe.jpg}
+			\end{flushright}
+		\end{minipage}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Überblick}
+		\tableofcontents
+	\end{frame}
+\end{document}
