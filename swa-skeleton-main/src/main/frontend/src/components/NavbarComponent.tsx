@@ -56,7 +56,7 @@ const NavbarComponent: React.FC = () => {
                 return (
                     <Link
                     to={configItem.route ?? "#"}
-                    className={`${options.className ?? ""} p-menuitem-link`}
+                    className="pixel-link"
                     onClick={handleClick}
                 >
                     {menuItem.icon && <span className={options.iconClassName} />}

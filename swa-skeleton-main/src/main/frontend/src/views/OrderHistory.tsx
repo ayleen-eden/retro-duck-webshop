@@ -7,6 +7,8 @@ import NavbarComponent from "../components/NavbarComponent";
 import { FooterComponent } from "../components/FooterComponent";
 import { OrderApi } from "../utilities/orderApi";
 import { OrderDTO, OrderStatus } from "../DTO/order.types";
+import {Button} from "primereact/button";
+import styles from "../components/PixelButton.module.css"
 
 const OrderHistory: React.FC = () => {
     const [orders, setOrders] = useState<OrderDTO[]>([]);
@@ -29,7 +31,7 @@ const OrderHistory: React.FC = () => {
     const statusBodyTemplate = (rowData: OrderDTO) => {
         const severity = rowData.status === OrderStatus.DONE ? 'success' :
             rowData.status === OrderStatus.CANCELLED ? 'danger' : 'info';
-        return <Tag value={rowData.status} severity={severity} />;
+        return <Tag className="pixel-tag pixel-tag-blue" value={rowData.status} severity={severity} />;
     };
 
     const dateBodyTemplate = (rowData: OrderDTO) => {
@@ -41,7 +43,7 @@ const OrderHistory: React.FC = () => {
     };
 
     const deleteOrder = async (orderId: number) => {
-        if (window.confirm("Are you sure you want to delete this order")) {
+        if (window.confirm("Are you sure you want to delete this order?")) {
             try {
                 await OrderApi.deleteOrder(orderId);
                 setOrders(prevOrders => prevOrders.filter(o => o.id !== orderId));
@@ -56,7 +58,7 @@ const OrderHistory: React.FC = () => {
     return (
         <div>
             <NavbarComponent />
-            <Card title="My Order History" className="m-4">
+            <Card title="MY ORDER HISTORY" className="product-card">
                 <DataTable<OrderDTO[]> value={orders} loading={loading} stripedRows emptyMessage="No orders found.">
                     <Column field="id" header="Order ID" sortable />
                     <Column header="Date" body={dateBodyTemplate} sortable />
@@ -69,13 +71,11 @@ const OrderHistory: React.FC = () => {
                     <Column
                         header="Actions"
                         body={(order: OrderDTO) => (
-                            <button
+                            <Button
                                 onClick={() => deleteOrder(order.id)}
-                                className="p-button p-button-danger p-button-text"
-                                style={{ color: 'red', cursor: 'pointer', border: 'none', background: 'none' }}
-                            >
-                                Delete
-                            </button>
+                                className={`${styles.btn} ${styles.btn_grey}`}
+                                icon="pi pi-trash"
+                            />
                         )}
                     />
                 </DataTable>

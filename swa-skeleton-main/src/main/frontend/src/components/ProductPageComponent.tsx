@@ -10,6 +10,7 @@ import {Rating} from "primereact/rating";
 import RatingComponent from "./RatingComponent";
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
+import styles from "./PixelButton.module.css"
 
 const ProductPageComponent: React.FC = () => {
     // Get ID from URL
@@ -61,7 +62,7 @@ const ProductPageComponent: React.FC = () => {
 
     return (
         <div className="p-4">
-            <Card>
+            <Card className="product-card">
                 <div style={{display: 'flex', gap: '2rem', flexWrap: 'wrap'}}>
                     <div style={{
                         flex: '0 0 auto',
@@ -83,16 +84,17 @@ const ProductPageComponent: React.FC = () => {
 
                         <div className="mb-3">
                             {/* Fixed Rating */}
-                            <Rating value={5} readOnly cancel={false}/>
+                            <Rating value={5} readOnly disabled cancel={false}/>
                         </div>
 
-                        <p className="mb-4 text-lg">{product.description}</p>
+                        <p className="mb-4 text-lg" style={{color: 'white'}}>{product.description}</p>
 
-                        <div className="mb-4">
+                        <div className="mb-4" style={{marginBottom: 10}}>
                             {hasDiscount ? (
                                 <>
                                     <span style={{
                                         textDecoration: 'line-through',
+                                        textDecorationThickness: '3px',
                                         color: '#999',
                                         marginRight: '1rem',
                                         fontSize: '1.2rem'
@@ -103,10 +105,10 @@ const ProductPageComponent: React.FC = () => {
                                         {discountedPrice} €
                                     </span>
                                     <Tag value={`-${(product.discount * 100).toFixed(0)}% Sale`} severity="warning"
-                                         className="ml-2"/>
+                                         className="pixel-tag pixel-tag-yellow"/>
                                 </>
                             ) : (
-                                <span style={{fontSize: '2rem', fontWeight: 'bold'}}>
+                                <span style={{fontSize: '2rem', fontWeight: 'bold', color: 'white'}}>
                                     {currentPrice.toFixed(2)} €
                                 </span>
                             )}
@@ -117,16 +119,16 @@ const ProductPageComponent: React.FC = () => {
                             <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                                 <Button
                                     icon="pi pi-minus"
-                                    className="p-button-rounded p-button-outlined"
+                                    className={`${styles.btn} ${styles.btn_red}`}
                                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                     disabled={product.stock <= 0}
                                 />
-                                <span className="font-bold text-2xl" style={{minWidth: '3rem', textAlign: 'center'}}>
+                                <span className="font-bold text-2xl" style={{minWidth: '3rem', textAlign: 'center', color: 'white'}}>
                                     {quantity}
                                 </span>
                                 <Button
                                     icon="pi pi-plus"
-                                    className="p-button-rounded p-button-outlined"
+                                    className={`${styles.btn} ${styles.btn_green}`}
                                     onClick={() => setQuantity(quantity + 1)}
                                     disabled={product.stock <= 0}
                                 />
@@ -150,11 +152,12 @@ const ProductPageComponent: React.FC = () => {
                                     disabled={product.stock <= 0}
                                     size="large"
                                     onClick={ () => addToCart(getCart(), product, quantity) }
+                                    className={`${styles.btn} ${styles.btn_green}`}
                                 />
                                 <Button
                                     icon="pi pi-bell"
                                     label="Notify me"
-                                    className="p-button-warning p-button-outlined"
+                                    className={`${styles.btn} ${styles.btn_grey}`}
                                     size="large"
                                 />
                             </div>
@@ -162,7 +165,7 @@ const ProductPageComponent: React.FC = () => {
 
                         <div className="mt-4 flex gap-2">
                             {product.categories && product.categories.map(cat => (
-                                <Tag key={cat} value={cat} severity="info"/>
+                                <Tag className="pixel-tag pixel-tag-blue" key={cat} value={cat} severity="info" style={{marginTop: 5, marginRight: 5}}/>
                             ))}
                         </div>
                     </div>
