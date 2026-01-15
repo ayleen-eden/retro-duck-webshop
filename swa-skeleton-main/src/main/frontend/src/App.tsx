@@ -13,7 +13,7 @@ import {
     LoginsRoute,
     LogoutsRoute,
     ManageUsersRoute,
-    ProductPageRoute,
+    ProductPageRoute, UserProfileRoute,
 } from "./routes";
 import PrivateRoute from './components/PrivateRoute';
 import {UserProvider} from "./Contexts/authenticatedUserContext";
@@ -35,6 +35,7 @@ const App: React.FC = () => {
                             <Route path={ManageUsersRoute.url} Component={ManageUsersRoute.component}/>
                             <Route path={LogoutsRoute.url} Component={LogoutsRoute.component}/>
                             <Route path={OrderHistoryRoute.url} Component={OrderHistoryRoute.component}/>
+                            <Route path={UserProfileRoute.url} Component={UserProfileRoute.component}/>
                         </Route>
                         {/* end of protected routes */}
                     </Routes>
