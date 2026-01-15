@@ -21,12 +21,12 @@ public class Product implements Serializable {
     private String description;
 
     @Column(nullable = false)
-    private Double price;
+    private double price;
 
     @Column(nullable = false)
-    private Long stock;
+    private long stock;
 
-    private Double discount;
+    private double discount;
 
     private String imageUrl;
 
@@ -48,14 +48,14 @@ public class Product implements Serializable {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
-    public Long getStock() { return stock; }
-    public void setStock(Long stock) { this.stock = stock; }
+    public long getStock() { return stock; }
+    public void setStock(long stock) { this.stock = stock; }
 
-    public Double getDiscount() { return discount; }
-    public void setDiscount(Double discount) { this.discount = discount; }
+    public double getDiscount() { return discount; }
+    public void setDiscount(double discount) { this.discount = discount; }
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }

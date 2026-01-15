@@ -56,7 +56,7 @@ public class OrderServiceTest {
         testProduct.setName("Laptop");
         testProduct.setPrice(1000.0);
         testProduct.setDiscount(1.0); // Kein Rabatt
-        testProduct.setStock(5L);
+        testProduct.setStock(5);
 
         CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
         testCart = new CartDTO(List.of(item));
@@ -79,7 +79,7 @@ public class OrderServiceTest {
 
     @Test
     void testPlaceOrderInsufficientStock() {
-        testProduct.setStock(1L); // Zu wenig
+        testProduct.setStock(1); // Zu wenig
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
 
@@ -103,7 +103,7 @@ public class OrderServiceTest {
     void testPlaceOrderCalculatesTotalPriceWithDiscount() {
         testProduct.setPrice(1000.0);
         testProduct.setDiscount(0.8);
-        testProduct.setStock(10L);
+        testProduct.setStock(10);
 
         CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
         CartDTO cartWithDiscount = new CartDTO(List.of(item));

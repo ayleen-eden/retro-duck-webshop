@@ -4,8 +4,6 @@ import at.qe.skeleton.configs.JwtConfig;
 import at.qe.skeleton.configs.JwtTokenProvider;
 import at.qe.skeleton.configs.WebSecurityConfig;
 import at.qe.skeleton.dtos.ProductCreateDTO;
-import at.qe.skeleton.mappers.ProductMapper; // <--- WICHTIG
-import at.qe.skeleton.mappers.ProductCreateMapper;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.services.ProductService;
 import at.qe.skeleton.services.UserxService;
@@ -20,7 +18,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,12 +43,6 @@ public class ProductControllerTest {
     @MockitoBean
     private JwtConfig jwtConfig;
 
-    @MockitoBean
-    private ProductMapper productMapper;
-
-    @MockitoBean
-    private ProductCreateMapper productCreateMapper;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -68,35 +59,27 @@ public class ProductControllerTest {
         Mockito.when(productService.getAllProducts()).thenReturn(List.of(p1));
 
         mockMvc.perform(get("/api/products/"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("My supercool Product"));
     }
 
     // POST (Only for ADMIN/MANAGER)
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testCreateProduct_AsAdmin() throws Exception {
+        ProductCreateDTO dto = new ProductCreateDTO("My supernew Product", 99.90, 10);
 
-        ProductCreateDTO dto = new ProductCreateDTO(
-                "My supernew Product",
-                "Desc",
-                99.90,
-                10L,
-                0.0,
-                "url",
-                Collections.emptySet()
-        );
-
-        Product savedProduct = new Product();
+        Product savedProduct = dto.toEntity();
         savedProduct.setId(1L);
-        savedProduct.setName("My supernew Product");
-        Mockito.when(productCreateMapper.mapFrom(dto)).thenReturn(savedProduct);
+
         Mockito.when(productService.saveProduct(Mockito.any(Product.class))).thenReturn(savedProduct);
 
         mockMvc.perform(post("/api/products/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto))
                         .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("My supernew Product"));
     }
 
     // DELETE (Only for ADMIN/MANAGER)
