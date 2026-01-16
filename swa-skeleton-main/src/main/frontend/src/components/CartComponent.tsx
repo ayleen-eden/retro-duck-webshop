@@ -133,12 +133,12 @@ const CartComponent: React.FC = () => {
                             boxShadow:"0 4px 8px rgba(0,0,0,0.1)"}}
                         >
                             <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue" style={{ fontSize: '2.5rem' }}/>
-                            <h2 style={{color: 'black'}}> Your cart is empty!</h2>
-                            <p>Looks like you haven’t added anything yet.</p>
+                            <h2 style={{color: 'black'}}> YOUR CART IS EMPTY!</h2>
+                            <p>LOOKS LIME YOU HAVEN'T ADDED ANYTHING YET.</p>
                             <Divider className="pixel-divider-dashed"/>
                             <Button
-                                className={`${styles.btn} ${styles.btn_blue}`}
-                                label="Go shopping"
+                                className={`${styles.btn} ${styles.btn_yellow}`}
+                                label="GO SHOPPING"
                                 icon="pi pi-cart-plus"
                                 severity="success"
                                 onClick={() => window.location.href = "/"}
@@ -162,20 +162,20 @@ const CartComponent: React.FC = () => {
                             dataKey="productId"
                             stripedRows
                             filterDisplay="row"
-                            emptyMessage="Nothing found."
+                            emptyMessage="NO DUCKS FOUND MATCHING YOUR CRITERIA. 🦆"
                         >
                             <Column
                                 field="productName"
-                                header="Product"
+                                header="PRODUCT"
                                 sortable
                             />
                             <Column
-                                header="Image"
+                                header="IMAGE"
                                 body={imageBodyTemplate}
                             />
                             <Column
                                 field="amount"
-                                header="Amount"
+                                header="AMOUNT"
                                 body={amountBodyTemplate}
                                 sortable
                                 filter
@@ -186,7 +186,7 @@ const CartComponent: React.FC = () => {
                             />
                             <Column
                                 field="pricePerUnit"
-                                header="Price per unit"
+                                header="PRICE PER UNIT"
                                 body={priceBodyTemplate}
                                 sortable
                                 filter
@@ -197,7 +197,7 @@ const CartComponent: React.FC = () => {
                             />
                             <Column
                                 field="totalPrice"
-                                header="Total price"
+                                header="TOTAL PRICE"
                                 body={totalBodyTemplate}
                                 sortable
                                 filter
@@ -229,9 +229,9 @@ const CartComponent: React.FC = () => {
                         </div>
                         <Divider className="pixel-divider-dashed" align="center"/>
                         <Button
-                            className={`${styles.btn} ${styles.btn_yellow}`}
+                            className={`${styles.btn} ${styles.btn_green}`}
                             icon="pi pi-money-bill"
-                            label="Proceed to checkout"
+                            label="PROCEED TO CHECKOUT"
                             size="large"
                             severity="success"
                             raised

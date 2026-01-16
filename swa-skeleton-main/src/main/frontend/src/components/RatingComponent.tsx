@@ -124,9 +124,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
 
             <div className="card flex flex-wrap justify-content-center gap-3">
                 <Rating style={{display: 'inline-flex', marginLeft: 10, marginBottom: '1.5rem'}} value={ratingValue} onChange={(e) => setRatingValue(e.value ?? undefined)}/>
-                <Button className={`${styles.btn} ${styles.btn_yellow}`} style={{marginLeft: '5.75rem', marginBottom: '0.75rem', marginTop: 5}} size="small" label="Submit" icon="pi pi-check" iconPos="right" onClick={createRating} />
+                <Button className={`${styles.btn} ${styles.btn_yellow}`} style={{marginLeft: '5.75rem', marginBottom: '0.75rem', marginTop: 5}} size="small" label="SUBMIT" icon="pi pi-check" iconPos="right" onClick={createRating} />
             </div>
-            <InputTextarea style={{marginLeft: 5, height: 200, width: 400}} placeholder="Enter your comment here" autoResize value={comment} onChange={(e) => setComment(e.target.value)} rows={5} cols={30} />
+            <InputTextarea style={{marginLeft: 5, height: 200, width: 400}} placeholder="ENTER YOUR COMMENT HERE" autoResize value={comment} onChange={(e) => setComment(e.target.value)} rows={5} cols={30} />
 
             {selectedRating.id !== undefined && (
             <div>
@@ -140,9 +140,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
             </div>
             <div style={{textAlign: "center", marginTop: 50, marginBottom: 50}}>
                 {ratings.length === 0 ? (
-                    <h2> Be the first to voice your opinion! </h2>
+                    <h2> BE THE FIRST TO VOICE YOUR OPINION! </h2>
                 ) : (
-                    <p> Rating is present </p>
+                    <p> RATING IS PRESENT </p>
                 )}
             </div>
             <Fieldset legend={legendTemplate}> <p className="pixel-fieldset"> KIRYU-DUCK! </p> </Fieldset>

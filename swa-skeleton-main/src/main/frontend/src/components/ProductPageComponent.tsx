@@ -138,16 +138,16 @@ const ProductPageComponent: React.FC = () => {
                             <div>
                                 {product.stock > 0 ? (
                                     <span className="text-green-500 font-bold"><i
-                                        className="pi pi-check"></i> {product.stock} in stock</span>
+                                        className="pi pi-check"></i> {product.stock} IN STOCK</span>
                                 ) : (
-                                    <span className="text-red-500 font-bold"><i className="pi pi-times"></i> Out of stock</span>
+                                    <span className="text-red-500 font-bold"><i className="pi pi-times"></i> OUT OF STOCK</span>
                                 )}
                             </div>
 
                             {/* Actions */}
                             <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
                                 <Button
-                                    label={product.stock > 0 ? "Add to Cart" : "Sold Out"}
+                                    label={product.stock > 0 ? "ADD TO CART" : "SOLD OUT"}
                                     icon="pi pi-cart-plus"
                                     disabled={product.stock <= 0}
                                     size="large"
@@ -156,7 +156,7 @@ const ProductPageComponent: React.FC = () => {
                                 />
                                 <Button
                                     icon="pi pi-bell"
-                                    label="Notify me"
+                                    label="NOTIFY ME"
                                     className={`${styles.btn} ${styles.btn_grey}`}
                                     size="large"
                                 />
