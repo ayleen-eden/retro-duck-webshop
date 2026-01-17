@@ -13,6 +13,7 @@ import {InputTextarea} from "primereact/inputtextarea";
 import {Button} from "primereact/button";
 import {FilterService} from "primereact/api";
 import styles from "./PixelButton.module.css"
+import RatingForm from "./RatingForm";
 
 FilterService.register('custom_range', (value, filters) => {
     const [from, to] = filters ?? [null, null];
@@ -40,7 +41,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     useEffect(() => {
         const fetchAllRatingsForProduct = async () => {
             try {
-                const ratingData = await RatingApi.fetchAllRatingsByProduct(1)
+                const ratingData = await RatingApi.fetchAllRatingsByProduct(productId)
                 const ratingInstances = ratingData.map((rating: RatingDTO) => createRatingFromInterfaces(rating));
                 setRatings(ratingInstances);
             } catch (err: any) {
@@ -77,7 +78,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
             rating: ratingValue,
             comment: comment,
             authorId: author.id,
-            productId: 1 //hardcoded
+            productId: productId
         });
         await RatingApi.createRating(productId, ratingToSave.toCreateJSON());
         setRating(ratingToSave);
@@ -112,27 +113,16 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
 
     const legendTemplate = (
         <div className="flex align-items-center gap-2 px-2">
-            <Avatar image="/images/majima_duck.png" shape="circle" style={{verticalAlign: 'middle'}}/>
             <span className="font-bold">Majima Duck</span>
             <Rating value={5} readOnly cancel={false} style={{ marginLeft: '0.5rem' }}/>
         </div>
     );
 
     return (
-        <div className="product-card" style={{marginTop: 10}}>
-            <Tag className="pixel-tag pixel-tag-blue" value="Tell us what you think of this product!" style={{marginLeft: 5, marginTop: 5}}/>
-
-            <div className="card flex flex-wrap justify-content-center gap-3">
-                <Rating style={{display: 'inline-flex', marginLeft: 10, marginBottom: '1.5rem'}} value={ratingValue} onChange={(e) => setRatingValue(e.value ?? undefined)}/>
-                <Button className={`${styles.btn} ${styles.btn_yellow}`} style={{marginLeft: '5.75rem', marginBottom: '0.75rem', marginTop: 5}} size="small" label="Submit" icon="pi pi-check" iconPos="right" onClick={createRating} />
-            </div>
-            <InputTextarea style={{marginLeft: 5, height: 200, width: 400}} placeholder="Enter your comment here" autoResize value={comment} onChange={(e) => setComment(e.target.value)} rows={5} cols={30} />
-
-            {selectedRating.id !== undefined && (
-            <div>
-                <Button className={`${styles.btn} ${styles.btn_grey}`} style={{marginLeft: '18rem', marginTop: '5rem'}} size="small" label="Delete" icon="pi pi-trash" iconPos="right" onClick={deleteRating} />
-            </div>
-            )}
+        <div>
+            <RatingForm selectedRating={selectedRating} ratingValue={ratingValue} comment={comment}
+                        setRatingValue={setRatingValue} setComment={setComment} createRating={createRating}
+                        deleteRating={deleteRating}></RatingForm>
             <div style={{textAlign: "center", marginTop: 50}}>
                 <Divider className="pixel-divider-dashed" align="center">
                     <Tag className="pixel-tag pixel-tag-blue" value="What other Users think of this product"/>
@@ -145,7 +135,6 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
                     <p> Rating is present </p>
                 )}
             </div>
-            <Fieldset legend={legendTemplate}> <p className="pixel-fieldset"> KIRYU-DUCK! </p> </Fieldset>
         </div>
     )
 }

@@ -7,10 +7,7 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.ProductService;
 import at.qe.skeleton.services.RatingService;
 import at.qe.skeleton.services.UserxService;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**

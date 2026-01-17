@@ -3,7 +3,6 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.RatingAlreadyExistsException;
 import at.qe.skeleton.model.Rating;
 import at.qe.skeleton.repositories.RatingRepository;
-import jakarta.validation.constraints.AssertTrue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;

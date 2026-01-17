@@ -82,7 +82,7 @@ public class RatingController {
     }
 
     @DeleteMapping("/{ratingId}")
-    public ResponseEntity<Void> deleteRating(@PathVariable Long productId, @PathVariable Long ratingId) {
+    public ResponseEntity<Void> deleteRating(@PathVariable("productId") Long productId, @PathVariable("ratingId") Long ratingId) {
         Optional<Rating> existingRating = ratingService.loadRating(productId, ratingId);
         if (existingRating.isPresent()) {
             ratingService.deleteRating(existingRating.get());
