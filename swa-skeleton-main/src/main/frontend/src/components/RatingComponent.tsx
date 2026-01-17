@@ -12,6 +12,7 @@ import {Tag} from "primereact/tag";
 import {InputTextarea} from "primereact/inputtextarea";
 import {Button} from "primereact/button";
 import {FilterService} from "primereact/api";
+import styles from "./PixelButton.module.css"
 
 FilterService.register('custom_range', (value, filters) => {
     const [from, to] = filters ?? [null, null];
@@ -118,32 +119,33 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     );
 
     return (
-        <div className="card">
-            <Divider align="left">
-                <Tag value="Tell us what you think of this product!" />
-            </Divider>
+        <div className="product-card" style={{marginTop: 10}}>
+            <Tag className="pixel-tag pixel-tag-blue" value="Tell us what you think of this product!" style={{marginLeft: 5, marginTop: 5}}/>
+
             <div className="card flex flex-wrap justify-content-center gap-3">
-                <Rating style={{display: 'inline-flex', marginLeft: '2rem', marginBottom: '1.5rem'}} value={ratingValue} onChange={(e) => setRatingValue(e.value ?? undefined)}/>
-                <Button style={{marginLeft: '6rem', marginBottom: '0.75rem'}} size="small" label="Submit" icon="pi pi-check" iconPos="right" onClick={createRating} />
+                <Rating style={{display: 'inline-flex', marginLeft: 10, marginBottom: '1.5rem'}} value={ratingValue} onChange={(e) => setRatingValue(e.value ?? undefined)}/>
+                <Button className={`${styles.btn} ${styles.btn_yellow}`} style={{marginLeft: '5.75rem', marginBottom: '0.75rem', marginTop: 5}} size="small" label="Submit" icon="pi pi-check" iconPos="right" onClick={createRating} />
             </div>
-            <InputTextarea style={{marginLeft: '2rem'}} placeholder="Enter your comment here" autoResize value={comment} onChange={(e) => setComment(e.target.value)} rows={5} cols={30} />
+            <InputTextarea style={{marginLeft: 5, height: 200, width: 400}} placeholder="Enter your comment here" autoResize value={comment} onChange={(e) => setComment(e.target.value)} rows={5} cols={30} />
 
             {selectedRating.id !== undefined && (
             <div>
-                <Button style={{marginLeft: '18rem', marginTop: '1rem'}} className="p-button-danger" size="small" label="Delete" icon="pi pi-trash" iconPos="right" onClick={deleteRating} />
+                <Button className={`${styles.btn} ${styles.btn_grey}`} style={{marginLeft: '18rem', marginTop: '5rem'}} size="small" label="Delete" icon="pi pi-trash" iconPos="right" onClick={deleteRating} />
             </div>
             )}
-            <Divider align="center">
-                <Tag value="What other Users think of this product" />
-            </Divider>
-            <div style={{textAlign: "center"}}>
+            <div style={{textAlign: "center", marginTop: 50}}>
+                <Divider className="pixel-divider-dashed" align="center">
+                    <Tag className="pixel-tag pixel-tag-blue" value="What other Users think of this product"/>
+                </Divider>
+            </div>
+            <div style={{textAlign: "center", marginTop: 50, marginBottom: 50}}>
                 {ratings.length === 0 ? (
-                    <h2>Be the first to voice your opinion!</h2>
+                    <h2> Be the first to voice your opinion! </h2>
                 ) : (
-                    <p>Rating is present</p>
+                    <p> Rating is present </p>
                 )}
             </div>
-            <Fieldset legend={legendTemplate}> <p className="m-0"> KIRYU-DUCK! </p> </Fieldset>
+            <Fieldset legend={legendTemplate}> <p className="pixel-fieldset"> KIRYU-DUCK! </p> </Fieldset>
         </div>
     )
 }

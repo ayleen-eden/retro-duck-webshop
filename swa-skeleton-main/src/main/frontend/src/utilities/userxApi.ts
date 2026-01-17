@@ -6,6 +6,14 @@ import globalAxios from "axios";
 import {UserDTO, UserxTypes} from "../DTO/userx.types";
 import {createUserxFromInterfaces} from "./userxUtilities";
 
+export interface UserProfileUpdateDTO {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    password?: string;
+}
+
 /**
  * This file provides utility functions for CRUD operations on users.
  */
@@ -57,6 +65,19 @@ const updateUser = async (selectedUser: UserDTO): Promise<UserxTypes> => {
 }
 
 /**
+ * Updates the current (logged-in) user-profile
+ * @param data
+ */
+const updateCurrentUserProfile = async (data: UserProfileUpdateDTO): Promise<UserDTO> => {
+    try {
+        const response = await globalAxios.patch("/api/users/me", data);
+        return response.data;
+    } catch (err: any) {
+        throw new Error(`Error updating profile: ${err?.message ?? String(err)}`);
+    }
+}
+
+/**
  * Delete an existing user
  * @param selectedUser the user to delete
  * @returns Promise<any> a promise that resolves with the response data
@@ -102,6 +123,7 @@ const isAuthenticated = async (): Promise<boolean> => {
 export const UserxApi = {
     createUser,
     updateUser,
+    updateCurrentUserProfile,
     deleteUser,
     fetchAllUsers,
     getCurrentUser,

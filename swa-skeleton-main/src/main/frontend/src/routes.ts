@@ -11,6 +11,7 @@ import Cart from "./views/Cart";
 import {ROUTES} from "./utilities/routes.paths";
 import ProductPage from "./views/ProductPage";
 import OrderHistory from "./views/OrderHistory";
+import UserProfile from "./views/UserProfile";
 
 /**
  * Define the routes of the application.
@@ -47,4 +48,9 @@ export const ProductPageRoute = {
 export const OrderHistoryRoute = {
     url: ROUTES.ORDERS,
     component: OrderHistory
+}
+
+export const UserProfileRoute = {
+    url: ROUTES.PROFILE,
+    component: UserProfile
 }

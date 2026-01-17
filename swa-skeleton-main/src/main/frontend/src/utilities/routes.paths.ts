@@ -1,9 +1,10 @@
 export const ROUTES = {
-    HOME : '/',
+    HOME: '/',
     MANAGE_USERS: '/manage-users',
     LOGIN: '/login',
     LOGOUT: '/logout',
     CART: '/cart',
     PRODUCT_PAGE: '/product_id/:productId',
-    ORDERS: '/orders'
+    ORDERS: '/orders',
+    PROFILE: '/profile'
 } as const;

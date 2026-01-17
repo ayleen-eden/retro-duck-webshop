@@ -26,7 +26,7 @@ const NavbarComponent: React.FC = () => {
         return items
             .map(item => {
                 const visibleChildren = item.items ? filterMenu(item.items) : undefined;
-                return { ...item, items: visibleChildren };
+                return {...item, items: visibleChildren};
             })
             .filter(item => {
                 const visible = hasRole(item.roles);
@@ -56,7 +56,7 @@ const NavbarComponent: React.FC = () => {
                 return (
                     <Link
                     to={configItem.route ?? "#"}
-                    className={`${options.className ?? ""} p-menuitem-link`}
+                    className="pixel-link"
                     onClick={handleClick}
                 >
                     {menuItem.icon && <span className={options.iconClassName} />}
@@ -78,8 +78,8 @@ const NavbarComponent: React.FC = () => {
     }
 
     return (
-        <div className="card">
-            <Menubar model={model} />
+        <div className="sticky-navbar">
+            <Menubar model={model}/>
         </div>
     );
 }
