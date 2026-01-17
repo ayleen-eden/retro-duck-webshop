@@ -50,21 +50,21 @@ export enum ProductCategories {
 
 export interface ProductDTO {
     id: number;
-    name: String;
+    name: string;
     description: string;
     price: number;
     stock: number;
     discount: number;
-    imageUrl: String;
+    imageUrl: string;
     categories: ProductCategories[];
 }
 
 export interface ProductCreateDTO {
-    name: String,
-    description: String,
+    name: string,
+    description: string,
     price: number,
     stock: number,
     discount: number,
-    imageUrl: String,
+    imageUrl: string,
     categories: ProductCategories[]
 }
