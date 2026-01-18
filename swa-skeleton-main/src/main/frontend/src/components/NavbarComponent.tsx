@@ -9,7 +9,9 @@ import {useUser} from "../Contexts/authenticatedUserContext";
 import {menuConfig, MenuItemConfig} from "../config/menuConfig";
 import {UserxRole} from "../DTO/userx.types";
 import {MenuItem} from "primereact/menuitem";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {ROUTES} from "../utilities/routes.paths";
+import { Button } from 'primereact/button';
 
 /**
  * Navbar component.
@@ -69,17 +71,28 @@ const NavbarComponent: React.FC = () => {
     }, []);
 
     const filteredItems = React.useMemo(() => filterMenu(menuConfig), [filterMenu]);
-
     const model = React.useMemo(() => buildMenubar(filteredItems), [filteredItems, buildMenubar]);
 
-    // don't render Menubar if no user is logged in
-    if (!user) {
-        return null;
-    }
+    const navigate = useNavigate();
+
+    const end = (
+        <Button
+            label={user ? "Logout" : "Login"}
+            icon={user ? "pi pi-sign-out" : "pi pi-sign-in"}
+            className="p-button-text pixel-link"
+            onClick={() => {
+                if (user) {
+                    navigate(ROUTES.LOGOUT);
+                } else {
+                    navigate(ROUTES.LOGIN);
+                }
+            }}
+        />
+    );
 
     return (
         <div className="sticky-navbar">
-            <Menubar model={model}/>
+            <Menubar model={model} end={end} />
         </div>
     );
 }

@@ -14,10 +14,10 @@ import {
     LogoutsRoute,
     ManageUsersRoute,
     ProductPageRoute, UserProfileRoute,
+    SignUpRoute,
 } from "./routes";
 import PrivateRoute from './components/PrivateRoute';
 import {UserProvider} from "./Contexts/authenticatedUserContext";
-import ProductPageComponent from "./components/ProductPageComponent";
 
 const App: React.FC = () => {
     return (
@@ -27,6 +27,7 @@ const App: React.FC = () => {
                 <BrowserRouter>
                     <Routes>
                         <Route path={LoginsRoute.url} Component={LoginsRoute.component}/>
+                        <Route path={SignUpRoute.url} Component={SignUpRoute.component}/>
                         <Route path={CartRoute.url} Component={CartRoute.component}/>
                         <Route path={HomePageRoute.url} Component={HomePageRoute.component}/>
                         <Route path={ProductPageRoute.url} element={<ProductPageRoute.component/>}/>
