@@ -25,7 +25,7 @@ const SignUpComponent: React.FC = () => {
         setError(null);
         try {
             await UserxApi.registerUser(userData);
-            alert("Registration successful!");
+            alert("Registration succesful!");
             navigate(ROUTES.LOGIN);
         } catch (err: any) {
             if (err.response) {
@@ -36,7 +36,7 @@ const SignUpComponent: React.FC = () => {
                     setError("Registration failed (Status " + err.response.status + ")");
                 }
             } else {
-                setError("Server not reachable. Please check your connection.");
+                setError("Server not reachable. Please check your connection");
             }
         }
     };
@@ -44,31 +44,31 @@ const SignUpComponent: React.FC = () => {
     return (
         <div className="login-container">
             <div className="login-card">
-                <h2 className="pixel-text">Sign Up</h2>
+                <h2 className="pixel-text">SIGN UP</h2>
                 <form onSubmit={handleSignUp}>
                     <FloatLabel style={{marginTop: 30}}>
                         <InputText id="username" value={userData.username} onChange={(e) => setUserData({...userData, username: e.target.value})} required className="input-field" />
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">USERNAME</label>
                     </FloatLabel>
                     <FloatLabel style={{marginTop: 25}}>
                         <InputText id="firstName" value={userData.firstName} onChange={(e) => setUserData({...userData, firstName: e.target.value})} required className="input-field" />
-                        <label htmlFor="firstName">First Name</label>
+                        <label htmlFor="firstName">FIRST NAME</label>
                     </FloatLabel>
                     <FloatLabel style={{marginTop: 25}}>
                         <InputText id="lastName" value={userData.lastName} onChange={(e) => setUserData({...userData, lastName: e.target.value})} required className="input-field" />
-                        <label htmlFor="lastName">Last Name</label>
+                        <label htmlFor="lastName">LAST NAME</label>
                     </FloatLabel>
                     <FloatLabel style={{marginTop: 25}}>
                         <InputText id="email" value={userData.email} onChange={(e) => setUserData({...userData, email: e.target.value})} required className="input-field" />
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email">E-MAIL</label>
                     </FloatLabel>
                     <FloatLabel style={{marginTop: 25}}>
                         <InputText id="phone" value={userData.phone} onChange={(e) => setUserData({...userData, phone: e.target.value})} required className="input-field" />
-                        <label htmlFor="phone">Phone Number</label>
+                        <label htmlFor="phone">PHONE NUMBER</label>
                     </FloatLabel>
                     <FloatLabel style={{marginTop: 25}}>
                         <Password inputId="password" value={userData.password} onChange={(e) => setUserData({...userData, password: e.target.value})} required feedback={false} className="input-field" />
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">PASSWORD</label>
                     </FloatLabel>
                     <div style={{
                         display: 'flex',
@@ -80,7 +80,7 @@ const SignUpComponent: React.FC = () => {
                     }}>
                         <Button
                             type="button"
-                            label="Back to Login"
+                            label="BACK TO LOGIN"
                             className="p-button-text pixel-link"
                             onClick={() => navigate(ROUTES.LOGIN)}
                             style={{
@@ -96,7 +96,7 @@ const SignUpComponent: React.FC = () => {
                         />
                         <Button
                             type="submit"
-                            label="Register"
+                            label="REGISTER"
                             className="loginButton"
                             style={{
                                 flex: 1,

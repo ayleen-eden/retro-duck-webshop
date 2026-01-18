@@ -5,8 +5,6 @@ import {Card} from "primereact/card";
 import {Button} from "primereact/button";
 import {useSessionStorage} from "primereact/hooks";
 import {Tag} from "primereact/tag";
-import {Rating} from "primereact/rating";
-import RatingComponent from "./RatingComponent";
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
 import styles from "./PixelButton.module.css"
@@ -14,7 +12,6 @@ import {getAllSubscriptionsForUser, subscribe, unsubscribe} from "../utilities/s
 import {UserxApi} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
 import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
-import {PickList} from "primereact/picklist";
 
 interface ProductComponentProps {
     productId: number;
