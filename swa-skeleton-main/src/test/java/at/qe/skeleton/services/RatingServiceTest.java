@@ -1,10 +1,7 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.RatingAlreadyExistsException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.services.AuthenticatedUserService;
-import at.qe.skeleton.services.ProductService;
-import at.qe.skeleton.services.RatingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -56,7 +53,7 @@ public class RatingServiceTest {
         Userx author = authenticatedUserService.getAuthenticatedUser();
         Rating ratingToInsert1 = new Rating();
         RatingScale ratingScale1 = RatingScale.FOUR_STARS;
-        String ratingComment1 = "This is a rating of a product";
+        String ratingComment1 = "This is a rating of a productId";
         ratingToInsert1.setRating(ratingScale1);
         ratingToInsert1.setAuthor(author);
         ratingToInsert1.setComment(ratingComment1);
@@ -65,7 +62,7 @@ public class RatingServiceTest {
 
         Rating ratingToInsert2 = new Rating();
         RatingScale ratingScale2 = RatingScale.FOUR_STARS;
-        String ratingComment2 = "This is a rating of a product";
+        String ratingComment2 = "This is a rating of a productId";
         ratingToInsert2.setRating(ratingScale2);
         ratingToInsert2.setAuthor(author);
         ratingToInsert2.setComment(ratingComment2);
@@ -92,7 +89,7 @@ public class RatingServiceTest {
         Rating toBeChangedRating = toBeChangedRatingOpt.get();
 
         toBeChangedRating.setRating(RatingScale.FIVE_STARS);
-        String updatedRatingComment = "I changed my mind. This product is awesome. Absolute Cinema!";
+        String updatedRatingComment = "I changed my mind. This productId is awesome. Absolute Cinema!";
         toBeChangedRating.setComment(updatedRatingComment);
 
         ratingService.saveRating(toBeChangedRating);

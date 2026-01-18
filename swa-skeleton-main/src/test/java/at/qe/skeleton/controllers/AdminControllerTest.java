@@ -1,9 +1,8 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.configs.JwtConfig;
 import at.qe.skeleton.configs.JwtTokenProvider;
 import at.qe.skeleton.configs.TokenAuthenticationFilter;
-import at.qe.skeleton.controllers.AdminController;
 import at.qe.skeleton.dtos.UserxCreateDTO;
 import at.qe.skeleton.dtos.UserxDTO;
 import at.qe.skeleton.mappers.UserxCreateMapper;

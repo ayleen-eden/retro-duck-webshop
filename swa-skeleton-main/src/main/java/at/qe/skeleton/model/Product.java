@@ -31,7 +31,7 @@ public class Product implements Serializable {
     private String imageUrl;
 
     // For categories, a helper table is needed
-    @ElementCollection(targetClass = ProductCategory.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = ProductCategory.class, fetch = FetchType.LAZY)
     @CollectionTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"))
     @Enumerated(EnumType.STRING)
     private Set<ProductCategory> categories;
