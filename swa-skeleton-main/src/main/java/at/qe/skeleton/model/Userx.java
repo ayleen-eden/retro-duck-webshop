@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Entity representing users.
- *
+ * <p>
  * This class is part of the skeleton project provided for students of the course "Software
  * Architecture" offered by Innsbruck University.
  */

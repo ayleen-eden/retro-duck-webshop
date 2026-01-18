@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Mapping between UserxTypes and UserxDTOs.
- *
+ * <p>
  * This class is part of the skeleton project provided for students of the course "Software
  * Architecture" offered by Innsbruck University.
  */
@@ -27,22 +27,21 @@ public class UserxMapper implements DTOMapper<Userx, UserxDTO>{
         if (user == null) {
             return null;
         }
-        UserxDTO dto = new UserxDTO(
-                user.getId(),
-                user.getCreateUser() != null ? user.getCreateUser().getId() : null,
-                user.getCreateDate(),
-                user.getUpdateUser() != null ? user.getUpdateUser().getId() : null, 
-                user.getUpdateDate(),
-                user.getUsername(), 
-                user.getFirstName(), 
-                user.getLastName(), 
-                user.getEmail(), 
-                user.getPhone(), 
-                user.isEnabled(), 
-                user.getRoles()
-        );
-        
-        return dto;
+
+       return new UserxDTO(
+               user.getId(),
+               user.getCreateUser() != null ? user.getCreateUser().getId() : null,
+               user.getCreateDate(),
+               user.getUpdateUser() != null ? user.getUpdateUser().getId() : null,
+               user.getUpdateDate(),
+               user.getUsername(),
+               user.getFirstName(),
+               user.getLastName(),
+               user.getEmail(),
+               user.getPhone(),
+               user.isEnabled(),
+               user.getRoles()
+       );
     }
 
     @Override

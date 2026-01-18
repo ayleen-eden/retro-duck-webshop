@@ -66,7 +66,7 @@ public class WebSecurityConfig {
   }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) {
 
         try {
 

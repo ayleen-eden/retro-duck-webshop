@@ -6,6 +6,8 @@ import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.mappers.UserxMapper;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.UserxService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ public class UserxController {
 
     private final UserxMapper userMapper;
     private final UserxService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserxController.class);
 
     @Autowired
     public UserxController(UserxMapper userMapper, UserxService userService) {
@@ -56,7 +59,7 @@ public class UserxController {
                     .status(HttpStatus.CONFLICT)
                     .body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Unexpected error during user registration", e);
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("message", "An unexpected error occurred: " + e.getMessage()));

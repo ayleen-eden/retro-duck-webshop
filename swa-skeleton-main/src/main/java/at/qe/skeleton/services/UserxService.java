@@ -58,10 +58,10 @@ public class UserxService implements UserDetailsService {
     }
 
     /**
-     * Saves the user. This method will also set {@link Userx#createDate} for new
-     * entities or {@link Userx#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link Userx#createDate}
-     * or {@link Userx#updateUser} respectively.
+     * Saves the user. This method will also set the creation date for new
+     * entities or the update date for updated entities. The user
+     * requesting this operation will also be stored as the creator
+     * or the last editor respectively.
      *
      * @param user the user to save
      * @return the updated user
@@ -74,11 +74,7 @@ public class UserxService implements UserDetailsService {
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Userx authUser = authenticatedUserService.getAuthenticatedUser();
-            if (authUser != null) {
-                user.setCreateUser(authUser);
-            } else {
-                user.setCreateUser(null); //sign-up
-            }
+            user.setCreateUser(authUser);
         } else {
             user.setUpdateUser(authenticatedUserService.getAuthenticatedUser());
         }
@@ -130,7 +126,7 @@ public class UserxService implements UserDetailsService {
      *
      * @param username the username identifying the user whose data is required.
      * @return the user with the given username and their details.
-     * @throws UsernameNotFoundException
+     * @throws UsernameNotFoundException if username could not be found
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
