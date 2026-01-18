@@ -5,6 +5,7 @@ import at.qe.skeleton.dtos.ProductDTO;
 import at.qe.skeleton.mappers.ProductCreateMapper;
 import at.qe.skeleton.mappers.ProductMapper;
 import at.qe.skeleton.model.Product;
+import at.qe.skeleton.model.ProductCategory;
 import at.qe.skeleton.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +37,20 @@ public class ProductController {
     // Load all products (allowed: everyone)
     @GetMapping("/")
     public ResponseEntity<Collection<ProductDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts().stream()
-                .map(productMapper::mapTo)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(productService.getAllProducts().stream().map(productMapper::mapTo).collect(Collectors.toList()));
     }
 
     // Load single product (allowed: everyone)
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        Product product = productService.getProductById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         return ResponseEntity.ok(productMapper.mapTo(product));
+    }
+
+    // Load all categories (allowed: everyone)
+    @GetMapping("/categories")
+    public ResponseEntity<ProductCategory[]> getCategories() {
+        return ResponseEntity.ok(ProductCategory.values());
     }
 
 

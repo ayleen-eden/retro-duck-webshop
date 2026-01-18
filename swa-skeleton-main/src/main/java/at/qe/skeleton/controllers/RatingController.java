@@ -19,6 +19,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Rating endpoints exposed by the server.
+ */
 @RestController
 @RequestMapping("/api/products/{productId}/ratings")
 public class RatingController {

@@ -115,7 +115,7 @@ const UserForm: React.FC<UserFormProps> =
                         <Checkbox inputId="enabled" name="enabled"
                             style={{ float: "right" }}
                             onChange={onUserEnabledChange}
-                            checked={user.enabled}>
+                            checked={user.enabled} className="pixel-checkbox">
                         </Checkbox>
                     </div>
                 </div>

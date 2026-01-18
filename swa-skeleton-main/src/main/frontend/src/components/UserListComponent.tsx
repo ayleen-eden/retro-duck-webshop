@@ -11,6 +11,8 @@ import {DataTable} from "primereact/datatable";
 import {UserxTypes} from "../DTO/userx.types";
 import {Checkbox} from "primereact/checkbox";
 import {rolesBodyTemplate} from "./rolesBodyTemplate";
+import styles from "./PixelButton.module.css"
+
 
 interface UserListProps {
     users: UserxTypes[];
@@ -33,10 +35,11 @@ const UserListComponent: React.FC<UserListProps> = ({ users, loading, onEditUser
      */
     const editButtonTemplate = (rowData: UserxTypes) => {
         return (<Button
-            label={"Details"}
+            label={"DETAILS"}
             icon="pi pi-external-link"
             onClick={() => onEditUser(rowData)}
             aria-label={`Details for ${rowData.username}`}
+            className={`${styles.btn} ${styles.btn_yellow}`}
         />);
     };
 
@@ -48,7 +51,7 @@ const UserListComponent: React.FC<UserListProps> = ({ users, loading, onEditUser
     const enableButtonTemplate = (rowData: UserxTypes) => {
         return (
             <Checkbox checked={rowData.enabled} disabled={true}
-                      className="p-mr-2"/>
+                      className="pixel-checkbox"/>
         )
     }
 
@@ -56,11 +59,11 @@ const UserListComponent: React.FC<UserListProps> = ({ users, loading, onEditUser
     return (
         // DataTable for displaying users
         <DataTable value={users} loading={loading}>
-            <Column field="username" header="Username" sortable></Column>
-            <Column field="firstName" header="First Name" sortable></Column>
-            <Column field="lastName" header="Last Name" sortable></Column>
-            <Column field="roles" header="Roles" body={rolesBodyTemplate}></Column>
-            <Column field="enabled" header="Enabled" body={enableButtonTemplate}></Column>
+            <Column field="username" header="USERNAME" sortable></Column>
+            <Column field="firstName" header="FIRST NAME" sortable></Column>
+            <Column field="lastName" header="LAST NAME" sortable></Column>
+            <Column field="roles" header="ROLES" body={rolesBodyTemplate}></Column>
+            <Column field="enabled" header="ENABLED" body={enableButtonTemplate}></Column>
             <Column body={editButtonTemplate} exportable={false}
                     style={{minWidth: '8rem'}}></Column>
         </DataTable>

@@ -36,7 +36,7 @@ public class SubscriptionController {
         this.userService = userService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<SubscriptionDTO> subscribe(@RequestParam Long userId, @RequestParam Long productId) {
 
         Optional<Userx> userOpt = userService.loadUser(userId);
@@ -46,7 +46,6 @@ public class SubscriptionController {
             return ResponseEntity.notFound().build();
         }
 
-        // Pass the actual entities to the service
         Subscription subscription = subscriptionService.createSubscription(userOpt.get(), productOpt.get());
 
         SubscriptionDTO subscriptionDTO = new SubscriptionDTO(
@@ -58,7 +57,7 @@ public class SubscriptionController {
         return ResponseEntity.ok(subscriptionDTO);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     public ResponseEntity<Void> unsubscribe(@RequestParam Long userId, @RequestParam Long productId) {
         Userx user = userService.loadUser(userId).orElse(null);
         Product product = productService.getProductById(productId).orElse(null);
@@ -72,8 +71,8 @@ public class SubscriptionController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<Collection<SubscriptionDTO>> getAllSubscriptionsForUser(@RequestParam Long userId) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<Collection<SubscriptionDTO>> getAllSubscriptionsForUser(@PathVariable Long userId) {
         return ResponseEntity.ok(subscriptionService.getSubscriptionByUserId(userId)
                 .stream()
                 .map(s -> subscriptionMapper.mapTo(s))

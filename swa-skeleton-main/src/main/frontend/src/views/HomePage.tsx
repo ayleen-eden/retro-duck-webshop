@@ -18,6 +18,7 @@ import {IconField} from 'primereact/iconfield';
 import {InputIcon} from 'primereact/inputicon';
 import {ProductDTO} from '../DTO/product.types';
 import {useNavigate} from 'react-router-dom';
+import styles from "../components/PixelButton.module.css"
 
 const HomePage: React.FC = () => {
     // --- STATE ---
@@ -35,16 +36,16 @@ const HomePage: React.FC = () => {
 
     // --- FILTER OPTIONS ---
     const sortOptions = [
-        {label: 'Name (A-Z)', value: 'name-asc'},
-        {label: 'Name (Z-A)', value: 'name-desc'},
-        {label: 'Price (Low to High)', value: 'price-asc'},
-        {label: 'Price (High to Low)', value: 'price-desc'}
+        {label: 'NAME (A-Z)', value: 'name-asc'},
+        {label: 'NAME (Z-A)', value: 'name-desc'},
+        {label: 'PRICE (LOW TO HIGH)', value: 'price-asc'},
+        {label: 'PRICE (HIGH TO LOW)', value: 'price-desc'}
     ];
 
     const stockOptions = [
-        {label: 'All Products', value: 'all'},
-        {label: 'In Stock Only', value: 'inStock'},
-        {label: 'Sold Out Only', value: 'outOfStock'}
+        {label: 'ALL PRODUCTS', value: 'all'},
+        {label: 'IN STOCK ONLY', value: 'inStock'},
+        {label: 'SOLD OUT ONLY', value: 'outOfStock'}
     ];
 
     const categoryOptions = useMemo(() => {
@@ -128,7 +129,7 @@ const HomePage: React.FC = () => {
 
     // --- NAVIGATION & RENDERING ---
     const handleProductClick = (productId: number) => {
-        navigate(`/product_id/${productId}`);
+        navigate(`/products/${productId}`);
     };
 
     const renderHeader = (product: ProductDTO) => {
@@ -161,14 +162,16 @@ const HomePage: React.FC = () => {
 
             <div className="main-content" style={{flex: 1, padding: '2rem', paddingBottom: '7rem'}}>
                 <header className="App-header" style={{minHeight: 'auto', marginBottom: '3rem', padding: '2rem'}}>
-                    <img src={logo} className="App-logo" alt="logo" style={{height: '80px'}}/>
-                    <h1>Welcome to the maybe not best, but duckiest videogame shop on the internet</h1>
+                    <img src={logo} className="App-logo" alt="logo" style={{height: '150px'}}/>
+                    <h1>DUCK'N'GO / THE RETRO DUCK</h1>
+                    <h3>WELCOME TO - MAYBE NOT THE BEST - BUT THE DUCKI-EST VIDEOGAME SHOP ON THE INTERNET!</h3>
                     <p>We like ducks. And we like videogames. And we like ducks.</p>
                 </header>
 
                 {/* --- FILTER BAR --- */}
                 <div
-                    className="card mb-5 p-4 shadow-2 border-round surface-card flex flex-column xl:flex-row gap-4 justify-content-between align-items-start xl:align-items-center filter-bar">
+                    className="product-card mb-5 p-4 shadow-2 border-round surface-card flex flex-column xl:flex-row gap-4 justify-content-between align-items-start xl:align-items-center filter-bar"
+                    style={{marginBottom: 10}}>
 
                     {/* 1. Searchbar */}
                     <div className="flex flex-column gap-2 filter-bar-element">
@@ -178,7 +181,7 @@ const HomePage: React.FC = () => {
                                 id="search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search Product..."
+                                placeholder="SEARCH PPRODUCT..."
                                 className="w-full md:w-20rem"
                             />
                         </IconField>
@@ -192,9 +195,9 @@ const HomePage: React.FC = () => {
                             options={categoryOptions}
                             onChange={(e) => setSelectedCategories(e.value)}
                             optionLabel="label"
-                            placeholder="Select Categories"
+                            placeholder="SELECT CATEGORIES"
                             maxSelectedLabels={2}
-                            className="w-full md:w-20rem"
+                            className="pixel-multiselect"
                             display="chip"
                         />
                     </div>
@@ -206,8 +209,8 @@ const HomePage: React.FC = () => {
                             value={stockFilter}
                             options={stockOptions}
                             onChange={(e) => setStockFilter(e.value)}
-                            placeholder="Availability"
-                            className="w-full md:w-14rem"
+                            placeholder="AVAILABILITY"
+                            className="pixel-dropdown"
                         />
                     </div>
 
@@ -218,8 +221,8 @@ const HomePage: React.FC = () => {
                             value={sortKey}
                             options={sortOptions}
                             onChange={(e) => setSortKey(e.value)}
-                            placeholder="Default"
-                            className="w-full md:w-14rem"
+                            placeholder="DEFAULT"
+                            className="pixel-dropdown"
                         />
                     </div>
 
@@ -228,28 +231,29 @@ const HomePage: React.FC = () => {
                         <Button
                             icon="pi pi-times"
                             label="Reset"
-                            className="p-button-outlined p-button-secondary"
+                            className={`${styles.btn} ${styles.btn_grey}`}
                             onClick={() => {
                                 setSortKey('');
                                 setStockFilter('all');
                                 setSelectedCategories(null);
                                 setSearchQuery('');
                             }}
-                            tooltip="Clear all filters"
+                            tooltip="CLEAR ALL FILTERS"
+                            tooltipOptions={{className: 'pixel-tooltip'}}
                         />
                     )}
                 </div>
 
                 {/* --- PRODUCTS GRID --- */}
                 {loading ? (
-                    <div style={{textAlign: 'center'}}>Loading products...</div>
+                    <div style={{textAlign: 'center'}}>LOADING PRODUCTS...</div>
                 ) : (
                     <>
                         {visibleProducts.length === 0 ? (
                             <div className="text-center p-5 surface-50 border-round">
                                 <i className="pi pi-search text-4xl mb-3 text-500"></i>
-                                <h3>No ducks found matching your criteria. 🦆</h3>
-                                <p>Try adjusting your search or filters.</p>
+                                <h3>NO DUCKS FOUND MATCHING YOUR CRITERIA. 🦆</h3>
+                                <p>TRY ADJUSTING YOUR SEARCH OR FILTERS.</p>
                             </div>
                         ) : (
                             <div style={{
@@ -261,14 +265,12 @@ const HomePage: React.FC = () => {
                                     <div
                                         key={product.id}
                                         onClick={() => handleProductClick(product.id)}
-                                        className="product-card-interactive"
                                         style={{height: '100%'}}
                                     >
                                         <Card
                                             title={product.name}
-                                            subTitle={`${product.price.toFixed(2)} €`}
                                             header={renderHeader(product)}
-                                            className="h-full shadow-2 hover:shadow-6"
+                                            className="product-card-interactive"
                                             style={{height: '100%'}}
                                         >
                                             <div style={{
@@ -278,15 +280,15 @@ const HomePage: React.FC = () => {
                                                 flexWrap: 'wrap'
                                             }}>
                                                 <Tag
+                                                    className={product.stock > 0 ? 'pixel-tag pixel-tag-green' : 'pixel-tag pixel-tag-red'}
                                                     value={product.stock > 0 ? 'In stock' : 'Sold out'}
-                                                    severity={product.stock > 0 ? 'success' : 'danger'}
                                                 />
                                                 {product.discount > 0 && (
                                                     <Tag value={`-${(product.discount * 100).toFixed(0)}% Sale`}
-                                                         severity="warning"/>
+                                                         className="pixel-tag pixel-tag-yellow"/>
                                                 )}
                                                 {product.categories && product.categories.map(cat => (
-                                                    <Tag key={cat} value={cat} severity="info"/>
+                                                    <Tag key={cat} value={cat} className="pixel-tag pixel-tag-blue"/>
                                                 ))}
                                             </div>
 

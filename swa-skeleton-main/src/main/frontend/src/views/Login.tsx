@@ -13,6 +13,7 @@ import '../styles/Login.css';
 
 import {useNavigate} from 'react-router-dom';
 import {useUser} from "../Contexts/authenticatedUserContext";
+import {ROUTES} from "../utilities/routes.paths";
 
 /**
  * Login component
@@ -55,11 +56,11 @@ const Login = () => {
         } catch (err: any) {
             const status = err?.response?.status as number | undefined;
             if (status === 401 || status === 403 ) {
-                setError('Wrong username or password');
+                setError('Wrong username or password.');
             } else if (status === 500) {
                 setError('Server error');
             } else if (status === undefined) {
-                setError('No connection to server. Try again later');
+                setError('No connection to the server. Try again later..');
             } else {
                 setError('Login failed. Please try again.')
             }
@@ -73,7 +74,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="login-card">
-                <h2>Login</h2>
+                <h2>LOGIN</h2>
                 <form onSubmit={handleLogin}>
                     <FloatLabel style={{marginTop: 50}}>
                         <InputText
@@ -84,7 +85,7 @@ const Login = () => {
                             autoComplete="off"
                             className="input-field"
                         />
-                        <label htmlFor="username">Username:</label>
+                        <label htmlFor="username">USERNAME:</label>
                     </FloatLabel>
 
                     <FloatLabel style={{marginTop: 25}}>
@@ -97,10 +98,18 @@ const Login = () => {
                             autoComplete="off"
                             className="input-field"
                         />
-                        <label htmlFor="password">Password:</label>
+                        <label htmlFor="password">PASSWORD:</label>
                     </FloatLabel>
-                    <Button type="submit" label="Login" className="loginButton"/>
+                    <Button type="submit" label="LOGIN" className="loginButton"/>
                 </form>
+                <div style={{marginTop: '5rem', textAlign: 'center'}}>
+                    <Button
+                        label="NO ACCOUNT? SIGN UP HERE!"
+                        className="p-button-text pixel-link"
+                        onClick={() => navigate(ROUTES.SIGNUP)}
+                        style={{fontSize: '0.8rem', color: 'white'}}
+                    />
+                </div>
                 {error && <p style={{color: 'red', marginTop: 25}}>{error}</p>}
             </div>
         </div>
