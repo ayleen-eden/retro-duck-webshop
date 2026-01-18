@@ -10,6 +10,7 @@ import RatingComponent from "./RatingComponent";
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
 import styles from "./PixelButton.module.css"
+import {PickList} from "primereact/picklist";
 
 interface ProductComponentProps {
     productId: number;
@@ -83,38 +84,40 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
                         <h1>{product.name}</h1>
 
                         <div className="mb-3">
-                            {/* Fixed Rating */}
-                            <Rating value={5} readOnly disabled cancel={false}/>
+                            {/* TODO: Make Rating variable */}
+                            {/* <Rating value={5} readOnly disabled cancel={false} className="pixel-rating"/> */}
                         </div>
 
                         <p className="mb-4 text-lg" style={{color: 'white'}}>{product.description}</p>
 
-                        <div className="mb-4" style={{marginBottom: 10}}>
+
                             {hasDiscount ? (
                                 <>
-                                    <span style={{
-                                        textDecoration: 'line-through',
-                                        textDecorationThickness: '3px',
-                                        color: '#999',
-                                        marginRight: '1rem',
-                                        fontSize: '1.2rem'
-                                    }}>
-                                        {currentPrice.toFixed(2)} €
-                                    </span>
+                                <div className="mb-4" style={{display: 'flex', marginBottom: 10, alignItems: 'center'}}>
                                     <span style={{color: "var(--red-500)", fontSize: '2rem', fontWeight: 'bold'}}>
                                         {discountedPrice} €
                                     </span>
-                                    <Tag value={`-${(product.discount * 100).toFixed(0)}% Sale`} severity="warning"
+
+                                    <Tag style={{marginLeft: '1rem'}} value={`-${(product.discount * 100).toFixed(0)}% Sale`} severity="warning"
                                          className="pixel-tag pixel-tag-yellow"/>
+                                </div>
+                                <span style={{
+                                    textDecoration: 'line-through',
+                                    textDecorationThickness: '3px',
+                                    color: '#999',
+                                    marginRight: '1rem',
+                                    fontSize: '1.2rem'
+                                }}>
+                                        {currentPrice.toFixed(2)} €
+                                    </span>
                                 </>
                             ) : (
                                 <span style={{fontSize: '2rem', fontWeight: 'bold', color: 'white'}}>
                                     {currentPrice.toFixed(2)} €
                                 </span>
                             )}
-                        </div>
 
-                        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>
                             {/* Choose amount */}
                             <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                                 <Button
