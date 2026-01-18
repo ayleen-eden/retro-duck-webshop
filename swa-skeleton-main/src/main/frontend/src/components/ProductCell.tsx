@@ -28,7 +28,7 @@ export const ProductCell: React.FC<{ productId: number }> = ({ productId }) => {
                 className={`${styles.btn} ${styles.btn_yellow}`}
                 icon="pi pi-external-link"
                 label="SEE PRODUCT"
-                onClick={() => window.location.href = `/product_id/${productId}`}
+                onClick={() => window.location.href = `/products/${productId}`}
             />
         </div>
     );

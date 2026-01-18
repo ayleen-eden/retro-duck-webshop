@@ -17,6 +17,7 @@ import { Button } from 'primereact/button';
  * Navbar component.
  */
 const NavbarComponent: React.FC = () => {
+    //TODO navbar for everyone (user management, communism)
     const {currentUser: user} = useUser();
 
     const filterMenu = React.useCallback((items: MenuItemConfig[]): MenuItemConfig[] => {
@@ -77,7 +78,7 @@ const NavbarComponent: React.FC = () => {
 
     const end = (
         <Button
-            label={user ? "Logout" : "Login"}
+            label={user ? "LOGOUT" : "LOGIN"}
             icon={user ? "pi pi-sign-out" : "pi pi-sign-in"}
             className="p-button-text pixel-link"
             onClick={() => {
@@ -92,7 +93,7 @@ const NavbarComponent: React.FC = () => {
 
     return (
         <div className="sticky-navbar">
-            <Menubar model={model} end={end} />
+            <Menubar model={model}/>
         </div>
     );
 }
