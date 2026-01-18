@@ -1,3 +1,7 @@
+/**
+ * This code is part of the skeleton project provided for students of the course "Software
+ * Architecture" offered by Innsbruck University.
+ */
 import HomePage from "./views/HomePage";
 import ManageUsers from "./views/ManageUsers";
 import Login from "./views/Login";
@@ -8,8 +12,8 @@ import ProductPage from "./views/ProductPage";
 import OrderHistory from "./views/OrderHistory";
 import UserProfile from "./views/UserProfile";
 import SignUpView from "./views/SignUpView";
-
 import Notification from "./views/Notification";
+import ManageProducts from "./views/ManageProducts";
 
 /**
  * Define the routes of the application.
@@ -41,6 +45,11 @@ export const SignUpRoute = {
 export const CartRoute = {
     url: ROUTES.CART,
     component: Cart
+}
+
+export const ManageProductsRoute = {
+    url: ROUTES.MANAGE_PRODUCTS,
+    component: ManageProducts
 }
 
 export const ProductPageRoute = {

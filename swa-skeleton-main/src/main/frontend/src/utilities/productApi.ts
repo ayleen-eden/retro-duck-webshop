@@ -46,3 +46,21 @@ export const deleteProduct = async (productId: number): Promise<void> => {
         throw new Error(`Error deleting product: ${err?.message ?? String(err)}`);
     }
 }
+
+const fetchCategories = async (): Promise<string[]> => {
+    try {
+        const response = await globalAxios.get("/api/products/categories");
+        return response.data;
+    } catch (err: any) {
+        throw new Error(`Error fetching categories: ${err?.message ?? String(err)}`);
+    }
+};
+
+
+export const ProductApi = {
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
+    fetchCategories
+};

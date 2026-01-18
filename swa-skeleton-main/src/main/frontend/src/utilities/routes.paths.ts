@@ -8,5 +8,6 @@ export const ROUTES = {
     PRODUCT_PAGE: '/products/:productId',
     ORDERS: '/orders',
     PROFILE: '/profile',
-    NOTIFICATION: '/notification'
+    NOTIFICATION: '/notification',
+    MANAGE_PRODUCTS: '/manage-products',
 } as const;

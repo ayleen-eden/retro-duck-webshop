@@ -27,6 +27,17 @@ public class DataInitializer {
 
             System.out.println("--- Initializing Test Data for Products ---");
 
+            // QUAK - Dummy Product
+            Product p1 = new Product();
+            p1.setName("QUAK(e)");
+            p1.setDescription("The groundbreaking first-person quacker that quacked a generation. Yellow, squishy, and QUAK.");
+            p1.setPrice(9.99);
+            p1.setStock(50L);
+            p1.setDiscount(0.0);
+            p1.setImageUrl("/images/quak(e).png");
+            p1.setCategories(Set.of(ProductCategory.PC));
+            productService.saveProduct(p1);
+
             createProduct(productService, "Panzer Dragoon Saga", "Rare RPG gem.", 999.99, 2, 0.2, ProductCategory.SATURN, "https://upload.wikimedia.org/wikipedia/en/6/64/PanzerDragoonSagaBox.jpg");
             createProduct(productService, "Dead Space", "Only the Dead Survive.", 9.99, 2, 0.5, ProductCategory.XBOX_360, "https://upload.wikimedia.org/wikipedia/en/5/57/Dead_Space_Box_Art.jpg");
 
