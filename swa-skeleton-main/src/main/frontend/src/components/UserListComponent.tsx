@@ -35,7 +35,7 @@ const UserListComponent: React.FC<UserListProps> = ({ users, loading, onEditUser
      */
     const editButtonTemplate = (rowData: UserxTypes) => {
         return (<Button
-            label={"Details"}
+            label={"DETAILS"}
             icon="pi pi-external-link"
             onClick={() => onEditUser(rowData)}
             aria-label={`Details for ${rowData.username}`}
@@ -59,11 +59,11 @@ const UserListComponent: React.FC<UserListProps> = ({ users, loading, onEditUser
     return (
         // DataTable for displaying users
         <DataTable value={users} loading={loading}>
-            <Column field="username" header="Username" sortable></Column>
-            <Column field="firstName" header="First Name" sortable></Column>
-            <Column field="lastName" header="Last Name" sortable></Column>
-            <Column field="roles" header="Roles" body={rolesBodyTemplate}></Column>
-            <Column field="enabled" header="Enabled" body={enableButtonTemplate}></Column>
+            <Column field="username" header="USERNAME" sortable></Column>
+            <Column field="firstName" header="FIRST NAME" sortable></Column>
+            <Column field="lastName" header="LAST NAME" sortable></Column>
+            <Column field="roles" header="ROLES" body={rolesBodyTemplate}></Column>
+            <Column field="enabled" header="ENABLED" body={enableButtonTemplate}></Column>
             <Column body={editButtonTemplate} exportable={false}
                     style={{minWidth: '8rem'}}></Column>
         </DataTable>

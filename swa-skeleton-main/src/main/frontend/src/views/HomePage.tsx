@@ -253,7 +253,7 @@ const HomePage: React.FC = () => {
                             <div className="text-center p-5 surface-50 border-round">
                                 <i className="pi pi-search text-4xl mb-3 text-500"></i>
                                 <h3>NO DUCKS FOUND MATCHING YOUR CRITERIA. 🦆</h3>
-                                <p>Try adjusting your search or filters.</p>
+                                <p>TRY ADJUSTING YOUR SEARCH OR FILTERS.</p>
                             </div>
                         ) : (
                             <div style={{

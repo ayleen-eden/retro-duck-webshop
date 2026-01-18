@@ -9,6 +9,8 @@ import OrderHistory from "./views/OrderHistory";
 import UserProfile from "./views/UserProfile";
 import SignUpView from "./views/SignUpView";
 
+import Notification from "./views/Notification";
+
 /**
  * Define the routes of the application.
  */
@@ -54,4 +56,9 @@ export const OrderHistoryRoute = {
 export const UserProfileRoute = {
     url: ROUTES.PROFILE,
     component: UserProfile
+}
+
+export const NotificationRoute = {
+    url: ROUTES.NOTIFICATION,
+    component: Notification
 }

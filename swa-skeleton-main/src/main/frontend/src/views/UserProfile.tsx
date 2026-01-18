@@ -77,13 +77,13 @@ const UserProfile: React.FC = () => {
 
             <div className="login-container" style={{height: 'auto', minHeight: '90vh', padding: '100px 0'}}>
                 <div className="login-card" style={{width: '600px'}}>
-                    <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Edit Profile</h2>
+                    <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>EDIT PROFILE</h2>
 
                     <form onSubmit={handleSave} className="flex flex-column gap-3">
 
                         {/* Username (Read Only) */}
                         <div className="flex flex-column gap-2 mb-3">
-                            <label htmlFor="username">Username (Read-only)</label>
+                            <label htmlFor="username">USERNAME (READ-ONLY)</label>
                             <InputText
                                 id="username"
                                 value={username}
@@ -96,7 +96,7 @@ const UserProfile: React.FC = () => {
                         {/* Name Fields */}
                         <div className="flex gap-3">
                             <div className="flex flex-column gap-2 w-full">
-                                <label htmlFor="firstName">First Name</label>
+                                <label htmlFor="firstName">FIRST NAME</label>
                                 <InputText
                                     id="firstName"
                                     value={firstName}
@@ -105,7 +105,7 @@ const UserProfile: React.FC = () => {
                                 />
                             </div>
                             <div className="flex flex-column gap-2 w-full">
-                                <label htmlFor="lastName">Last Name</label>
+                                <label htmlFor="lastName">LAST NAME</label>
                                 <InputText
                                     id="lastName"
                                     value={lastName}
@@ -117,7 +117,7 @@ const UserProfile: React.FC = () => {
 
                         {/* Contact Info */}
                         <div className="flex flex-column gap-2 mb-3">
-                            <label htmlFor="email">E-Mail</label>
+                            <label htmlFor="email">E-MAIL</label>
                             <InputText
                                 id="email"
                                 value={email}
@@ -127,7 +127,7 @@ const UserProfile: React.FC = () => {
                         </div>
 
                         <div className="flex flex-column gap-2 mb-3">
-                            <label htmlFor="phone">Phone</label>
+                            <label htmlFor="phone">PHONE</label>
                             <InputText
                                 id="phone"
                                 value={phone}
@@ -139,14 +139,14 @@ const UserProfile: React.FC = () => {
                         <div className="pixel-divider-dashed"></div>
 
                         {/* Password Section */}
-                        <h3>Change Password</h3>
+                        <h3>CHANGE PASSWORD</h3>
                         <p style={{fontSize: '0.7rem', color: '#aaa', marginBottom: '1rem'}}>
-                            Leave blank if you don't want to change it.
+                            LEAVE BLANK IF YOU DON'T WANT TO CHANGE IT.
                         </p>
 
                         <div className="flex gap-3">
                             <div className="flex flex-column gap-2 w-full">
-                                <label htmlFor="newPass">New Password</label>
+                                <label htmlFor="newPass">NEW PASSWORD</label>
                                 <Password
                                     inputId="newPass"
                                     value={newPassword}
@@ -161,7 +161,7 @@ const UserProfile: React.FC = () => {
                                 />
                             </div>
                             <div className="flex flex-column gap-2 w-full">
-                                <label htmlFor="confPass">Confirm</label>
+                                <label htmlFor="confPass">CONFIRM</label>
                                 <Password
                                     inputId="confPass"
                                     value={confirmPassword}
@@ -179,7 +179,7 @@ const UserProfile: React.FC = () => {
 
                         <div className="flex justify-content-end mt-4">
                             <Button
-                                label="Save Changes"
+                                label="SAVE CHANGES"
                                 icon="pi pi-save"
                                 className={`${styles.btn} ${styles.btn_green}`}
                                 type="submit"

@@ -7,5 +7,6 @@ export const ROUTES = {
     CART: '/cart',
     PRODUCT_PAGE: '/products/:productId',
     ORDERS: '/orders',
-    PROFILE: '/profile'
+    PROFILE: '/profile',
+    NOTIFICATION: '/notification'
 } as const;

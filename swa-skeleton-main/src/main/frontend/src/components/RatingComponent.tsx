@@ -158,9 +158,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
             </div>
             <div style={{textAlign: "center", marginTop: 50, marginBottom: 50}}>
                 {ratings.length === 0 ? (
-                    <h2> Be the first to voice your opinion! </h2>
+                    <h2> BE THE FIRST TO VOICE YOUR OPINION! </h2>
                 ) : (
-                    <p> Rating is present </p>
+                    <p> RATING IS PRESENT </p>
                 )}
             </div>
         </div>

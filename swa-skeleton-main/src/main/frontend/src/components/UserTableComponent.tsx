@@ -216,7 +216,7 @@ const UserTable = () => {
     return (<Card title="USER LIST" className="product-card">
             <Toast ref={toast} />
             {/* Button that opens a new user dialog on click */}
-            <Button label="Add User" icon="pi pi-plus" className={`${styles.btn} ${styles.btn_yellow}`}
+            <Button label="ADD USER" icon="pi pi-plus" className={`${styles.btn} ${styles.btn_yellow}`}
                     style={{marginBottom: "10px"}} onClick={openNewUserDialog}/>
             <UserListComponent users={users} loading={loading} onEditUser={openEditDialog}/>
 
