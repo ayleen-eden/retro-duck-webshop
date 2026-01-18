@@ -9,8 +9,9 @@ import Login from "./views/Login";
 import Logout from "./views/Logout";
 import Cart from "./views/Cart";
 import {ROUTES} from "./utilities/routes.paths";
-import ProductPage from "./views/ProductPage";
 import OrderHistory from "./views/OrderHistory";
+import ProductPage from "./views/ProductPage";
+import ManageProducts from "./views/ManageProducts";
 
 /**
  * Define the routes of the application.
@@ -37,6 +38,11 @@ export const LogoutsRoute = {
 export const CartRoute = {
     url: ROUTES.CART,
     component: Cart
+}
+
+export const ManageProductsRoute = {
+    url: ROUTES.MANAGE_PRODUCTS,
+    component: ManageProducts
 }
 
 export const ProductPageRoute = {
