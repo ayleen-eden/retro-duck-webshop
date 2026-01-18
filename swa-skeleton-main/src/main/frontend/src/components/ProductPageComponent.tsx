@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
 import {dummyProduct1} from "./DebugProducts"; // Fallback
 import {ProductDTO} from "../DTO/product.types";
 import {Card} from "primereact/card";
@@ -15,11 +14,13 @@ import {getAllSubscriptionsForUser, subscribe, unsubscribe} from "../utilities/s
 import {UserxApi} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
 import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
+import {PickList} from "primereact/picklist";
 
-const ProductPageComponent: React.FC = () => {
-    // Get ID from URL
-    const {productId} = useParams<{ productId: string }>();
+interface ProductComponentProps {
+    productId: number;
+}
 
+const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
     const [product, setProduct] = useState<ProductDTO | null>(null); // Startet leer
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -28,6 +29,8 @@ const ProductPageComponent: React.FC = () => {
     const [user, setUser] = useState<UserxTypes | null>(null);
     const [subscribed, setSubscribed] = useState(false);
     const [subLoading, setSubLoading] = useState(false);
+
+    //TODO: Replace with proper productId API!!!
 
     useEffect(() => {
         if (!productId) return;
@@ -46,7 +49,7 @@ const ProductPageComponent: React.FC = () => {
                 setLoading(false);
             })
             .catch(error => {
-                console.error("Error loading product details:", error);
+                console.error("Error loading productId details:", error);
                 setProduct(dummyProduct1);
                 setLoading(false);
             });
@@ -129,8 +132,6 @@ const ProductPageComponent: React.FC = () => {
                         flex: '0 0 auto',
                         display: 'flex',
                         justifyContent: 'center',
-                        width: '100%',
-                        maxWidth: '500px'
                     }}>
                         <img
                             style={{maxWidth: '100%', height: 'auto', maxHeight: '500px', objectFit: 'contain'}}
@@ -144,38 +145,40 @@ const ProductPageComponent: React.FC = () => {
                         <h1>{product.name}</h1>
 
                         <div className="mb-3">
-                            {/* Fixed Rating */}
-                            <Rating value={5} readOnly disabled cancel={false}/>
+                            {/* TODO: Make Rating variable */}
+                            {/* <Rating value={5} readOnly disabled cancel={false} className="pixel-rating"/> */}
                         </div>
 
                         <p className="mb-4 text-lg" style={{color: 'white'}}>{product.description}</p>
 
-                        <div className="mb-4" style={{marginBottom: 10}}>
+
                             {hasDiscount ? (
                                 <>
-                                    <span style={{
-                                        textDecoration: 'line-through',
-                                        textDecorationThickness: '3px',
-                                        color: '#999',
-                                        marginRight: '1rem',
-                                        fontSize: '1.2rem'
-                                    }}>
-                                        {currentPrice.toFixed(2)} €
-                                    </span>
+                                <div className="mb-4" style={{display: 'flex', marginBottom: 10, alignItems: 'center'}}>
                                     <span style={{color: "var(--red-500)", fontSize: '2rem', fontWeight: 'bold'}}>
                                         {discountedPrice} €
                                     </span>
-                                    <Tag value={`-${(product.discount * 100).toFixed(0)}% Sale`} severity="warning"
+
+                                    <Tag style={{marginLeft: '1rem'}} value={`-${(product.discount * 100).toFixed(0)}% Sale`} severity="warning"
                                          className="pixel-tag pixel-tag-yellow"/>
+                                </div>
+                                <span style={{
+                                    textDecoration: 'line-through',
+                                    textDecorationThickness: '3px',
+                                    color: '#999',
+                                    marginRight: '1rem',
+                                    fontSize: '1.2rem'
+                                }}>
+                                        {currentPrice.toFixed(2)} €
+                                    </span>
                                 </>
                             ) : (
                                 <span style={{fontSize: '2rem', fontWeight: 'bold', color: 'white'}}>
                                     {currentPrice.toFixed(2)} €
                                 </span>
                             )}
-                        </div>
 
-                        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>
                             {/* Choose amount */}
                             <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                                 <Button
@@ -234,10 +237,6 @@ const ProductPageComponent: React.FC = () => {
                     </div>
                 </div>
             </Card>
-
-            <div className="mt-4">
-                <RatingComponent productId={Number(productId)}/>
-            </div>
         </div>
     );
 };

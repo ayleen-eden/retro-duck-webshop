@@ -3,18 +3,17 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.dtos.UserProfileUpdateDTO;
 import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
-
-import java.util.Collection;
-
+import at.qe.skeleton.repositories.UserxRepository;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import at.qe.skeleton.repositories.UserxRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -59,22 +58,23 @@ public class UserxService implements UserDetailsService {
     }
 
     /**
-     * Saves the user. This method will also set {@link Userx#createDate} for new
-     * entities or {@link Userx#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link Userx#createDate}
-     * or {@link Userx#updateUser} respectively.
+     * Saves the user. This method will also set the creation date for new
+     * entities or the update date for updated entities. The user
+     * requesting this operation will also be stored as the creator
+     * or the last editor respectively.
      *
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PermitAll
     public Userx saveUser(Userx user) {
         if (user.isNew()) {
             if (userRepository.existsByUsername(user.getUsername())) {
                 throw new UsernameDuplicateException("Username " + user.getUsername() + " not available");
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setCreateUser(authenticatedUserService.getAuthenticatedUser());
+            Userx authUser = authenticatedUserService.getAuthenticatedUser();
+            user.setCreateUser(authUser);
         } else {
             user.setUpdateUser(authenticatedUserService.getAuthenticatedUser());
         }
@@ -126,7 +126,7 @@ public class UserxService implements UserDetailsService {
      *
      * @param username the username identifying the user whose data is required.
      * @return the user with the given username and their details.
-     * @throws UsernameNotFoundException
+     * @throws UsernameNotFoundException if username could not be found
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

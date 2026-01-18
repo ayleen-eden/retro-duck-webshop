@@ -13,6 +13,7 @@ import '../styles/Login.css';
 
 import {useNavigate} from 'react-router-dom';
 import {useUser} from "../Contexts/authenticatedUserContext";
+import {ROUTES} from "../utilities/routes.paths";
 
 /**
  * Login component
@@ -101,6 +102,14 @@ const Login = () => {
                     </FloatLabel>
                     <Button type="submit" label="Login" className="loginButton"/>
                 </form>
+                <div style={{marginTop: '5rem', textAlign: 'center'}}>
+                    <Button
+                        label="No account? Sign up here"
+                        className="p-button-text pixel-link"
+                        onClick={() => navigate(ROUTES.SIGNUP)}
+                        style={{fontSize: '0.8rem', color: 'white'}}
+                    />
+                </div>
                 {error && <p style={{color: 'red', marginTop: 25}}>{error}</p>}
             </div>
         </div>

@@ -49,6 +49,20 @@ const createUser = async (selectedUser: UserDTO): Promise<UserxTypes> => {
 }
 
 /**
+ * Register a new user (Public Signup)
+ * @param userData basic information for registration
+ * @returns Promise<any>
+ */
+const registerUser = async (userData: any): Promise<any> => {
+    try {
+        const response = await globalAxios.post("/api/users", userData);
+        return response.data;
+    } catch (err: any) {
+        throw err;
+    }
+}
+
+/**
  * Update an existing user
  * @param selectedUser the user to update
  * @returns Promise<UserxTypes> a promise that resolves with the updated user
@@ -122,6 +136,7 @@ const isAuthenticated = async (): Promise<boolean> => {
 
 export const UserxApi = {
     createUser,
+    registerUser,
     updateUser,
     updateCurrentUserProfile,
     deleteUser,

@@ -3,8 +3,9 @@ export const ROUTES = {
     MANAGE_USERS: '/manage-users',
     LOGIN: '/login',
     LOGOUT: '/logout',
+    SIGNUP: '/signup',
     CART: '/cart',
-    PRODUCT_PAGE: '/product_id/:productId',
+    PRODUCT_PAGE: '/products/:productId',
     ORDERS: '/orders',
     PROFILE: '/profile',
     NOTIFICATION: '/notification'

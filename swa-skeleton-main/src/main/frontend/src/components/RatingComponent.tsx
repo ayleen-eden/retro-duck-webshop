@@ -1,18 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {RatingDTO, RatingTypes} from "../DTO/rating.types";
+import React, {useEffect, useRef, useState} from "react";
+import {RatingDTO, RatingScale, RatingTypes} from "../DTO/rating.types";
 import {RatingApi} from "../utilities/ratingApi";
 import {createRatingFromInterfaces} from "../utilities/ratingUtilities";
 import {UserxApi} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
-import { Fieldset } from "primereact/fieldset";
-import {Avatar} from "primereact/avatar";
 import {Divider} from "primereact/divider";
 import {Rating} from "primereact/rating";
 import {Tag} from "primereact/tag";
-import {InputTextarea} from "primereact/inputtextarea";
-import {Button} from "primereact/button";
 import {FilterService} from "primereact/api";
-import styles from "./PixelButton.module.css"
+import RatingForm from "./RatingForm";
+import {Toast} from "primereact/toast";
 
 FilterService.register('custom_range', (value, filters) => {
     const [from, to] = filters ?? [null, null];
@@ -32,6 +29,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const [comment, setComment] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedRating, setRating] = useState<RatingDTO>(RatingTypes.empty);
+    const toast = useRef<Toast>(null)
 
     //Unused
     //const [isNewRating, setIsNewRating] = useState<boolean>(false);
@@ -40,7 +38,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     useEffect(() => {
         const fetchAllRatingsForProduct = async () => {
             try {
-                const ratingData = await RatingApi.fetchAllRatingsByProduct(1)
+                const ratingData = await RatingApi.fetchAllRatingsByProduct(productId)
                 const ratingInstances = ratingData.map((rating: RatingDTO) => createRatingFromInterfaces(rating));
                 setRatings(ratingInstances);
             } catch (err: any) {
@@ -68,26 +66,39 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     }, [ratings, productId, loading]);
 
     const createRating = async () => {
-        if (selectedRating.id !== undefined) {
+        if (ratingValue == undefined) {
+            toast.current?.show({
+                severity: 'warn',
+                summary: 'Your rating is still incomplete!',
+                detail: 'Click on the stars to rate this product',
+                life: 3000
+            });
             return;
         }
         const author: UserxTypes = await UserxApi.getCurrentUser();
         const ratingToSave = new RatingTypes({
             ...selectedRating,
-            rating: ratingValue,
+            rating: numberToRatingScale(ratingValue),
             comment: comment,
             authorId: author.id,
-            productId: 1 //hardcoded
+            productId: productId
         });
-        await RatingApi.createRating(productId, ratingToSave.toCreateJSON());
-        setRating(ratingToSave);
+        const createdRating: RatingDTO = await RatingApi.createRating(productId, ratingToSave.toCreateJSON());
+        setRating(createdRating);
     };
 
     const updateRating = async () => {
         if (!selectedRating?.id) return;
 
         try {
-            const updatedRating : RatingDTO = await RatingApi.updateRating(productId, selectedRating.id, selectedRating)
+            const ratingToUpdate: RatingDTO = {
+                ...selectedRating,
+                rating: numberToRatingScale(ratingValue),
+                comment: comment,
+                authorId: selectedRating.authorId,
+                productId: productId
+            }
+            const updatedRating: RatingDTO = await RatingApi.updateRating(productId, selectedRating.id, ratingToUpdate)
             setRating(updatedRating);
         } catch (err: any) {
             console.error('Error updating Rating:', err);
@@ -99,7 +110,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     }
 
     const deleteRating = async () => {
-        if(!selectedRating.id) return;
+        if (!selectedRating.id) return;
 
         try {
             await RatingApi.deleteRating(productId, selectedRating);
@@ -110,29 +121,36 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         }
     }
 
+    const numberToRatingScale = (ratingValue: number | undefined): RatingScale | undefined => {
+        switch (ratingValue) {
+            case 1:
+                return RatingScale.ONE_STAR;
+            case 2:
+                return RatingScale.TWO_STARS;
+            case 3:
+                return RatingScale.THREE_STARS;
+            case 4:
+                return RatingScale.FOUR_STARS;
+            case 5:
+                return RatingScale.FIVE_STARS;
+            default:
+                return undefined;
+        }
+    }
+
     const legendTemplate = (
         <div className="flex align-items-center gap-2 px-2">
-            <Avatar image="/images/majima_duck.png" shape="circle" style={{verticalAlign: 'middle'}}/>
             <span className="font-bold">Majima Duck</span>
-            <Rating value={5} readOnly cancel={false} style={{ marginLeft: '0.5rem' }}/>
+            <Rating value={5} readOnly cancel={false} style={{marginLeft: '0.5rem'}}/>
         </div>
     );
 
     return (
-        <div className="product-card" style={{marginTop: 10}}>
-            <Tag className="pixel-tag pixel-tag-blue" value="Tell us what you think of this product!" style={{marginLeft: 5, marginTop: 5}}/>
-
-            <div className="card flex flex-wrap justify-content-center gap-3">
-                <Rating style={{display: 'inline-flex', marginLeft: 10, marginBottom: '1.5rem'}} value={ratingValue} onChange={(e) => setRatingValue(e.value ?? undefined)}/>
-                <Button className={`${styles.btn} ${styles.btn_yellow}`} style={{marginLeft: '5.75rem', marginBottom: '0.75rem', marginTop: 5}} size="small" label="SUBMIT" icon="pi pi-check" iconPos="right" onClick={createRating} />
-            </div>
-            <InputTextarea style={{marginLeft: 5, height: 200, width: 400}} placeholder="ENTER YOUR COMMENT HERE" autoResize value={comment} onChange={(e) => setComment(e.target.value)} rows={5} cols={30} />
-
-            {selectedRating.id !== undefined && (
-            <div>
-                <Button className={`${styles.btn} ${styles.btn_grey}`} style={{marginLeft: '18rem', marginTop: '5rem'}} size="small" label="Delete" icon="pi pi-trash" iconPos="right" onClick={deleteRating} />
-            </div>
-            )}
+        <div>
+            <Toast ref={toast} position="top-right"/>
+            <RatingForm selectedRating={selectedRating} ratingValue={ratingValue} comment={comment}
+                        setRatingValue={setRatingValue} setComment={setComment} createRating={createRating}
+                        updateRating={updateRating} deleteRating={deleteRating}></RatingForm>
             <div style={{textAlign: "center", marginTop: 50}}>
                 <Divider className="pixel-divider-dashed" align="center">
                     <Tag className="pixel-tag pixel-tag-blue" value="What other Users think of this product"/>
@@ -145,7 +163,6 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
                     <p> RATING IS PRESENT </p>
                 )}
             </div>
-            <Fieldset legend={legendTemplate}> <p className="pixel-fieldset"> KIRYU-DUCK! </p> </Fieldset>
         </div>
     )
 }
