@@ -3,18 +3,17 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.dtos.UserProfileUpdateDTO;
 import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
-
-import java.util.Collection;
-
+import at.qe.skeleton.repositories.UserxRepository;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import at.qe.skeleton.repositories.UserxRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -67,14 +66,19 @@ public class UserxService implements UserDetailsService {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PermitAll
     public Userx saveUser(Userx user) {
         if (user.isNew()) {
             if (userRepository.existsByUsername(user.getUsername())) {
                 throw new UsernameDuplicateException("Username " + user.getUsername() + " not available");
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setCreateUser(authenticatedUserService.getAuthenticatedUser());
+            Userx authUser = authenticatedUserService.getAuthenticatedUser();
+            if (authUser != null) {
+                user.setCreateUser(authUser);
+            } else {
+                user.setCreateUser(null); //sign-up
+            }
         } else {
             user.setUpdateUser(authenticatedUserService.getAuthenticatedUser());
         }

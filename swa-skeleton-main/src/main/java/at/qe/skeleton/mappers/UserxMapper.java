@@ -28,9 +28,9 @@ public class UserxMapper implements DTOMapper<Userx, UserxDTO>{
             return null;
         }
         UserxDTO dto = new UserxDTO(
-                user.getId(), 
-                user.getCreateUser().getId(), 
-                user.getCreateDate(), 
+                user.getId(),
+                user.getCreateUser() != null ? user.getCreateUser().getId() : null,
+                user.getCreateDate(),
                 user.getUpdateUser() != null ? user.getUpdateUser().getId() : null, 
                 user.getUpdateDate(),
                 user.getUsername(), 
