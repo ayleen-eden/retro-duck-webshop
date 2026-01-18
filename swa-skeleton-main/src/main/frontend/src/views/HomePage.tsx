@@ -129,7 +129,7 @@ const HomePage: React.FC = () => {
 
     // --- NAVIGATION & RENDERING ---
     const handleProductClick = (productId: number) => {
-        navigate(`/product_id/${productId}`);
+        navigate(`/products/${productId}`);
     };
 
     const renderHeader = (product: ProductDTO) => {

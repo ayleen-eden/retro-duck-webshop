@@ -4,17 +4,21 @@ import React from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import ProductPageComponent from "../components/ProductPageComponent";
 import {FooterComponent} from "../components/FooterComponent";
+import {useParams} from "react-router-dom";
+import RatingComponent from "../components/RatingComponent";
 
-class ProductPage extends React.Component {
-    render() {
+const ProductPage: React.FC =() => {
+    const {productId} = useParams<{ productId: string }>();
+
+
         return (
             <div>
                 <NavbarComponent/>
-                <ProductPageComponent/>
+                <ProductPageComponent productId={Number(productId)}/>
+                <RatingComponent productId={Number(productId)}/>
                 <FooterComponent/>
             </div>
         );
     }
-}
 
 export default ProductPage;

@@ -25,7 +25,7 @@ const createRating = async (productId: number, ratingToCreate: RatingDTO): Promi
 const updateRating = async (productId: number, ratingId: number, ratingToUpdate: RatingDTO): Promise<RatingDTO> => {
     try {
         const ratingInstance = createRatingFromInterfaces(ratingToUpdate);
-        const response = await globalAxios.patch(`api/products/${productId}/ratings/${ratingId}`, ratingInstance.toUpdateJSON());
+        const response = await globalAxios.patch(`/api/products/${productId}/ratings/${ratingId}`, ratingInstance.toUpdateJSON());
         return RatingTypes.fromJSON(response.data);
     } catch (err: any) {
         throw new Error(`Error updating rating: ${err?.message ?? String(err)}`);
@@ -34,7 +34,7 @@ const updateRating = async (productId: number, ratingId: number, ratingToUpdate:
 
 const deleteRating = async (productId: number, ratingToDelete: RatingDTO) => {
     try {
-        return await globalAxios.delete(`api/products/${productId}/ratings/${ratingToDelete.id}`);
+        return await globalAxios.delete(`/api/products/${productId}/ratings/${ratingToDelete.id}`);
     } catch (err: any) {
         throw new Error(`Error deleting rating: ${err?.message ?? String(err)}`);
     }

@@ -1,8 +1,11 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.dtos.UserProfileUpdateDTO;
 import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
+
 import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +19,13 @@ import java.util.Optional;
 
 /**
  * Service for accessing and manipulating user data.
- *
+ * <p>
  * This class is part of the skeleton project provided for students of the
  * course "Software Architecture" offered by Innsbruck University.
  */
 @Service
 public class UserxService implements UserDetailsService {
- 
+
     private final UserxRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticatedUserService authenticatedUserService;
@@ -33,7 +36,7 @@ public class UserxService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
         this.authenticatedUserService = authenticatedUserService;
     }
-    
+
     /**
      * Returns a collection of all users.
      *
@@ -54,7 +57,7 @@ public class UserxService implements UserDetailsService {
     public Optional<Userx> loadUser(Long id) {
         return userRepository.findById(id);
     }
-    
+
     /**
      * Saves the user. This method will also set {@link Userx#createDate} for new
      * entities or {@link Userx#updateDate} for updated entities. The user
@@ -93,6 +96,30 @@ public class UserxService implements UserDetailsService {
         return userRepository.findFirstByUsername(username).orElse(null);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    public Userx updateUserSelf(Userx currentUser, UserProfileUpdateDTO dto) {
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new IllegalArgumentException("User or ID missing");
+        }
+
+        // Wir laden den User frisch aus der DB über die ID, um sicherzugehen
+        Userx user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + currentUser.getId()));
+
+        // Daten updaten, wenn vorhanden
+        if (dto.firstName() != null) user.setFirstName(dto.firstName());
+        if (dto.lastName() != null) user.setLastName(dto.lastName());
+        if (dto.email() != null) user.setEmail(dto.email());
+        if (dto.phone() != null) user.setPhone(dto.phone());
+
+        // Passwort nur ändern, wenn es nicht leer ist
+        if (dto.password() != null && !dto.password().isBlank()) {
+            user.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        user.setUpdateUser(user); // Metadaten: User hat sich selbst geändert
+        return userRepository.save(user);
+    }
 
     /**
      * Loads a user by its username. Required for JWT authentication.

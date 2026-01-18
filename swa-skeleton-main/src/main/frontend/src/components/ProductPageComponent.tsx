@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
 import {dummyProduct1} from "./DebugProducts"; // Fallback
 import {ProductDTO} from "../DTO/product.types";
 import {Card} from "primereact/card";
@@ -12,14 +11,17 @@ import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
 import styles from "./PixelButton.module.css"
 
-const ProductPageComponent: React.FC = () => {
-    // Get ID from URL
-    const {productId} = useParams<{ productId: string }>();
+interface ProductComponentProps {
+    productId: number;
+}
 
+const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
     const [product, setProduct] = useState<ProductDTO | null>(null); // Startet leer
     const [loading, setLoading] = useState<boolean>(true);
 
     const [quantity, setQuantity] = useSessionStorage<number>(1, 'quantity');
+
+    //TODO: Replace with proper productId API!!!
 
     useEffect(() => {
         if (!productId) return;
@@ -38,7 +40,7 @@ const ProductPageComponent: React.FC = () => {
                 setLoading(false);
             })
             .catch(error => {
-                console.error("Error loading product details:", error);
+                console.error("Error loading productId details:", error);
                 setProduct(dummyProduct1);
                 setLoading(false);
             });
@@ -68,8 +70,6 @@ const ProductPageComponent: React.FC = () => {
                         flex: '0 0 auto',
                         display: 'flex',
                         justifyContent: 'center',
-                        width: '100%',
-                        maxWidth: '500px'
                     }}>
                         <img
                             style={{maxWidth: '100%', height: 'auto', maxHeight: '500px', objectFit: 'contain'}}
@@ -171,10 +171,6 @@ const ProductPageComponent: React.FC = () => {
                     </div>
                 </div>
             </Card>
-
-            <div className="mt-4">
-                <RatingComponent productId={Number(productId)}/>
-            </div>
         </div>
     );
 };
