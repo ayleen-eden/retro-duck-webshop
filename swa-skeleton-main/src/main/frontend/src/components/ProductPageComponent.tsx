@@ -11,6 +11,10 @@ import RatingComponent from "./RatingComponent";
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
 import styles from "./PixelButton.module.css"
+import {getAllSubscriptionsForUser, subscribe, unsubscribe} from "../utilities/subscriptionApi";
+import {UserxApi} from "../utilities/userxApi";
+import {UserxTypes} from "../DTO/userx.types";
+import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 
 const ProductPageComponent: React.FC = () => {
     // Get ID from URL
@@ -20,6 +24,10 @@ const ProductPageComponent: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const [quantity, setQuantity] = useSessionStorage<number>(1, 'quantity');
+
+    const [user, setUser] = useState<UserxTypes | null>(null);
+    const [subscribed, setSubscribed] = useState(false);
+    const [subLoading, setSubLoading] = useState(false);
 
     useEffect(() => {
         if (!productId) return;
@@ -44,6 +52,58 @@ const ProductPageComponent: React.FC = () => {
             });
     }, [productId]);
 
+    useEffect(() => {
+        const loadUserAndSubscription = async () => {
+            try {
+                const currentUser = await UserxApi.getCurrentUser();
+                setUser(currentUser);
+
+                if (currentUser.id && productId) {
+                    const subs = await getAllSubscriptionsForUser(currentUser.id);
+                    const isSubscribed = subs.some(sub => sub.productId === Number(productId));
+                    setSubscribed(isSubscribed);
+                }
+            } catch (err) {
+                console.error("Failed to load subscription info:", err);
+            }
+        };
+
+        loadUserAndSubscription();
+    }, [productId]);
+
+    const handleSubscribeToggle = async () => {
+        if (!user?.id || !productId) return;
+        setSubLoading(true);
+        try {
+            if (subscribed) {
+                await unsubscribe(user.id, Number(productId));
+                setSubscribed(false);
+            } else {
+                await subscribe(user.id, Number(productId));
+                setSubscribed(true);
+            }
+        } catch (err) {
+            console.error("Subscription action failed:", err);
+        } finally {
+            setSubLoading(false);
+        }
+    };
+
+    const confirmSubToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (!subscribed) {
+            handleSubscribeToggle();
+        } else {
+            confirmPopup({
+                target: event.currentTarget,
+                message: 'ARE YOU SURE YOU WANT TO UNSUBSCRIBE?',
+                icon: 'pi pi-exclamation-triangle',
+                acceptClassName: 'p-button-danger',
+                className: "pixel-confirmpopup",
+                accept: () => handleSubscribeToggle(),
+            });
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex justify-content-center align-items-center" style={{height: '50vh'}}>
@@ -62,6 +122,7 @@ const ProductPageComponent: React.FC = () => {
 
     return (
         <div className="p-4">
+            <ConfirmPopup/>
             <Card className="product-card">
                 <div style={{display: 'flex', gap: '2rem', flexWrap: 'wrap'}}>
                     <div style={{
@@ -155,10 +216,12 @@ const ProductPageComponent: React.FC = () => {
                                     className={`${styles.btn} ${styles.btn_green}`}
                                 />
                                 <Button
-                                    icon="pi pi-bell"
-                                    label="NOTIFY ME"
-                                    className={`${styles.btn} ${styles.btn_grey}`}
+                                    icon={subscribed ? "pi pi-bell-slash" : "pi pi-bell"}
+                                    label={subscribed ? "UNSUBSCRIBE" : "SUBSCRIBE"}
+                                    className={`${styles.btn} ${subscribed ? styles.btn_red : styles.btn_yellow}`}
+                                    disabled={subLoading}
                                     size="large"
+                                    onClick={confirmSubToggle}
                                 />
                             </div>
                         </div>

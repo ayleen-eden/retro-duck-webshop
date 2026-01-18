@@ -71,7 +71,7 @@ const CartComponent: React.FC = () => {
         confirmPopup({
             className:"pixel-confirmpopup pixel-icon",
             target: event.currentTarget,
-            message:`Are you sure you want to remove ${item.productName}?`,
+            message:`ARE YOU SURE YOU WANT TO REMOVE ${item.productName}?`,
             icon:"pi pi-exclamation-triangle",
             acceptIcon:"pi pi-check",
             rejectIcon:"pi pi-times",
@@ -83,8 +83,8 @@ const CartComponent: React.FC = () => {
     const actionBodyTemplate = (rowData: CartItemDTO) => {
         return (
             <div>
-                <Button className={`${styles.btn} ${styles.btn_red}`} icon="pi pi-minus" size="small" severity="secondary" onClick={(event) => handleDecrease(event, rowData)} text/>
-                <Button className={`${styles.btn} ${styles.btn_green}`} icon="pi pi-plus" size="small" severity="secondary" onClick={() => handleIncrease(rowData)} text/>
+                <Button className={`${styles.btn} ${styles.btn_red}`} icon="pi pi-minus" size="small" onClick={(event) => handleDecrease(event, rowData)} text/>
+                <Button className={`${styles.btn} ${styles.btn_green}`} icon="pi pi-plus" size="small" onClick={() => handleIncrease(rowData)} text/>
                 <Button
                     className={`${styles.btn} ${styles.btn_grey}`}
                     icon="pi pi-trash"
@@ -142,8 +142,6 @@ const CartComponent: React.FC = () => {
                                 icon="pi pi-cart-plus"
                                 severity="success"
                                 onClick={() => window.location.href = "/"}
-                                text raised
-                                rounded
                             />
                         </div>
                     </div>

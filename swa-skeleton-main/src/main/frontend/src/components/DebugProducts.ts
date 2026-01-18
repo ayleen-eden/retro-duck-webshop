@@ -1,4 +1,4 @@
-import {ProductDTO} from "../DTO/product.types";
+import {ProductCategories, ProductDTO} from "../DTO/product.types";
 
 export const dummyProduct1: ProductDTO = {
     id: 1,
@@ -8,7 +8,7 @@ export const dummyProduct1: ProductDTO = {
     description: 'The Dragon of Dojima as a duck.',
     stock: 10,
     discount: 0.1,
-    categories: ['YAKUZA', 'DUCK']
+    categories: [ProductCategories.PS3]
 };
 
 export const dummyProduct2: ProductDTO = {
@@ -19,5 +19,5 @@ export const dummyProduct2: ProductDTO = {
     description: 'Mad Dog of Shimano.',
     stock: 5,
     discount: 0.0,
-    categories: ['YAKUZA', 'DUCK']
+    categories: [ProductCategories.PS3]
 };
