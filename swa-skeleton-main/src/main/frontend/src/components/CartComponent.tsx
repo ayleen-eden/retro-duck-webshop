@@ -88,7 +88,6 @@ const CartComponent: React.FC = () => {
                 <Button
                     className={`${styles.btn} ${styles.btn_grey}`}
                     icon="pi pi-trash"
-                    severity="danger"
                     outlined
                     onClick={(event) => confirmDelete(event, rowData)}
                 />
@@ -108,8 +107,8 @@ const CartComponent: React.FC = () => {
 
         return (
             <div className="flex gap-1">
-                <InputNumber value={from} onChange={(e) => options.filterApplyCallback([e.value, to])} placeholder="from" allowEmpty style={{ width: '6rem' }}/>
-                <InputNumber value={to} onChange={(e) => options.filterApplyCallback([from, e.value])} placeholder="to" allowEmpty style={{ width: '6rem' }}/>
+                <InputNumber value={from} onChange={(e) => options.filterApplyCallback([e.value, to])} placeholder="FROM" allowEmpty style={{ width: '6rem' }}/>
+                <InputNumber value={to} onChange={(e) => options.filterApplyCallback([from, e.value])} placeholder="TO" allowEmpty style={{ width: '6rem' }}/>
             </div>
         );
     };
@@ -220,7 +219,7 @@ const CartComponent: React.FC = () => {
                                 content={
                                     <div>
                                         <i className="pi pi-wallet text-xl"></i>
-                                        <b> Total: {totalPrice} €</b>
+                                        <b> TOTAL: {totalPrice} €</b>
                                     </div>
                                 }
                             />

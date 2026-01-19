@@ -88,7 +88,7 @@ const ManageProducts: React.FC = () => {
     const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, product: ProductDTO) => {
         confirmPopup({
             target: event.currentTarget,
-            message: `Are you sure you want to delete ${product.name}?`,
+            message: `ARE YOU SURE YOU WANT TO DELETE ${product.name}?`,
             icon: 'pi pi-exclamation-triangle',
             accept: () => deleteProduct(product.id),
             className: "pixel-confirmpopup"
@@ -123,10 +123,11 @@ const ManageProducts: React.FC = () => {
         return (
             <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
                 <Button
-                    label="New Product"
+                    label="NEW PRODUCT"
                     icon="pi pi-plus"
                     className={`${styles.btn} ${styles.btn_green}`}
                     onClick={openNew}
+                    style={{marginBottom: '1rem'}}
                 />
 
                 <IconField iconPosition="left">
@@ -134,7 +135,7 @@ const ManageProducts: React.FC = () => {
                     <InputText
                         type="search"
                         onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder="Search products..."
+                        placeholder=" SEARCH PRODUCTS..."
                         className="p-inputtext-sm"
                     />
                 </IconField>
@@ -151,27 +152,29 @@ const ManageProducts: React.FC = () => {
             <ConfirmPopup/>
 
             <div className="p-4" style={{marginBottom: '80px'}}>
-                <Card title="Prouct management" className="product-card">
+                <Card title="PRODUCT MANAGEMENT" className="product-card">
 
                     <DataTable
                         value={products}
                         loading={loading}
                         stripedRows
                         paginator
+                        paginatorClassName="pixel-paginator"
                         rows={10}
                         rowsPerPageOptions={[5, 10, 25, 50]}
+
                         globalFilter={globalFilter}
                         header={header}
                         globalFilterFields={['name', 'id', 'description', 'categories']}
-                        emptyMessage="No products found."
+                        emptyMessage="NO DUCKS FOUND MATCHING YOUR CRITERIA. 🦆"
                     >
                         <Column field="id" header="ID" sortable style={{width: '5%'}}/>
-                        <Column header="Image" body={imageBodyTemplate} style={{width: '10%'}}/>
-                        <Column field="name" header="Name" sortable style={{width: '25%'}}/>
-                        <Column field="price" header="Price" body={priceBodyTemplate} sortable style={{width: '10%'}}/>
-                        <Column field="stock" header="Stock" body={stockBodyTemplate} sortable style={{width: '10%'}}/>
-                        <Column field="discount" header="Discount" sortable style={{width: '10%'}}/>
-                        <Column header="Actions" body={actionBodyTemplate} style={{width: '15%'}}/>
+                        <Column header="IMAGE" body={imageBodyTemplate} style={{width: '10%'}}/>
+                        <Column field="name" header="NAME" sortable style={{width: '25%'}}/>
+                        <Column field="price" header="PRICE" body={priceBodyTemplate} sortable style={{width: '10%'}}/>
+                        <Column field="stock" header="STOCK" body={stockBodyTemplate} sortable style={{width: '10%'}}/>
+                        <Column field="discount" header="DISCOUNT" sortable style={{width: '10%'}}/>
+                        <Column header="ACTIONS" body={actionBodyTemplate} style={{width: '15%'}}/>
                     </DataTable>
                 </Card>
             </div>

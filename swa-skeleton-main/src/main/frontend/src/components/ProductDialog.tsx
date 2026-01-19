@@ -100,15 +100,15 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
 
     return (
         <Dialog
-            header={isNewProduct ? "New Product" : `Edit: ${product?.name}`}
+            header={isNewProduct ? "NEW PRODUCT" : `EDIT: ${product?.name}`}
             visible={visible}
             style={{width: '50vw'}}
             onHide={onHide}
             footer={(
                 <div className="pt-3">
-                    <Button label="Cancel" icon="pi pi-times" onClick={onHide} className="p-button-text"/>
+                    <Button label="CANCEL" icon="pi pi-times" onClick={onHide} className={`${styles.btn} ${styles.btn_red}`}/>
                     <Button
-                        label={isNewProduct ? "Create Product" : "Save Changes"}
+                        label={isNewProduct ? "CREATE PRODUCT" : "SAVE CHANGES"}
                         icon="pi pi-check"
                         onClick={handleFormSubmit}
                         className={`${styles.btn} ${styles.btn_green}`}
@@ -121,32 +121,32 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
 
             <div className="flex flex-column gap-4 mt-2">
                 <div className="flex flex-column gap-2">
-                    <label htmlFor="name" className="font-bold">Product Name</label>
+                    <label htmlFor="name" className="font-bold">PRODUCT NAME</label>
                     <InputText id="name" value={name} onChange={(e) => setName(e.target.value)}
                                className="input-field"/>
                 </div>
 
                 <div className="flex flex-column gap-2">
-                    <label htmlFor="description" className="font-bold">Description</label>
+                    <label htmlFor="description" className="font-bold">DESCRIPTION</label>
                     <InputTextarea id="description" value={description} onChange={(e) => setDescription(e.target.value)}
                                    rows={3} className="input-field" autoResize/>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
                     <div className="flex-1 flex flex-column gap-2" style={{minWidth: '150px'}}>
-                        <label htmlFor="price" className="font-bold">Price (€)</label>
+                        <label htmlFor="price" className="font-bold">PRICE (€) </label>
                         <InputNumber id="price" value={price}
                                      onValueChange={(e: InputNumberValueChangeEvent) => setPrice(e.value ?? null)}
                                      mode="currency" currency="EUR" locale="de-DE" inputClassName="input-field w-full"/>
                     </div>
                     <div className="flex-1 flex flex-column gap-2" style={{minWidth: '150px'}}>
-                        <label htmlFor="stock" className="font-bold">Initial Stock</label>
+                        <label htmlFor="stock" className="font-bold">INITIAL STOCK </label>
                         <InputNumber id="stock" value={stock}
                                      onValueChange={(e: InputNumberValueChangeEvent) => setStock(e.value ?? null)}
                                      inputClassName="input-field w-full"/>
                     </div>
                     <div className="flex-1 flex flex-column gap-2" style={{minWidth: '150px'}}>
-                        <label htmlFor="discount" className="font-bold">Discount (0-1)</label>
+                        <label htmlFor="discount" className="font-bold">DISCOUNT (0-1) </label>
                         <InputNumber id="discount" value={discount}
                                      onValueChange={(e: InputNumberValueChangeEvent) => setDiscount(e.value ?? null)}
                                      min={0} max={1} minFractionDigits={2} inputClassName="input-field w-full"/>
@@ -154,21 +154,21 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
                 </div>
 
                 <div className="flex flex-column gap-2">
-                    <label htmlFor="categories" className="font-bold">Categories</label>
+                    <label htmlFor="categories" className="font-bold">CATEGORIES </label>
                     <MultiSelect
                         id="categories"
                         value={selectedCategories}
                         options={categoryOptions}
                         onChange={(e: MultiSelectChangeEvent) => setSelectedCategories(e.value)}
                         optionLabel="label"
-                        placeholder="Select Categories"
+                        placeholder="SELECT CATEGORIES"
                         display="chip"
                         className="pixel-multiselect w-full"
                     />
                 </div>
 
                 <div className="flex flex-column gap-2">
-                    <label htmlFor="imageUrl" className="font-bold">Image URL</label>
+                    <label htmlFor="imageUrl" className="font-bold">IMAGE URL</label>
                     <InputText id="imageUrl" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)}
                                className="input-field" placeholder="e.g. /images/duck.png"/>
                 </div>

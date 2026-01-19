@@ -184,6 +184,132 @@
   border-top: 4px solid white !important;
 }
 
+/* ===== PAGINATOR ===== */
+
+.pixel-paginator {
+  background: #1e1e2e;
+  border-top: 4px solid white;
+  padding: 0.75rem;
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+.pixel-paginator button,
+.pixel-paginator .p-paginator-page {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 10px;
+
+  background: #0f0f1a;
+  color: white;
+
+  border: 4px solid white;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 #000;
+
+  width: 36px;
+  height: 36px;
+  margin: 0 4px;
+
+  transition: none;
+}
+
+.pixel-paginator button:hover,
+.pixel-paginator .p-paginator-page:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.pixel-paginator .p-paginator-page.p-highlight {
+  background: #FFD700;
+  color: black;
+  border-color: black;
+}
+
+.pixel-paginator button:disabled {
+  opacity: 0.35;
+  box-shadow: none;
+}
+
+.pixel-paginator .p-link {
+  border-radius: 0 !important;
+}
+
+.pixel-paginator .p-dropdown {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 10px;
+
+  background: #0f0f1a;
+  color: white;
+
+  border: 4px solid white;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 #000;
+
+  height: 36px;
+  min-width: 90px;
+}
+
+.pixel-paginator .p-dropdown-label {
+  padding: 0.4rem 0.6rem;
+}
+
+.pixel-paginator .p-dropdown-trigger {
+  border-left: 4px solid white;
+}
+
+.p-dropdown.pixel-dropdown {
+  background: #0f0f1a;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  color: white;
+}
+
+.p-dropdown-label {
+  padding: 0.7rem 1rem;
+  color: white;
+}
+
+.p-dropdown-label.p-placeholder {
+  color: #888;
+}
+
+.p-dropdown-trigger {
+  border-left: 4px solid white;
+  width: 3rem;
+}
+
+.p-dropdown-panel {
+  background: #1e1e2e;
+  border: 4px solid white;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.p-dropdown-item {
+  padding: 0.7rem 1rem;
+  border-bottom: 2px solid #333;
+  font-size: 0.7rem;
+  color: white;
+}
+
+.p-dropdown-item:hover {
+  background: #3B82F6;
+  color: black;
+}
+
+.p-dropdown-item.p-highlight {
+  background: #FFD700;
+  color: white;
+}
+
+.p-dropdown *,
+.p-dropdown-panel * {
+  transition: none !important;
+}
+
 /* ===== DIVIDER ===== */
 
 .pixel-divider {
