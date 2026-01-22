@@ -163,7 +163,7 @@ const HomePage: React.FC = () => {
             <div className="main-content" style={{flex: 1, padding: '2rem', paddingBottom: '7rem'}}>
                 <header className="App-header" style={{minHeight: 'auto', marginBottom: '3rem', padding: '2rem'}}>
                     <img src={logo} className="App-logo" alt="logo" style={{height: '150px'}}/>
-                    <h1>DUCK'N'GO / THE RETRO DUCK</h1>
+                    <h1>DUCK'N'GAMES / THE RETRO DUCK</h1>
                     <h3>WELCOME TO - MAYBE NOT THE BEST - BUT THE DUCKI-EST VIDEOGAME SHOP ON THE INTERNET!</h3>
                     <p>We like ducks. And we like videogames. And we like ducks.</p>
                 </header>

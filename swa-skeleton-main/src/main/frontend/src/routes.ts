@@ -14,6 +14,7 @@ import UserProfile from "./views/UserProfile";
 import SignUpView from "./views/SignUpView";
 import Notification from "./views/Notification";
 import ManageProducts from "./views/ManageProducts";
+import ContactView from "./views/ContactView";
 
 /**
  * Define the routes of the application.
@@ -70,4 +71,9 @@ export const UserProfileRoute = {
 export const NotificationRoute = {
     url: ROUTES.NOTIFICATION,
     component: Notification
+}
+
+export const ContactRoute = {
+    url: ROUTES.CONTACT,
+    component: ContactView
 }

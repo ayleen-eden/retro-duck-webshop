@@ -687,3 +687,23 @@
 .p-tooltip * {
   transition: none !important;
 }
+
+/* ===== LINK ===== */
+
+.link:hover {
+  color: #3B82F6;
+  text-decoration: underline;
+}
+
+.link:active {
+  transform: translate(1px, 1px);
+}
+
+.link {
+  color: #FFD700;
+  text-decoration: none;
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+}
