@@ -37,6 +37,7 @@ public class RatingMapper implements DTOMapper<Rating, RatingDTO>{
                 rating.getRating(),
                 rating.getComment(),
                 rating.getAuthor().getId(),
+                rating.getAuthor().getUsername(),
                 rating.getProduct().getId()
         );
 
@@ -61,6 +62,7 @@ public class RatingMapper implements DTOMapper<Rating, RatingDTO>{
         rating.setComment(ratingDto.comment());
         rating.setProduct(product);
         rating.setAuthor(author);
+        rating.setUsername(author.getUsername());
 
         return rating;
     }

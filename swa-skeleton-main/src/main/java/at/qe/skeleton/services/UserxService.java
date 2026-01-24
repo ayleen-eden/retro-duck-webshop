@@ -96,6 +96,10 @@ public class UserxService implements UserDetailsService {
         return userRepository.findFirstByUsername(username).orElse(null);
     }
 
+    public Userx getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     @PreAuthorize("isAuthenticated()")
     public Userx updateUserSelf(Userx currentUser, UserProfileUpdateDTO dto) {
         if (currentUser == null || currentUser.getId() == null) {

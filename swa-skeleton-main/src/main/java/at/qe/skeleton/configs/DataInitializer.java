@@ -38,7 +38,7 @@ public class DataInitializer {
             p1.setCategories(Set.of(ProductCategory.PC));
             productService.saveProduct(p1);
 
-            createProduct(productService, "Panzer Dragoon Saga", "Rare RPG gem.", 999.99, 2, 0.2, ProductCategory.SATURN, "https://upload.wikimedia.org/wikipedia/en/6/64/PanzerDragoonSagaBox.jpg");
+            createProduct(productService, "Panzer Dragoon Saga", "Enter the world of Panzer Dragoon Saga and experience a game like no other: a fusion of classic Panzer action with the most technologically advanced RPG to come to Saturn.", 999.99, 2, 0.2, ProductCategory.SATURN, "https://upload.wikimedia.org/wikipedia/en/6/64/PanzerDragoonSagaBox.jpg");
             createProduct(productService, "Dead Space", "Only the Dead Survive.", 9.99, 2, 0.5, ProductCategory.XBOX_360, "https://upload.wikimedia.org/wikipedia/en/5/57/Dead_Space_Box_Art.jpg");
 
             System.out.println("--- Test Data Initialized ---");
