@@ -41,8 +41,8 @@ public class ProductEventListener {
 
         for (Subscription sub : subs) {
             Notification notification = new Notification();
-            notification.setTitle(String.format("%s restock", productName));
-            notification.setDescription(String.format("%s was restocked. Stock is now %d", productName, productStock));
+            notification.setTitle(String.format("%s RESTOCK", productName));
+            notification.setDescription(String.format("Stock is now %d.", productStock));
             notification.setProduct(product);
             notification.setTimestamp(LocalDateTime.now());
             notification.setType(NotificationType.RESTOCK);
@@ -65,8 +65,8 @@ public class ProductEventListener {
 
         for (Subscription sub : subs) {
             Notification notification = new Notification();
-            notification.setTitle(String.format("%s sale", productName));
-            notification.setDescription(String.format("%s is on sale. Price is now %.2f instead of %.2f.", productName, newProductPrice, productPrice));
+            notification.setTitle(String.format("%s SALE", productName));
+            notification.setDescription(String.format("Price is now %.2f instead of %.2f.", newProductPrice, productPrice));
             notification.setProduct(product);
             notification.setTimestamp(LocalDateTime.now());
             notification.setType(NotificationType.SALE);
@@ -86,8 +86,8 @@ public class ProductEventListener {
 
         for (Subscription sub : subs) {
             Notification notification = new Notification();
-            notification.setTitle(String.format("%s out of stock", productName));
-            notification.setDescription(String.format("%s is out of stock. You will be notified about restocks.", productName));
+            notification.setTitle(String.format("%s OUT OF STOCK", productName));
+            notification.setDescription("You will be notified about restocks.");
             notification.setProduct(product);
             notification.setTimestamp(LocalDateTime.now());
             notification.setType(NotificationType.OUT_OF_STOCK);

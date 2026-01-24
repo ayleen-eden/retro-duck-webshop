@@ -56,9 +56,11 @@ public class ProductService {
         Product oldProduct = getProductById(oldProductId).orElse(null);
 
         if (oldProduct == null) {
-            //TODO
             return null;
         }
+
+        Long previousStock = oldProduct.getStock();
+        Double previousDiscount = oldProduct.getDiscount();
 
         if (newProduct.name() != null) oldProduct.setName(newProduct.name());
         if (newProduct.description() != null) oldProduct.setDescription(newProduct.description());
@@ -66,32 +68,28 @@ public class ProductService {
         if (newProduct.imageUrl() != null) oldProduct.setImageUrl(newProduct.imageUrl());
 
         if (newProduct.stock() != null && newProduct.stock() >= 0) {
-            if (newProduct.stock() > oldProduct.getStock()) {
-                publisher.publishEvent(
-                        new ProductRestockEvent(this, oldProduct.getId())
-                );
-            }
-
-            if (newProduct.stock() == 0) {
-                publisher.publishEvent(
-                        new ProductOutOfStockEvent(this, oldProduct.getId())
-                );
-            }
-
             oldProduct.setStock(newProduct.stock());
         }
 
         if (newProduct.discount() != null) {
-            if (newProduct.discount() > oldProduct.getDiscount()) {
-                publisher.publishEvent(
-                        new ProductSaleEvent(this, oldProduct.getId())
-                );
-            }
-
             oldProduct.setDiscount(newProduct.discount());
         }
 
         Product updatedProduct = saveProduct(oldProduct);
+
+        if (newProduct.stock() != null && newProduct.stock() > previousStock) {
+            publisher.publishEvent(new ProductRestockEvent(this, updatedProduct.getId()));
+        }
+
+        if (newProduct.stock() != null && newProduct.stock() == 0) {
+            publisher.publishEvent(new ProductOutOfStockEvent(this, updatedProduct.getId()));
+        }
+
+        if (newProduct.discount() != null && newProduct.discount() > previousDiscount) {
+            publisher.publishEvent(new ProductSaleEvent(this, updatedProduct.getId()));
+        }
+
         return productMapper.mapTo(updatedProduct);
     }
+
 }

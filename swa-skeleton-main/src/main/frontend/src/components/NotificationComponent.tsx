@@ -22,7 +22,7 @@ export const NotificationComponent: React.FC = () => {
         type: { value: null, matchMode: FilterMatchMode.EQUALS }
     });
 
-    const USE_DUMMY = true;
+    const USE_DUMMY = false;
 
     const [user, setUser] = useState<UserxTypes | null>(null);
     const [notifications, setNotifications] = useState<NotificationDTO[]>(USE_DUMMY ? dummyNotifications : []);
@@ -63,7 +63,7 @@ export const NotificationComponent: React.FC = () => {
 
     const titleTemplate = (rowData: NotificationDTO) => rowData.title;
 
-    const timestampTemplate = (rowData: NotificationDTO) => rowData.timestamp.toDateString();
+    const timestampTemplate = (rowData: NotificationDTO) => new Date(rowData.timestamp).toDateString();
     const descriptionBodyTemplate = (rowData: NotificationDTO)=> {
         return (
             <div>
