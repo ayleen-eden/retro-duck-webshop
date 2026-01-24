@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.dtos.UserProfileUpdateDTO;
 import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.UserxRole;
 import at.qe.skeleton.repositories.UserxRepository;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,9 @@ public class UserxService implements UserDetailsService {
         if (user.isNew()) {
             if (userRepository.existsByUsername(user.getUsername())) {
                 throw new UsernameDuplicateException("Username " + user.getUsername() + " not available");
+            }
+            if (user.getRoles() == null || user.getRoles().isEmpty()) {
+                user.setRoles(java.util.Set.of(UserxRole.CUSTOMER));
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Userx authUser = authenticatedUserService.getAuthenticatedUser();
