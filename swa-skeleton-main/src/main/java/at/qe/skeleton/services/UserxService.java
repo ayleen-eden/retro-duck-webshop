@@ -4,7 +4,6 @@ import at.qe.skeleton.dtos.UserProfileUpdateDTO;
 import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
-import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;

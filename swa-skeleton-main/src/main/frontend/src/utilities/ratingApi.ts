@@ -2,6 +2,7 @@ import {RatingDTO, RatingTypes} from "../DTO/rating.types";
 import globalAxios from "axios";
 import {createRatingFromInterfaces} from "./ratingUtilities";
 
+//TODO: Make this Api consistent with userx >w<
 
 const fetchAllRatingsByProduct = async (productId: number): Promise<RatingDTO[]> => {
     try {

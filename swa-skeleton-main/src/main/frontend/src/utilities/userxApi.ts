@@ -119,6 +119,15 @@ const getCurrentUser = async (): Promise<UserxTypes> => {
     }
 }
 
+const getUser = async (userId: number): Promise<UserxTypes> => {
+    try {
+        const response = await globalAxios.get<string>(`/api/users/${userId}`);
+        return UserxTypes.fromJSON(response.data)
+    } catch (err: any) {
+        throw new Error(`Error getting user: ${err?.message ?? String(err)}`);
+    }
+}
+
 /**
  * Return true if user is authenticated
  * @throws otherwise
@@ -142,5 +151,6 @@ export const UserxApi = {
     deleteUser,
     fetchAllUsers,
     getCurrentUser,
+    getUser,
     isAuthenticated,
 }

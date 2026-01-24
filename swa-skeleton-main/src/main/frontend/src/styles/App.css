@@ -496,6 +496,8 @@
   padding: 0 0.5rem;
   color: #FFD700;
   text-shadow: 2px 2px 0 #000;
+    background: transparent;
+    border: none;
 }
 
 .pixel-fieldset input,
