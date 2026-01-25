@@ -48,9 +48,12 @@ const CartComponent: React.FC = () => {
             setCart({ items: [] });
             alert("Order created! Thank you for shopping with us!");
             navigate(ROUTES.ORDERS);
-        } catch (err: any) {
-            console.error("Order creation failed:", err);
-            alert("Failed to create order: " + (err.message || "Unknown error"));
+        } catch (error: any) {
+            if (error.response && error.response.status === 409) {
+                alert("Failed to create order: " + error.response.data); // Hier wäre ein Toast schöner
+            } else {
+                alert("Failed to create order: Unknown error");
+            }
         }
     };
 
