@@ -81,7 +81,7 @@ const NavbarComponent: React.FC = () => {
         <Button
             label={user ? "LOGOUT" : "LOGIN"}
             icon={user ? "pi pi-sign-out" : "pi pi-sign-in"}
-            className="p-button-text pixel-link"
+            className="pixel-link"
             onClick={() => {
                 if (user) {
                     navigate(ROUTES.LOGOUT);

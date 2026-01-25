@@ -28,7 +28,5 @@ export const menuConfig: MenuItemConfig[] = [
         label: 'Notifications', icon: 'pi pi-bell', route: ROUTES.NOTIFICATION
     }, {
         label: "Manage Products", icon: "pi pi-box", route: ROUTES.MANAGE_PRODUCTS, roles: [UserxRole.MANAGER, UserxRole.ADMIN]
-    }, {
-        label: "Logout", icon: "pi pi-sign-out", route: ROUTES.LOGOUT, roles: [UserxRole.CUSTOMER]
-    },
+    }
 ];
