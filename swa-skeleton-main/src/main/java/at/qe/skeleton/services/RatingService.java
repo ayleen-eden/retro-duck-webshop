@@ -51,7 +51,7 @@ public class RatingService {
     public Rating saveRating(Rating rating) {
         if (rating.isNew()) {
             if (ratingRepository.existsRatingByAuthorAndProduct(rating.getAuthor(), rating.getProduct())) {
-                throw new RatingAlreadyExistsException("User " + rating.getAuthor().getUsername() + "already submitted a rating");
+                throw new RatingAlreadyExistsException("User " + rating.getUsername() + "already submitted a rating");
             }
         } else {
             rating.setTimestamp(LocalDateTime.now());

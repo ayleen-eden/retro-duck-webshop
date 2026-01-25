@@ -84,6 +84,16 @@ public class UserxController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserxDTO> getUser(@PathVariable Long id) {
+        try {
+            Userx user = userService.getUserById(id);
+            return ResponseEntity.ok(userMapper.mapTo(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/authenticated")
     public ResponseEntity<String> isAuthenticated(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {

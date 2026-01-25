@@ -13,5 +13,6 @@ public record RatingDTO (
     RatingScale rating,
     String comment,
     Long authorId,
+    String username,
     Long productId
 ) {}

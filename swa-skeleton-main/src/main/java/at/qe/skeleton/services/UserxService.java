@@ -5,7 +5,6 @@ import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.UserxRole;
 import at.qe.skeleton.repositories.UserxRepository;
-import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -98,6 +97,10 @@ public class UserxService implements UserDetailsService {
 
     public Userx getUserByUsername(String username) {
         return userRepository.findFirstByUsername(username).orElse(null);
+    }
+
+    public Userx getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @PreAuthorize("isAuthenticated()")
