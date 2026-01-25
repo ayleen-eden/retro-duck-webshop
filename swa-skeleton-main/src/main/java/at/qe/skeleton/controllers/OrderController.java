@@ -2,6 +2,9 @@ package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.CartDTO;
 import at.qe.skeleton.dtos.OrderDTO;
+import at.qe.skeleton.exceptions.InsufficientStockException;
+import at.qe.skeleton.exceptions.OrderNotFoundException;
+import at.qe.skeleton.exceptions.UnauthorizedOrderAccessException;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.OrderService;
 import at.qe.skeleton.services.AuthenticatedUserService;
@@ -32,16 +35,19 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody CartDTO cartDto) {
+    public ResponseEntity<?> createOrder(@RequestBody CartDTO cartDto) {
+        Userx currentUser = authenticatedUserService.getAuthenticatedUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
-            Userx currentUser = authenticatedUserService.getAuthenticatedUser();
-            if (currentUser == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
             OrderDTO orderDto = orderService.placeOrder(currentUser, cartDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (InsufficientStockException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
 
@@ -54,11 +60,10 @@ public class OrderController {
         try {
             OrderDTO order = orderService.getOrderById(id, currentUser);
             return ResponseEntity.ok(order);
-        } catch (RuntimeException e) {
-            if (e.getMessage().contains("Access denied")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-            }
+        } catch (OrderNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UnauthorizedOrderAccessException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
 
@@ -71,11 +76,10 @@ public class OrderController {
         try {
             orderService.deleteOrder(id, currentUser);
             return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            if (e.getMessage().contains("Access denied")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-            }
+        } catch (OrderNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UnauthorizedOrderAccessException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
 }
