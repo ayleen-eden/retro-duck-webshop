@@ -57,7 +57,7 @@ public class UserxServiceTest {
                         "User \"" + user + "\" has a updateDate defined");
             } else if ("user2".equals(user.getUsername())) {
                 Assertions.assertTrue(user.getRoles().contains(UserxRole.CUSTOMER),
-                        "User \"" + user + "\" does not have role EMPLOYEE");
+                        "User \"" + user + "\" does not have role CUSTOMER");
                 Assertions.assertNotNull(user.getCreateUser(),
                         "User \"" + user + "\" does not have a createUser defined");
                 Assertions.assertNotNull(user.getCreateDate(),
@@ -194,7 +194,7 @@ public class UserxServiceTest {
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserxRole.MANAGER),
                 "User \"" + username + "\" does not have role MANAGER");
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserxRole.CUSTOMER),
-                "User \"" + username + "\" does not have role EMPLOYEE");
+                "User \"" + username + "\" does not have role CUSTOMER");
         Assertions.assertNotNull(freshlyCreatedUser.getCreateUser(),
                 "User \"" + username + "\" does not have a createUser defined after being saved");
         Assertions.assertEquals(adminUser, freshlyCreatedUser.getCreateUser(),

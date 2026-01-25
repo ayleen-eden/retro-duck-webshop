@@ -10,6 +10,7 @@ import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.Userx;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -37,16 +38,16 @@ public class SubscriptionController {
     }
 
     @PostMapping
-    public ResponseEntity<SubscriptionDTO> subscribe(@RequestParam Long userId, @RequestParam Long productId) {
+    public ResponseEntity<SubscriptionDTO> subscribe(@RequestParam Long productId) {
 
-        Optional<Userx> userOpt = userService.loadUser(userId);
+        Userx user = (Userx) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Product> productOpt = productService.getProductById(productId);
 
-        if (userOpt.isEmpty() || productOpt.isEmpty()) {
+        if (productOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        Subscription subscription = subscriptionService.createSubscription(userOpt.get(), productOpt.get());
+        Subscription subscription = subscriptionService.createSubscription(user, productOpt.get());
 
         SubscriptionDTO subscriptionDTO = new SubscriptionDTO(
                 subscription.getId(),
@@ -58,15 +59,16 @@ public class SubscriptionController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> unsubscribe(@RequestParam Long userId, @RequestParam Long productId) {
-        Userx user = userService.loadUser(userId).orElse(null);
+    public ResponseEntity<Void> unsubscribe(@RequestParam Long productId) {
+
+        Userx user = (Userx) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Product product = productService.getProductById(productId).orElse(null);
 
         if (user == null || product == null) {
             return ResponseEntity.notFound().build();
         }
 
-        subscriptionService.deleteSubscription(subscriptionService.getSubscriptionByUserIdAndProductId(userId, productId));
+        subscriptionService.deleteSubscription(subscriptionService.getSubscriptionByUserIdAndProductId(user.getId(), productId));
 
         return ResponseEntity.noContent().build();
     }

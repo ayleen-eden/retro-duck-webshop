@@ -76,10 +76,10 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         setSubLoading(true);
         try {
             if (subscribed) {
-                await unsubscribe(user.id, Number(productId));
+                await unsubscribe(Number(productId));
                 setSubscribed(false);
             } else {
-                await subscribe(user.id, Number(productId));
+                await subscribe(Number(productId));
                 setSubscribed(true);
             }
         } catch (err) {
