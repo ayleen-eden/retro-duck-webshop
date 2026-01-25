@@ -66,7 +66,7 @@ public class OrderServiceTest {
     @Test
     void testPlaceOrderSuccess() throws InsufficientStockException {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
-        when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
+        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
         when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of()));
 
@@ -82,7 +82,7 @@ public class OrderServiceTest {
     void testPlaceOrderInsufficientStock() {
         testProduct.setStock(1L); // Zu wenig
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
-        when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
+        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
 
         assertThatThrownBy(() -> orderService.placeOrder(testUser, testCart))
                 .isInstanceOf(InsufficientStockException.class)
@@ -112,7 +112,7 @@ public class OrderServiceTest {
         CartDTO cartWithDiscount = new CartDTO(List.of(item));
 
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(cartWithDiscount));
-        when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
+        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
 
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
