@@ -9,7 +9,7 @@ export const ContactComponent: React.FC = () => {
             <div style={{display: 'flex', flexDirection: 'column', lineHeight: '1.2', justifyContent:"center", alignItems:"center"}}>
                 <img src={logo} className="App-logo" alt="logo" style={{height: '150px'}}/>
                 <span style={{fontWeight: 'bold', fontSize: '1.8rem', marginBottom: '1rem'}}>
-                    <h2> DUCK'N'GAMES / THE RETRO DUCK </h2>
+                    <h2>THE RETRO DUCK </h2>
                 </span>
                 <span style={{fontWeight: 'bold', fontSize: '1.8rem', marginBottom: '1rem'}}>
                     <h3> Software Architecture Project (WS 2025/26) </h3>
@@ -27,11 +27,7 @@ export const ContactComponent: React.FC = () => {
                     <a href="https://git.uibk.ac.at/csbc4400" className="link link_red">Leonid Stommel</a>
                 </span>
                 <span style={{fontSize: '1.5rem', color: 'gray', justifyContent:"center", alignItems:"center", marginBottom: '1rem'}}>
-                    ANYTHING YOU DON'T LIKE ABOUT DUCK'N'GAMES? WE DON'T CARE!
-                    {
-                        // TODO:
-                        // ? remove "WE DON'T CARE!"
-                    }
+                    ANYTHING YOU DON'T LIKE ABOUT THE RETRO DUCK? WE DON'T CARE!
                 </span>
             </div>
         </div>

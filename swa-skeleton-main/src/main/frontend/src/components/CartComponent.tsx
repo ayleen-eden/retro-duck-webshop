@@ -34,12 +34,18 @@ const CartComponent: React.FC = () => {
         USE_DUMMY ? dummyCart : getCart()
     );
 
-    const cartWithTotals: CartItemDTO[] = cart.items.map(item => ({
-        ...item,
-        totalPrice: item.amount * item.pricePerUnit
-    }));
+    const cartWithTotals: CartItemDTO[] = cart.items.map(item => {
+        const discount = item.productDiscount ?? 0;
 
-    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit, 0).toFixed(2);
+        const totalPrice = item.amount * item.pricePerUnit * (1 - discount);
+
+        return {
+            ...item,
+            totalPrice: Number(totalPrice.toFixed(2))
+        };
+    });
+
+    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * (item.pricePerUnit * (1 - item.productDiscount)), 0).toFixed(2);
 
     const handleCheckout = async () => {
         try {
@@ -102,8 +108,8 @@ const CartComponent: React.FC = () => {
         return ( <img src={rowData.productImage} alt={rowData.productName} style={{ width: 50, height: 50, objectFit: 'cover' }}/> );
     };
     const amountBodyTemplate = (rowData: CartItemDTO) => rowData.amount;
-    const priceBodyTemplate = (rowData: CartItemDTO) => `${rowData.pricePerUnit.toFixed(2)} €`;
-    const totalBodyTemplate = (rowData: CartItemDTO) => `${(rowData.amount * rowData.pricePerUnit).toFixed(2)} €`;
+    const priceBodyTemplate = (rowData: CartItemDTO) => `${(rowData.pricePerUnit * (1 - rowData.productDiscount)).toFixed(2)} €`;
+    const totalBodyTemplate = (rowData: CartItemDTO) => `${(rowData.amount * (rowData.pricePerUnit * (1 - rowData.productDiscount))).toFixed(2)} €`;
 
     const numericRangeFilterTemplate = (options: any) => {
         const [from, to] = options.value ?? [null, null];

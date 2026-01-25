@@ -74,8 +74,8 @@ const OrderHistoryComponent: React.FC = () => {
 
     const rowExpansionTemplate = (data: OrderDTO) => {
         return (
-            <div className="p-3" style={{ backgroundColor: 'rgba(0,0,0,0.05)', borderRadius: '8px' }}>
-                <h5 style={{ marginTop: 0 }}>Details for Order #{data.id}</h5>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.05)', borderRadius: '8px', padding: '1rem' }}>
+                <h4 style={{ marginTop: '1rem', marginLeft: '1rem' }}>DETAILS FOR ORDER #{data.id}</h4>
                 <ConfirmPopup />
                 <DataTable<OrderItemDTO[]> value={data.items} className="pixel-table-nested">
                     <Column field="productName" header="PRODUCT" />

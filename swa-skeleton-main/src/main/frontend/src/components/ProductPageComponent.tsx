@@ -191,7 +191,7 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
                                     icon="pi pi-plus"
                                     className={`${styles.btn} ${styles.btn_green}`}
                                     onClick={() => setQuantity(quantity + 1)}
-                                    disabled={product.stock <= 0}
+                                    disabled={product.stock <= 0 || quantity >= product.stock}
                                 />
                             </div>
 

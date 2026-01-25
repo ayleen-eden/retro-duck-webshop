@@ -21,16 +21,21 @@ export function addToCart(cart: CartDTO, product: ProductDTO | CartItemDTO, quan
     const pricePerUnit = 'price' in product ? product.price : product.pricePerUnit;
     const productName = 'name' in product ? product.name : product.productName;
     const productImage = 'imageUrl' in product ? product.imageUrl : product.productImage;
+    const productDiscount = 'discount' in product ? product.discount : product.productDiscount;
 
     const existingItem = cart.items.find(i => i.productId === productId);
 
     const items = existingItem
         ? cart.items.map(item =>
             item.productId === productId
-                ? {...item, amount: item.amount + quantity}
+                ? {
+                    ...item,
+                    amount: item.amount + quantity,
+                    discount: productDiscount
+                }
                 : item
         )
-        : [...cart.items, {productId, productName, productImage, pricePerUnit, amount: quantity}];
+        : [...cart.items, {productId, productName, productImage, pricePerUnit, productDiscount, amount: quantity}];
 
     const updatedCart = {
         ...cart,

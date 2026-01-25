@@ -9,6 +9,7 @@ export const OrderApi = {
             productName: item.productName,
             productImage: item.productImage,
             pricePerUnit: item.pricePerUnit,
+            productDiscount: item.productDiscount,
             amount: item.amount
         }));
 
