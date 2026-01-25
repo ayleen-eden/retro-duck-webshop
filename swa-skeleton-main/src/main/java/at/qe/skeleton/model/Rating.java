@@ -26,6 +26,8 @@ public class Rating implements Persistable<Long>, Serializable {
     private String comment;
     @ManyToOne(fetch = FetchType.LAZY)
     private Userx author;
+    @Transient
+    private String username;
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
@@ -63,6 +65,14 @@ public class Rating implements Persistable<Long>, Serializable {
 
     public void setAuthor(Userx author) {
         this.author = author;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Product getProduct() {

@@ -7,17 +7,15 @@
     border-radius: 0; /* hard edges */
     box-shadow: 4px 4px 0 #000;
 
-    transition: none; /* no smooth transitions, pixel style */
+    transition: none;
     cursor: pointer;
 }
 
-/* Hover = lift */
 .btn:hover {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0 #000;
 }
 
-/* Active = click */
 .btn:active {
     transform: translate(4px, 4px);
     box-shadow: 0 0 0 #000;

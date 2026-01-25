@@ -11,6 +11,7 @@ import {InputMaskChangeEvent} from "primereact/inputmask";
 import {CheckboxChangeEvent} from "primereact/checkbox";
 import {UserxValidationResult} from "../utilities/userxUtilities";
 import {Message} from "primereact/message";
+import styles from "./PixelButton.module.css";
 
 interface UserDialogProps {
     visible: boolean;
@@ -53,19 +54,20 @@ const UserDialog: React.FC<UserDialogProps> = ({
      */
     const renderFooter = () => (
         <div>
-            <Button label="Cancel" icon="pi pi-times" onClick={onHide} className="p-button-text" />
-            <Button label={isNewUser ? "Create" : "Save"} icon="pi pi-check" onClick={onSubmit}
-                autoFocus />
+            <Button label="CANCEL" icon="pi pi-times" onClick={onHide} className={`${styles.btn} ${styles.btn_red}`}/>
+            <Button label={isNewUser ? "CREATE" : "SAVE"} icon="pi pi-check" onClick={onSubmit}
+                autoFocus className={`${styles.btn} ${styles.btn_green}`}/>
         </div>
     );
 
     return (
         <Dialog
-            header={isNewUser ? "Create New User" : "Edit User"}
+            header={isNewUser ? "CREATE NEW USER" : "EDIT USER"}
             visible={visible}
             style={{ width: '50vw' }}
             onHide={onHide}
             footer={renderFooter}
+            className="product-card"
         >
             {validation.message && (<Message severity="error" text={validation.message} className="mb-3"/>)}
             {user && (

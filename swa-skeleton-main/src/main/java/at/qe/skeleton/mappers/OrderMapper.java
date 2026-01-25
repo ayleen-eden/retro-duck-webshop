@@ -3,11 +3,11 @@ package at.qe.skeleton.mappers;
 import at.qe.skeleton.dtos.OrderDTO;
 import at.qe.skeleton.dtos.OrderItemDTO;
 import at.qe.skeleton.model.Order;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class OrderMapper implements DTOMapper<Order, OrderDTO> {
 
     @Override
@@ -26,20 +26,17 @@ public class OrderMapper implements DTOMapper<Order, OrderDTO> {
                         item.getQuantity(),
                         item.getPriceAtPurchase(),
                         item.getDiscountAtPurchase()
-                )).collect(Collectors.toList())
+                )).collect(Collectors.toList()),
+                order.getShippingName(),
+                order.getPaymentMethod()
         );
     }
 
     @Override
     public Order mapFrom(OrderDTO dto) {
-        if (dto == null) {
-            return null;
-        }
+        if (dto == null) return null;
         Order order = new Order();
         order.setId(dto.id());
-        order.setOrderDate(dto.orderDate());
-        order.setStatus(dto.status());
-        order.setTotalPrice(dto.totalPrice());
         return order;
     }
 }

@@ -76,10 +76,10 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         setSubLoading(true);
         try {
             if (subscribed) {
-                await unsubscribe(user.id, Number(productId));
+                await unsubscribe(Number(productId));
                 setSubscribed(false);
             } else {
-                await subscribe(user.id, Number(productId));
+                await subscribe(Number(productId));
                 setSubscribed(true);
             }
         } catch (err) {
@@ -191,7 +191,7 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
                                     icon="pi pi-plus"
                                     className={`${styles.btn} ${styles.btn_green}`}
                                     onClick={() => setQuantity(quantity + 1)}
-                                    disabled={product.stock <= 0}
+                                    disabled={product.stock <= 0 || quantity >= product.stock}
                                 />
                             </div>
 

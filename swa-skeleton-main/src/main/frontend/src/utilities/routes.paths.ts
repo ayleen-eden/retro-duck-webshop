@@ -5,9 +5,11 @@ export const ROUTES = {
     LOGOUT: '/logout',
     SIGNUP: '/signup',
     CART: '/cart',
+    CHECKOUT: '/checkout',
     PRODUCT_PAGE: '/products/:productId',
     ORDERS: '/orders',
     PROFILE: '/profile',
     NOTIFICATION: '/notification',
     MANAGE_PRODUCTS: '/manage-products',
+    CONTACT: '/contact',
 } as const;

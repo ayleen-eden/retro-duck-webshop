@@ -45,64 +45,63 @@ const UserForm: React.FC<UserFormProps> =
                 <form>
                 <div className="card p-fluid flex flex-wrap gap-3">
                     <div className="flex-auto mb-3">
-                        <label htmlFor="username" className="font-bold block">Username</label>
+                        <label htmlFor="username" className="font-bold block">USERNAME</label>
                         <InputText id="username" name="username" value={user.username}
                             onChange={onInputChange} required={true}
-                            placeholder="Username"
+                            placeholder="USERNAME"
                             autoComplete="off"
                             className={fieldErrors?.username ? 'p-invalid' : undefined}
                         />
                         {fieldErrors?.username && <small className="p-error">{fieldErrors.username}</small>}
                     </div>
                     <div className="flex-auto mb-3">
-                        <label htmlFor="firstName" className="font-bold block">First
-                            Name</label>
+                        <label htmlFor="firstName" className="font-bold block">FIRST NAME</label>
                         <InputText id="firstName" name="firstName" value={user.firstName}
                             onChange={onInputChange}
-                            placeholder="First Name"
+                            placeholder="FIRST NAME"
                             autoComplete="off"
                             className={fieldErrors?.firstName ? 'p-invalid' : undefined}
                         />
                         {fieldErrors?.firstName && <small className="p-error">{fieldErrors.firstName}</small>}
                     </div>
                     <div className="flex-auto mb-3">
-                        <label htmlFor="lastName" className="font-bold block">Last Name</label>
+                        <label htmlFor="lastName" className="font-bold block">LAST NAME</label>
                         <InputText id="lastName" name="lastName" value={user.lastName}
                             onChange={onInputChange}
-                            placeholder="Last Name"
+                            placeholder="LAST NAME"
                             autoComplete="off"
                             className={fieldErrors?.lastName ? 'p-invalid' : undefined}
                         />
                         {fieldErrors?.lastName && <small className="p-error">{fieldErrors.lastName}</small>}
                     </div>
                     <div className="flex-auto mb-3">
-                        <label htmlFor="email" className="font-bold block">E-Mail</label>
+                        <label htmlFor="email" className="font-bold block">E-MAIL</label>
                         <InputText id="email" name="email" value={user.email ?? ''}
-                            onChange={onInputChange} placeholder="E-Mail" autoComplete="off"
+                            onChange={onInputChange} placeholder="E-MAIL" autoComplete="off"
                         />
                     </div>
                     <div className="flex-auto mb-3">
-                        <label htmlFor="password" className="font-bold block">Password</label>
+                        <label htmlFor="password" className="font-bold block">PASSWORD</label>
                         <Password inputId="password" name="password" value={user.password}
                             onChange={onInputChange}
-                            placeholder="Password"
+                            placeholder="PASSWORD"
                             autoComplete="off"
                             className={fieldErrors?.password ? 'p-invalid' : undefined}
                         />
                         {fieldErrors?.password && <small className="p-error">{fieldErrors.password}</small>}
                     </div>
                     <div className="flex-auto mb-3">
-                        <label htmlFor="roles" className="font-bold block">Roles</label>
+                        <label htmlFor="roles" className="font-bold block">ROLES</label>
                         <MultiSelect inputId="roles" name="roles" value={user.roles} onChange={onRolesChange}
                             options={userRoles} optionLabel="label"
-                            placeholder="Select Roles"
+                            placeholder="SELECT ROLES"
                             className="w-full md:w-20rem"
                             invalid={!!fieldErrors?.roles}
                         />
                         {fieldErrors?.roles && <small className="p-error">{fieldErrors.roles}</small>}
                     </div>
                     <div className="flex-auto mb-3">
-                        <label htmlFor="phone" className="font-bold block">Phone</label>
+                        <label htmlFor="phone" className="font-bold block">PHONE</label>
                         <InputMask id="phone" name="phone" mask="+99 999 9999999"
                             onChange={onInputChange}
                             placeholder="+43 123 1234567"
@@ -111,7 +110,7 @@ const UserForm: React.FC<UserFormProps> =
                         </InputMask>
                     </div>
                     <div className="flex-auto mb-3">
-                        <label htmlFor="enabled" className="font-bold block">Enabled</label>
+                        <label htmlFor="enabled" className="font-bold block">ENABLED</label>
                         <Checkbox inputId="enabled" name="enabled"
                             style={{ float: "right" }}
                             onChange={onUserEnabledChange}

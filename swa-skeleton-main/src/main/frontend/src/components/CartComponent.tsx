@@ -1,20 +1,19 @@
-import React, { useState } from "react";
-import { CartDTO, CartItemDTO } from "../DTO/cart.types";
-import { getCart, removeFromCart, addToCart } from "../utilities/cartUtilities";
-import { Button } from "primereact/button";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Card } from 'primereact/card';
-import { Divider } from "primereact/divider";
-import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
-import { ScrollTop } from "primereact/scrolltop";
-import { dummyCart } from "./DebugDummyCart";
-import { Message } from "primereact/message";
-import { OrderApi } from "../utilities/orderApi";
-import { FilterService } from "primereact/api";
-import { InputNumber } from "primereact/inputnumber";
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from "../utilities/routes.paths";
+import React, {useState} from "react";
+import {CartDTO, CartItemDTO} from "../DTO/cart.types";
+import {getCart, removeFromCart, addToCart} from "../utilities/cartUtilities";
+import {Button} from "primereact/button";
+import {DataTable} from "primereact/datatable";
+import {Column} from "primereact/column";
+import {Card} from 'primereact/card';
+import {Divider} from "primereact/divider";
+import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
+import {ScrollTop} from "primereact/scrolltop";
+import {dummyCart} from "./DebugDummyCart";
+import {Message} from "primereact/message";
+import {FilterService} from "primereact/api";
+import {InputNumber} from "primereact/inputnumber";
+import {useNavigate} from 'react-router-dom';
+import {ROUTES} from "../utilities/routes.paths";
 import styles from "./PixelButton.module.css"
 
 FilterService.register('custom_range', (value, filters) => {
@@ -34,24 +33,21 @@ const CartComponent: React.FC = () => {
         USE_DUMMY ? dummyCart : getCart()
     );
 
-    const cartWithTotals: CartItemDTO[] = cart.items.map(item => ({
-        ...item,
-        totalPrice: item.amount * item.pricePerUnit
-    }));
+    const cartWithTotals: CartItemDTO[] = cart.items.map(item => {
+        const discount = item.productDiscount ?? 0;
 
-    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit, 0).toFixed(2);
+        const totalPrice = item.amount * item.pricePerUnit * (1 - discount);
 
-    const handleCheckout = async () => {
-        try {
-            await OrderApi.createOrder(cart);
-            localStorage.removeItem('cart');
-            setCart({ items: [] });
-            alert("Order created! Thank you for shopping with us!");
-            navigate(ROUTES.ORDERS);
-        } catch (err: any) {
-            console.error("Order creation failed:", err);
-            alert("Failed to create order: " + (err.message || "Unknown error"));
-        }
+        return {
+            ...item,
+            totalPrice: Number(totalPrice.toFixed(2))
+        };
+    });
+
+    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * (item.pricePerUnit * (1 - item.productDiscount)), 0).toFixed(2);
+
+    const handleProceedToCheckout = () => {
+        navigate(ROUTES.CHECKOUT);
     };
 
     const handleRemove = (item: CartItemDTO) => {
@@ -69,26 +65,28 @@ const CartComponent: React.FC = () => {
     };
     const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         confirmPopup({
-            className:"pixel-confirmpopup pixel-icon",
+            className: "pixel-confirmpopup pixel-icon",
             target: event.currentTarget,
-            message:`ARE YOU SURE YOU WANT TO REMOVE ${item.productName}?`,
-            icon:"pi pi-exclamation-triangle",
-            acceptIcon:"pi pi-check",
-            rejectIcon:"pi pi-times",
+            message: `ARE YOU SURE YOU WANT TO REMOVE ${item.productName}?`,
+            icon: "pi pi-exclamation-triangle",
+            acceptIcon: "pi pi-check",
+            rejectIcon: "pi pi-times",
             accept: () => handleRemove(item),
-            reject: () => {}
+            reject: () => {
+            }
         });
     };
 
     const actionBodyTemplate = (rowData: CartItemDTO) => {
         return (
             <div>
-                <Button className={`${styles.btn} ${styles.btn_red}`} icon="pi pi-minus" size="small" onClick={(event) => handleDecrease(event, rowData)} text/>
-                <Button className={`${styles.btn} ${styles.btn_green}`} icon="pi pi-plus" size="small" onClick={() => handleIncrease(rowData)} text/>
+                <Button className={`${styles.btn} ${styles.btn_red}`} icon="pi pi-minus" size="small"
+                        onClick={(event) => handleDecrease(event, rowData)} text/>
+                <Button className={`${styles.btn} ${styles.btn_green}`} icon="pi pi-plus" size="small"
+                        onClick={() => handleIncrease(rowData)} text/>
                 <Button
                     className={`${styles.btn} ${styles.btn_grey}`}
                     icon="pi pi-trash"
-                    severity="danger"
                     outlined
                     onClick={(event) => confirmDelete(event, rowData)}
                 />
@@ -97,19 +95,22 @@ const CartComponent: React.FC = () => {
     };
 
     const imageBodyTemplate = (rowData: CartItemDTO) => {
-        return ( <img src={rowData.productImage} alt={rowData.productName} style={{ width: 50, height: 50, objectFit: 'cover' }}/> );
+        return (<img src={rowData.productImage} alt={rowData.productName}
+                     style={{width: 50, height: 50, objectFit: 'cover'}}/>);
     };
     const amountBodyTemplate = (rowData: CartItemDTO) => rowData.amount;
-    const priceBodyTemplate = (rowData: CartItemDTO) => `${rowData.pricePerUnit.toFixed(2)} €`;
-    const totalBodyTemplate = (rowData: CartItemDTO) => `${(rowData.amount * rowData.pricePerUnit).toFixed(2)} €`;
+    const priceBodyTemplate = (rowData: CartItemDTO) => `${(rowData.pricePerUnit * (1 - rowData.productDiscount)).toFixed(2)} €`;
+    const totalBodyTemplate = (rowData: CartItemDTO) => `${(rowData.amount * (rowData.pricePerUnit * (1 - rowData.productDiscount))).toFixed(2)} €`;
 
     const numericRangeFilterTemplate = (options: any) => {
         const [from, to] = options.value ?? [null, null];
 
         return (
             <div className="flex gap-1">
-                <InputNumber value={from} onChange={(e) => options.filterApplyCallback([e.value, to])} placeholder="from" allowEmpty style={{ width: '6rem' }}/>
-                <InputNumber value={to} onChange={(e) => options.filterApplyCallback([from, e.value])} placeholder="to" allowEmpty style={{ width: '6rem' }}/>
+                <InputNumber value={from} onChange={(e) => options.filterApplyCallback([e.value, to])}
+                             placeholder="FROM" allowEmpty style={{width: '6rem'}}/>
+                <InputNumber value={to} onChange={(e) => options.filterApplyCallback([from, e.value])} placeholder="TO"
+                             allowEmpty style={{width: '6rem'}}/>
             </div>
         );
     };
@@ -120,19 +121,20 @@ const CartComponent: React.FC = () => {
             <div>
                 {cart.items.length === 0 ? (
                     <div style={{
-                        display:"flex",
-                        justifyContent:"center",
-                        alignItems:"center"
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
                     }}>
                         <div style={{
-                            textAlign:"center",
-                            marginTop:"50px",
-                            padding:"40px",
-                            backgroundColor:"ghostwhite",
-                            maxWidth:"400px",
-                            boxShadow:"0 4px 8px rgba(0,0,0,0.1)"}}
+                            textAlign: "center",
+                            marginTop: "50px",
+                            padding: "40px",
+                            backgroundColor: "ghostwhite",
+                            maxWidth: "400px",
+                            boxShadow: "0 4px 8px rgba(0,0,0,0.1)"
+                        }}
                         >
-                            <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue" style={{ fontSize: '2.5rem' }}/>
+                            <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue" style={{fontSize: '2.5rem'}}/>
                             <h2 style={{color: 'black'}}> YOUR CART IS EMPTY!</h2>
                             <p>LOOKS LIME YOU HAVEN'T ADDED ANYTHING YET.</p>
                             <Divider className="pixel-divider-dashed"/>
@@ -148,12 +150,12 @@ const CartComponent: React.FC = () => {
                 ) : (
                     <>
                         <div style={{
-                            display:"flex",
-                            justifyContent:"center",
-                            alignItems:"center",
-                            marginBottom:"30px"
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginBottom: "30px"
                         }}>
-                            <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue"  style={{ fontSize: '4rem' }}/>
+                            <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue" style={{fontSize: '4rem'}}/>
                         </div>
                         <DataTable<CartItemDTO[]>
                             value={cartWithTotals}
@@ -210,9 +212,9 @@ const CartComponent: React.FC = () => {
                         </DataTable>
                         <Divider className="pixel-divider-dashed"/>
                         <div style={{
-                            display:"flex",
-                            justifyContent:"center",
-                            alignItems:"center"
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
                         }}>
                             <Message
                                 className="pixel-message pixel-message-info"
@@ -220,7 +222,7 @@ const CartComponent: React.FC = () => {
                                 content={
                                     <div>
                                         <i className="pi pi-wallet text-xl"></i>
-                                        <b> Total: {totalPrice} €</b>
+                                        <b> TOTAL: {totalPrice} €</b>
                                     </div>
                                 }
                             />
@@ -228,12 +230,12 @@ const CartComponent: React.FC = () => {
                         <Divider className="pixel-divider-dashed" align="center"/>
                         <Button
                             className={`${styles.btn} ${styles.btn_green}`}
-                            icon="pi pi-money-bill"
+                            icon="pi pi-arrow-right"
                             label="PROCEED TO CHECKOUT"
                             size="large"
                             severity="success"
                             raised
-                            onClick={handleCheckout}
+                            onClick={handleProceedToCheckout}
                         />
                     </>
                 )}

@@ -17,7 +17,8 @@ import {
     UserProfileRoute,
     NotificationRoute,
     SignUpRoute,
-    ManageProductsRoute
+    ManageProductsRoute,
+    ContactRoute, CheckoutRoute
 } from "./routes";
 import PrivateRoute from './components/PrivateRoute';
 import {UserProvider} from "./Contexts/authenticatedUserContext";
@@ -34,6 +35,7 @@ const App: React.FC = () => {
                         <Route path={CartRoute.url} Component={CartRoute.component}/>
                         <Route path={HomePageRoute.url} Component={HomePageRoute.component}/>
                         <Route path={ProductPageRoute.url} element={<ProductPageRoute.component/>}/>
+                        <Route path={ContactRoute.url} element={<ContactRoute.component/>}/>
                         /* Protected Routes (authentication required) */
                         <Route element={<PrivateRoute/>}>
                             <Route path={ManageUsersRoute.url} Component={ManageUsersRoute.component}/>
@@ -42,6 +44,7 @@ const App: React.FC = () => {
                             <Route path={UserProfileRoute.url} Component={UserProfileRoute.component}/>
                             <Route path={NotificationRoute.url} Component={NotificationRoute.component}/>
                             <Route path={ManageProductsRoute.url} Component={ManageProductsRoute.component}/>
+                            <Route path={CheckoutRoute.url} Component={CheckoutRoute.component}/>
                         </Route>
                         {/* end of protected routes */}
                     </Routes>

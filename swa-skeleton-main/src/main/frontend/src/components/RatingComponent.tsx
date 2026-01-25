@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from "react";
-import {RatingDTO, RatingScale, RatingTypes} from "../DTO/rating.types";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import {RatingDTO, RatingScale, ratingScaleToNumber, RatingTypes} from "../DTO/rating.types";
 import {RatingApi} from "../utilities/ratingApi";
 import {createRatingFromInterfaces} from "../utilities/ratingUtilities";
 import {UserxApi} from "../utilities/userxApi";
@@ -10,6 +10,7 @@ import {Tag} from "primereact/tag";
 import {FilterService} from "primereact/api";
 import RatingForm from "./RatingForm";
 import {Toast} from "primereact/toast";
+import RatingListComponent from "./RatingListComponent";
 
 FilterService.register('custom_range', (value, filters) => {
     const [from, to] = filters ?? [null, null];
@@ -29,11 +30,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const [comment, setComment] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedRating, setRating] = useState<RatingDTO>(RatingTypes.empty);
+    const [sorting, setSorting] = useState<'asc' | 'desc'>('desc')
+    const [ratingFilter, setRatingFilter] = useState<number | undefined>(undefined);
     const toast = useRef<Toast>(null)
-
-    //Unused
-    //const [isNewRating, setIsNewRating] = useState<boolean>(false);
-    //const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchAllRatingsForProduct = async () => {
@@ -49,6 +48,22 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         }
         void fetchAllRatingsForProduct();
     }, [productId]);
+
+    const sortedRatings = useMemo(() => {
+        return [...ratings]
+            .filter(rating => {
+                // Filter nur anwenden, wenn ratingFilter gesetzt ist
+                if (ratingFilter !== undefined) {
+                    return ratingScaleToNumber(rating.rating) === ratingFilter;
+                }
+                return true; // sonst alle Ratings behalten
+            })
+            .sort((a, b) =>
+                sorting === "asc"
+                    ? ratingScaleToNumber(a.rating) - ratingScaleToNumber(b.rating)
+                    : ratingScaleToNumber(b.rating) - ratingScaleToNumber(a.rating)
+            );
+    }, [ratings, sorting, ratingFilter]);
 
     useEffect(() => {
         if (loading) return;
@@ -66,7 +81,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     }, [ratings, productId, loading]);
 
     const createRating = async () => {
-        if (ratingValue == undefined) {
+        if (ratingValue == undefined || comment == '') {
             toast.current?.show({
                 severity: 'warn',
                 summary: 'Your rating is still incomplete!',
@@ -81,13 +96,26 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
             rating: numberToRatingScale(ratingValue),
             comment: comment,
             authorId: author.id,
+            username: author.username,
             productId: productId
         });
         const createdRating: RatingDTO = await RatingApi.createRating(productId, ratingToSave.toCreateJSON());
         setRating(createdRating);
+        const newRating = RatingTypes.fromJSON(createdRating)
+        setRatings(prevState => [...prevState, newRating])
     };
 
     const updateRating = async () => {
+        if (ratingValue == undefined || comment == '') {
+            toast.current?.show({
+                severity: 'warn',
+                summary: 'Your rating is still incomplete!',
+                detail: 'Click on the stars to rate this product',
+                life: 3000
+            });
+            return;
+        }
+
         if (!selectedRating?.id) return;
 
         try {
@@ -96,10 +124,13 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
                 rating: numberToRatingScale(ratingValue),
                 comment: comment,
                 authorId: selectedRating.authorId,
+                username: selectedRating.username,
                 productId: productId
             }
             const updatedRating: RatingDTO = await RatingApi.updateRating(productId, selectedRating.id, ratingToUpdate)
             setRating(updatedRating);
+            const newRating = RatingTypes.fromJSON(updatedRating);
+            setRatings(prevState => prevState.map(rating => rating.id === newRating.id ? newRating : rating))
         } catch (err: any) {
             console.error('Error updating Rating:', err);
         }
@@ -138,30 +169,21 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         }
     }
 
-    const legendTemplate = (
-        <div className="flex align-items-center gap-2 px-2">
-            <span className="font-bold">Majima Duck</span>
-            <Rating value={5} readOnly cancel={false} style={{marginLeft: '0.5rem'}}/>
-        </div>
-    );
-
     return (
         <div>
             <Toast ref={toast} position="top-right"/>
-            <RatingForm selectedRating={selectedRating} ratingValue={ratingValue} comment={comment}
-                        setRatingValue={setRatingValue} setComment={setComment} createRating={createRating}
-                        updateRating={updateRating} deleteRating={deleteRating}></RatingForm>
-            <div style={{textAlign: "center", marginTop: 50}}>
-                <Divider className="pixel-divider-dashed" align="center">
-                    <Tag className="pixel-tag pixel-tag-blue" value="What other Users think of this product"/>
-                </Divider>
-            </div>
-            <div style={{textAlign: "center", marginTop: 50, marginBottom: 50}}>
-                {ratings.length === 0 ? (
-                    <h2> BE THE FIRST TO VOICE YOUR OPINION! </h2>
-                ) : (
-                    <p> RATING IS PRESENT </p>
-                )}
+            <div style={{display: "flex", gap: "2rem",
+                alignItems: "flex-start"}}>
+                <div style={{flex: 1}}>
+                <RatingForm selectedRating={selectedRating} ratingValue={ratingValue} comment={comment}
+                            setRatingValue={setRatingValue} setComment={setComment} createRating={createRating}
+                            updateRating={updateRating} deleteRating={deleteRating}></RatingForm>
+                </div>
+                <div style={{flex: 2}}>
+                <RatingListComponent sortedRatings={sortedRatings} sorting={sorting} setSorting={setSorting}
+                                     ratingFilter={ratingFilter}
+                                     setRatingFilter={setRatingFilter}></RatingListComponent>
+                </div>
             </div>
         </div>
     )

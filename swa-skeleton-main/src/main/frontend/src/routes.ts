@@ -14,6 +14,8 @@ import UserProfile from "./views/UserProfile";
 import SignUpView from "./views/SignUpView";
 import Notification from "./views/Notification";
 import ManageProducts from "./views/ManageProducts";
+import ContactView from "./views/ContactView";
+import CheckoutView from "./views/CheckoutView";
 
 /**
  * Define the routes of the application.
@@ -47,6 +49,11 @@ export const CartRoute = {
     component: Cart
 }
 
+export const CheckoutRoute = {
+    url: ROUTES.CHECKOUT,
+    component: CheckoutView
+}
+
 export const ManageProductsRoute = {
     url: ROUTES.MANAGE_PRODUCTS,
     component: ManageProducts
@@ -70,4 +77,9 @@ export const UserProfileRoute = {
 export const NotificationRoute = {
     url: ROUTES.NOTIFICATION,
     component: Notification
+}
+
+export const ContactRoute = {
+    url: ROUTES.CONTACT,
+    component: ContactView
 }

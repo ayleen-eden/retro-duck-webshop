@@ -1,6 +1,7 @@
 package at.qe.skeleton.dtos;
 
 import at.qe.skeleton.model.OrderStatus;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,5 +10,8 @@ public record OrderDTO(
         LocalDateTime orderDate,
         OrderStatus status,
         double totalPrice,
-        List<OrderItemDTO> items
-) {}
+        List<OrderItemDTO> items,
+        String shippingName,
+        String paymentMethod
+) {
+}
