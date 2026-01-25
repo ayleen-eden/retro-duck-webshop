@@ -7,24 +7,18 @@ import {Menubar} from "primereact/menubar";
 
 import {useUser} from "../Contexts/authenticatedUserContext";
 import {menuConfig, MenuItemConfig} from "../config/menuConfig";
-import {UserxRole} from "../DTO/userx.types";
 import {MenuItem} from "primereact/menuitem";
 import {Link, useNavigate} from "react-router-dom";
 import {ROUTES} from "../utilities/routes.paths";
-import { Button } from 'primereact/button';
+import {Button} from 'primereact/button';
 
 /**
  * Navbar component.
  */
 const NavbarComponent: React.FC = () => {
-    //TODO navbar for everyone (user management, communism)
     const {currentUser: user} = useUser();
 
     const filterMenu = React.useCallback((items: MenuItemConfig[]): MenuItemConfig[] => {
-        if (!user) return [];
-
-        const hasRole = (required?: UserxRole[]) =>
-            !required || required.some(r => user.roles.includes(r));
 
         return items
             .map(item => {
@@ -32,10 +26,17 @@ const NavbarComponent: React.FC = () => {
                 return {...item, items: visibleChildren};
             })
             .filter(item => {
-                const visible = hasRole(item.roles);
-                const hasChildren = !!item.items?.length;
-                // Keep if user can see it, or it has visible children
-                return visible || hasChildren;
+                if (!item.roles || item.roles.length === 0) {
+                    return true;
+                }
+
+                if (!user) {
+                    return false;
+                }
+                const hasRole = item.roles.some(r => user.roles.includes(r));
+                const hasVisibleChildren = !!item.items?.length;
+
+                return hasRole || hasVisibleChildren;
             });
     }, [user]);
 
@@ -58,13 +59,13 @@ const NavbarComponent: React.FC = () => {
 
                 return (
                     <Link
-                    to={configItem.route ?? "#"}
-                    className="pixel-link"
-                    onClick={handleClick}
-                >
-                    {menuItem.icon && <span className={options.iconClassName} />}
-                    <span className={options.labelClassName}>{menuItem.label}</span>
-                </Link>
+                        to={configItem.route ?? "#"}
+                        className="pixel-link"
+                        onClick={handleClick}
+                    >
+                        {menuItem.icon && <span className={options.iconClassName}/>}
+                        <span className={options.labelClassName}>{menuItem.label}</span>
+                    </Link>
                 );
             }
             return menuItem;
@@ -93,7 +94,7 @@ const NavbarComponent: React.FC = () => {
 
     return (
         <div className="sticky-navbar">
-            <Menubar model={model}/>
+            <Menubar model={model} end={end}/>
         </div>
     );
 }
