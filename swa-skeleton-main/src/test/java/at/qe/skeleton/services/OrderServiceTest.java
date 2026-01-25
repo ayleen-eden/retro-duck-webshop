@@ -1,8 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.dtos.CartDTO;
-import at.qe.skeleton.dtos.CartItemDTO;
-import at.qe.skeleton.dtos.OrderDTO;
+import at.qe.skeleton.dtos.*;
 import at.qe.skeleton.exceptions.InsufficientStockException;
 import at.qe.skeleton.exceptions.OrderNotFoundException;
 import at.qe.skeleton.exceptions.UnauthorizedOrderAccessException;
@@ -18,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +43,7 @@ public class OrderServiceTest {
     private Userx testUser;
     private Product testProduct;
     private CartDTO testCart;
+    private CheckoutRequestDTO testCheckoutRequest;
 
     @BeforeEach
     void setUp() {
@@ -56,11 +56,21 @@ public class OrderServiceTest {
         testProduct.setId(1L);
         testProduct.setName("Laptop");
         testProduct.setPrice(1000.0);
-        testProduct.setDiscount(1.0); // Kein Rabatt
+        testProduct.setDiscount(0.0); // Kein Rabatt
         testProduct.setStock(5L);
 
         CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
         testCart = new CartDTO(List.of(item));
+
+        testCheckoutRequest = new CheckoutRequestDTO(
+                testCart,
+                "Duck McQuack",
+                "Quakstreet 404",
+                "Ducksbruck",
+                "6020",
+                "Duckland",
+                "DUCK_COINS"
+        );
     }
 
     @Test
@@ -68,9 +78,11 @@ public class OrderServiceTest {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of()));
 
-        OrderDTO result = orderService.placeOrder(testUser, testCart);
+        OrderDTO mappedDto = new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of(), "Duck McQuak", "DUCK_COINS");
+        when(orderMapper.mapTo(any(Order.class))).thenReturn(mappedDto);
+
+        OrderDTO result = orderService.placeOrder(testUser, testCheckoutRequest);
 
         assertThat(result).isNotNull();
         assertThat(testProduct.getStock()).isEqualTo(3);
@@ -84,7 +96,7 @@ public class OrderServiceTest {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
 
-        assertThatThrownBy(() -> orderService.placeOrder(testUser, testCart))
+        assertThatThrownBy(() -> orderService.placeOrder(testUser, testCheckoutRequest))
                 .isInstanceOf(InsufficientStockException.class)
                 .hasMessageContaining("Insufficient stock");
 
@@ -95,7 +107,7 @@ public class OrderServiceTest {
     void testPlaceOrderCartValidationFails() {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> orderService.placeOrder(testUser, testCart))
+        assertThatThrownBy(() -> orderService.placeOrder(testUser, testCheckoutRequest))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Cart validation failed");
 
@@ -105,25 +117,23 @@ public class OrderServiceTest {
     @Test
     void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
         testProduct.setPrice(1000.0);
-        testProduct.setDiscount(0.8);
+        testProduct.setDiscount(0.2);
         testProduct.setStock(10L);
 
-        CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
-        CartDTO cartWithDiscount = new CartDTO(List.of(item));
-
-        when(cartValidationService.validateCart(any())).thenReturn(Optional.of(cartWithDiscount));
+        when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
 
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
-        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of()));
 
-        OrderDTO result = orderService.placeOrder(testUser, cartWithDiscount);
+        OrderDTO mappedDto = new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of(), "Duck McQuack", "DUCK_COINS");
+        when(orderMapper.mapTo(any(Order.class))).thenReturn(mappedDto);
+
+        orderService.placeOrder(testUser, testCheckoutRequest);
 
         Order savedOrder = orderCaptor.getValue();
         double expectedTotal = 1000.0 * 0.8 * 2;
         assertThat(savedOrder.getTotalPrice()).isEqualTo(expectedTotal);
-        assertThat(result).isNotNull();
     }
 
     @Test
@@ -161,13 +171,11 @@ public class OrderServiceTest {
 
         orderService.deleteOrder(10L, testUser);
 
-        // Überprüft ob delete-Methode genau einmal aufgerufen wurde
-        verify(orderRepository, times(1)) .delete(order);
+        verify(orderRepository, times(1)).delete(order);
     }
 
     @Test
     void testDeleteOrderAccessDenied() {
-        // Arrange
         Userx stranger = new Userx();
         stranger.setId(2L);
         stranger.setUsername("stranger");
@@ -182,7 +190,6 @@ public class OrderServiceTest {
                 .isInstanceOf(UnauthorizedOrderAccessException.class)
                 .hasMessageContaining("Access denied");
 
-        // Sicherstellen, dass delete() niemals aufgerufen wurde
         verify(orderRepository, never()).delete(any());
     }
 
@@ -207,11 +214,11 @@ public class OrderServiceTest {
         List<Order> orders = List.of(order1, order2);
         when(orderRepository.findByUser(testUser)).thenReturn(orders);
 
-        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(null, null, null, 0.0, List.of()));
+        when(orderMapper.mapTo(any(Order.class))).thenReturn(new OrderDTO(null, null, null, 0.0, List.of(), null, null));
 
-        List<OrderDTO> result = (List<OrderDTO>) orderService.getOrderHistory(testUser);
+        Collection<OrderDTO> result = orderService.getOrderHistory(testUser);
 
         assertThat(result).hasSize(2);
-        verify(orderRepository).findByUser(testUser); // Verifizieren dass Repo aufgerufen wurde
+        verify(orderRepository).findByUser(testUser);
     }
 }

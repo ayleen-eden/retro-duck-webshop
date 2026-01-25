@@ -20,13 +20,6 @@ public class CartValidationService {
         this.productService = productService;
     }
 
-    /*
-    ? When is a cart valid?
-    - Prices and discounts match
-    - Product exists
-    - Enough product is available
-    */
-
     public Optional<CartDTO> validateCart(CartDTO cart) {
         Collection<CartItemDTO> updatedItems = new ArrayList<>();
 
@@ -38,21 +31,23 @@ public class CartValidationService {
             }
 
             Product product = optionalProduct.get();
-            Double actualPrice = product.getPrice() * product.getDiscount();
+
+            Double actualPrice = product.getPrice() * (1.0 - product.getDiscount());
 
             if (product.getStock() < item.amount()) {
                 return Optional.empty();
             }
 
-            if (actualPrice.equals(item.pricePerUnit())) { // ? How is discount implemented
-                updatedItems.add(item);
-            } else {
-                updatedItems.add(new CartItemDTO(item.productId(), item.productName(), item.productImage(), actualPrice, item.amount()));
-            }
+            updatedItems.add(new CartItemDTO(
+                    item.productId(),
+                    item.productName(),
+                    item.productImage(),
+                    actualPrice,
+                    item.amount()
+            ));
         }
 
         CartDTO updatedCart = new CartDTO(updatedItems);
-
         return Optional.of(updatedCart);
     }
 }
