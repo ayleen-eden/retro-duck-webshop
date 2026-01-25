@@ -48,7 +48,7 @@ export const SubscriptionComponent: React.FC = () => {
 
     const handleUnsubscribe = async (productId: number) => {
         if (!user?.id) return;
-        await unsubscribe(user.id, productId);
+        await unsubscribe(productId);
         setSubscriptions(prev => prev.filter(sub => sub.productId !== productId));
     };
 
