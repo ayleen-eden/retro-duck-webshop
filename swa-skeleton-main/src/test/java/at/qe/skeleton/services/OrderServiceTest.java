@@ -3,6 +3,9 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.dtos.CartDTO;
 import at.qe.skeleton.dtos.CartItemDTO;
 import at.qe.skeleton.dtos.OrderDTO;
+import at.qe.skeleton.exceptions.InsufficientStockException;
+import at.qe.skeleton.exceptions.OrderNotFoundException;
+import at.qe.skeleton.exceptions.UnauthorizedOrderAccessException;
 import at.qe.skeleton.mappers.OrderMapper;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.OrderRepository;
@@ -61,7 +64,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void testPlaceOrderSuccess() {
+    void testPlaceOrderSuccess() throws InsufficientStockException {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -82,8 +85,10 @@ public class OrderServiceTest {
         when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
 
         assertThatThrownBy(() -> orderService.placeOrder(testUser, testCart))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(InsufficientStockException.class)
                 .hasMessageContaining("Insufficient stock");
+
+        verify(orderRepository, never()).save(any());
     }
 
     @Test
@@ -98,7 +103,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void testPlaceOrderCalculatesTotalPriceWithDiscount() {
+    void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
         testProduct.setPrice(1000.0);
         testProduct.setDiscount(0.8);
         testProduct.setStock(10L);
@@ -133,7 +138,7 @@ public class OrderServiceTest {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
         assertThatThrownBy(() -> orderService.getOrderById(1L, stranger))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(UnauthorizedOrderAccessException.class)
                 .hasMessageContaining("Access denied");
     }
 
@@ -142,12 +147,12 @@ public class OrderServiceTest {
         when(orderRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> orderService.getOrderById(999L, testUser))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(OrderNotFoundException.class)
                 .hasMessageContaining("Order not found");
     }
 
     @Test
-    void testDeleteOrderSuccess() {
+    void testDeleteOrderSuccess() throws OrderNotFoundException, UnauthorizedOrderAccessException {
         Order order = new Order();
         order.setId(10L);
         order.setUser(testUser);
@@ -174,7 +179,7 @@ public class OrderServiceTest {
         when(orderRepository.findById(10L)).thenReturn(Optional.of(order));
 
         assertThatThrownBy(() -> orderService.deleteOrder(10L, stranger))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(UnauthorizedOrderAccessException.class)
                 .hasMessageContaining("Access denied");
 
         // Sicherstellen, dass delete() niemals aufgerufen wurde
@@ -186,7 +191,7 @@ public class OrderServiceTest {
         when(orderRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> orderService.deleteOrder(999L, testUser))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(OrderNotFoundException.class)
                 .hasMessageContaining("Order not found");
 
         verify(orderRepository, never()).delete(any());

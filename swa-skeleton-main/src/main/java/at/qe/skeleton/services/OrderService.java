@@ -3,6 +3,9 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.dtos.CartDTO;
 import at.qe.skeleton.dtos.CartItemDTO;
 import at.qe.skeleton.dtos.OrderDTO;
+import at.qe.skeleton.exceptions.InsufficientStockException;
+import at.qe.skeleton.exceptions.OrderNotFoundException;
+import at.qe.skeleton.exceptions.UnauthorizedOrderAccessException;
 import at.qe.skeleton.mappers.OrderMapper;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.OrderRepository;
@@ -36,8 +39,8 @@ public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
-    @Transactional
-    public OrderDTO placeOrder(Userx user, CartDTO rawCart) {
+    @Transactional(rollbackFor = Exception.class) // Rollback bei jeder Exception
+    public OrderDTO placeOrder(Userx user, CartDTO rawCart) throws InsufficientStockException {
         CartDTO validatedCart = cartValidationService.validateCart(rawCart)
                 .orElseThrow(() -> new RuntimeException("Cart validation failed"));
 
@@ -50,11 +53,11 @@ public class OrderService {
         double total = 0;
 
         for (CartItemDTO itemDto : validatedCart.items()) {
-            Product product = productRepository.findById(itemDto.productId())
-                    .orElseThrow(() -> new RuntimeException("Product not found: " + itemDto.productId()));
+            Product product = productRepository.findByIdWithLock(itemDto.productId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
 
             if (product.getStock() < itemDto.amount()) {
-                throw new RuntimeException("Insufficient stock for product: " + product.getName());
+                throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
             }
 
             product.setStock(product.getStock() - itemDto.amount());
@@ -97,12 +100,12 @@ public class OrderService {
         log.info("--------------------------------------------------");
     }
 
-    public OrderDTO getOrderById(Long id, Userx user) {
+    public OrderDTO getOrderById(Long id, Userx user) throws OrderNotFoundException, UnauthorizedOrderAccessException {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
 
         if (!order.getUser().equals(user)) {
-            throw new RuntimeException("Access denied: You are not allowed to view this order");
+            throw new UnauthorizedOrderAccessException("Access denied for order: " + id);
         }
         return orderMapper.mapTo(order);
     }
@@ -114,13 +117,13 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void deleteOrder(Long id, Userx user) {
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteOrder(Long id, Userx user) throws OrderNotFoundException, UnauthorizedOrderAccessException {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
 
         if (!order.getUser().equals(user)) {
-            throw new RuntimeException("Access denied: You are not allowed to delete this order");
+            throw new UnauthorizedOrderAccessException("Access denied for order: " + id);
         }
         orderRepository.delete(order);
     }
