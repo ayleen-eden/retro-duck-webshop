@@ -1,9 +1,13 @@
 export const ROUTES = {
-    HOME : '/',
+    HOME: '/',
     MANAGE_USERS: '/manage-users',
     LOGIN: '/login',
     LOGOUT: '/logout',
+    SIGNUP: '/signup',
     CART: '/cart',
-    PRODUCT_PAGE: '/product_id/:productId',
-    ORDERS: '/orders'
+    PRODUCT_PAGE: '/products/:productId',
+    ORDERS: '/orders',
+    PROFILE: '/profile',
+    NOTIFICATION: '/notification',
+    MANAGE_PRODUCTS: '/manage-products',
 } as const;

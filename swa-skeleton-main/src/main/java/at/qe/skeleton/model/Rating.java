@@ -8,6 +8,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * Entity representing ratings.
+ */
 @Entity
 public class Rating implements Persistable<Long>, Serializable {
     @Serial

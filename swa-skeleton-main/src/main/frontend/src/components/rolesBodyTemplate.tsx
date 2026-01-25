@@ -9,7 +9,7 @@ import React from "react";
 export const rolesBodyTemplate = (rowData: UserDTO) => {
     return <>
         {rowData.roles.map(role => {
-            return <Tag key={role} value={role} severity="info" style={{marginRight: '.5em'}}/>
+            return <Tag key={role} value={role} severity="info" style={{marginRight: '.5em'}} className="pixel-tag pixel-tag-blue"/>
         })}
     </>;
 };

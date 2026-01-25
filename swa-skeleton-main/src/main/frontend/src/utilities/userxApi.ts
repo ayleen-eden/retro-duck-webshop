@@ -6,6 +6,14 @@ import globalAxios from "axios";
 import {UserDTO, UserxTypes} from "../DTO/userx.types";
 import {createUserxFromInterfaces} from "./userxUtilities";
 
+export interface UserProfileUpdateDTO {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    password?: string;
+}
+
 /**
  * This file provides utility functions for CRUD operations on users.
  */
@@ -41,6 +49,20 @@ const createUser = async (selectedUser: UserDTO): Promise<UserxTypes> => {
 }
 
 /**
+ * Register a new user (Public Signup)
+ * @param userData basic information for registration
+ * @returns Promise<any>
+ */
+const registerUser = async (userData: any): Promise<any> => {
+    try {
+        const response = await globalAxios.post("/api/users", userData);
+        return response.data;
+    } catch (err: any) {
+        throw err;
+    }
+}
+
+/**
  * Update an existing user
  * @param selectedUser the user to update
  * @returns Promise<UserxTypes> a promise that resolves with the updated user
@@ -53,6 +75,19 @@ const updateUser = async (selectedUser: UserDTO): Promise<UserxTypes> => {
         return UserxTypes.fromJSON(response.data);
     } catch (err: any) {
         throw new Error(`Error updating user: ${err?.message ?? String(err)}`);
+    }
+}
+
+/**
+ * Updates the current (logged-in) user-profile
+ * @param data
+ */
+const updateCurrentUserProfile = async (data: UserProfileUpdateDTO): Promise<UserDTO> => {
+    try {
+        const response = await globalAxios.patch("/api/users/me", data);
+        return response.data;
+    } catch (err: any) {
+        throw new Error(`Error updating profile: ${err?.message ?? String(err)}`);
     }
 }
 
@@ -101,7 +136,9 @@ const isAuthenticated = async (): Promise<boolean> => {
 
 export const UserxApi = {
     createUser,
+    registerUser,
     updateUser,
+    updateCurrentUserProfile,
     deleteUser,
     fetchAllUsers,
     getCurrentUser,

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -65,7 +66,7 @@ public class WebSecurityConfig {
   }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) {
 
         try {
 
@@ -76,6 +77,7 @@ public class WebSecurityConfig {
                     .securityMatcher("/api/**", "/authentication/**", "/h2-console/**")
                     .authorizeHttpRequests(authorize -> authorize
                             .requestMatchers("/h2-console/**").access(devOnly())
+                            .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                             .requestMatchers("/authentication/**").permitAll()
 
                             // PRODUCTS

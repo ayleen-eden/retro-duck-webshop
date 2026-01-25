@@ -1,4 +1,4 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.services;
 
 import at.qe.skeleton.dtos.CartDTO;
 import at.qe.skeleton.dtos.CartItemDTO;
@@ -7,8 +7,6 @@ import at.qe.skeleton.mappers.OrderMapper;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.OrderRepository;
 import at.qe.skeleton.repositories.ProductRepository;
-import at.qe.skeleton.services.CartValidationService;
-import at.qe.skeleton.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +54,7 @@ public class OrderServiceTest {
         testProduct.setName("Laptop");
         testProduct.setPrice(1000.0);
         testProduct.setDiscount(1.0); // Kein Rabatt
-        testProduct.setStock(5);
+        testProduct.setStock(5L);
 
         CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
         testCart = new CartDTO(List.of(item));
@@ -79,7 +77,7 @@ public class OrderServiceTest {
 
     @Test
     void testPlaceOrderInsufficientStock() {
-        testProduct.setStock(1); // Zu wenig
+        testProduct.setStock(1L); // Zu wenig
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
         when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
 
@@ -103,7 +101,7 @@ public class OrderServiceTest {
     void testPlaceOrderCalculatesTotalPriceWithDiscount() {
         testProduct.setPrice(1000.0);
         testProduct.setDiscount(0.8);
-        testProduct.setStock(10);
+        testProduct.setStock(10L);
 
         CartItemDTO item = new CartItemDTO(1L, "Laptop", "image.png", 1000.0, 2);
         CartDTO cartWithDiscount = new CartDTO(List.of(item));

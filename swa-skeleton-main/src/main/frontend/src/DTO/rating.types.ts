@@ -3,11 +3,11 @@
  */
 
 export enum RatingScale {
-    ONE_STAR = 1,
-    TWO_STARS = 2,
-    THREE_STARS = 3,
-    FOUR_STARS = 4,
-    FIVE_STARS = 5
+    ONE_STAR = "ONE_STAR",
+    TWO_STARS = "TWO_STARS",
+    THREE_STARS = "THREE_STARS",
+    FOUR_STARS = "FOUR_STARS",
+    FIVE_STARS = "FIVE_STARS"
 }
 
 
@@ -18,7 +18,7 @@ export enum RatingScale {
 export interface RatingDTO {
     id?: number;
     timestamp?: Date | null;
-    rating?: RatingScale | null;
+    rating?: RatingScale;
     comment: String;
     authorId?: number;
     productId: number | null;
@@ -27,7 +27,7 @@ export interface RatingDTO {
 export class RatingTypes implements RatingDTO {
     id?: number;
     timestamp?: Date | null;
-    rating?: RatingScale | null;
+    rating?: RatingScale;
     comment: String;
     authorId?: number;
     productId: number | null;
@@ -54,6 +54,16 @@ export class RatingTypes implements RatingDTO {
 
     toCreateJSON(): Pick<RatingDTO, 'rating' | 'comment' | 'authorId' | 'productId'> {
         return {
+            rating: RatingScale[this.rating as RatingScale],
+            comment: this.comment,
+            authorId: this.authorId,
+            productId: this.productId
+        };
+    }
+
+    toUpdateJSON(): Pick<RatingDTO, 'id' | 'rating' | 'comment' | 'authorId' | 'productId'> {
+        return {
+            id: this.id,
             rating: this.rating,
             comment: this.comment,
             authorId: this.authorId,
@@ -61,19 +71,11 @@ export class RatingTypes implements RatingDTO {
         };
     }
 
-    toUpdateJSON(): Pick<RatingDTO, 'id' | 'rating' | 'comment'> {
-        return {
-            id: this.id, //Not certain why this would be needed
-            rating: this.rating,
-            comment: this.comment
-        };
-    }
-
     static empty(): RatingTypes {
         return new RatingTypes({
             id: undefined,
             timestamp: null,
-            rating: null,
+            rating: undefined,
             comment: '',
             authorId: undefined,
             productId: null

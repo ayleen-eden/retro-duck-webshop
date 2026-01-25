@@ -1,0 +1,51 @@
+stages:
+  - test
+  - analyze
+
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_MERGE_REQUEST_ID'
+    - when: never
+
+.before_script_template:
+  before_script:
+    - apk add --update maven
+    - apk add --update git
+    - cd swa-skeleton-main
+    - mkdir -p ~/.m2
+    - cp settings.xml ~/.m2/settings.xml
+
+backend-unit-tests:
+  stage: test
+  image: alpine:3.22
+  extends: .before_script_template
+  cache:
+    key: "maven"
+    paths:
+      - swa-skeleton-main/.m2/repository
+  script:
+    - echo "Running unit tests ..."
+    - mvn -Dmaven.repo.local=./.m2/repository clean verify -Dskip.frontend=true
+    - mvn -Dmaven.repo.local=./.m2/repository dependency:copy-dependencies
+  artifacts:
+    paths:
+      - swa-skeleton-main/target
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_MERGE_REQUEST_ID'
+
+sonarqube-analysis:
+  stage: analyze
+  image: sonarsource/sonar-scanner-cli:latest
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - cd swa-skeleton-main
+    - sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}"
+  needs:
+    - job: backend-unit-tests
+      artifacts: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'

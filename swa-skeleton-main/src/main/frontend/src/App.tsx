@@ -14,10 +14,13 @@ import {
     LogoutsRoute,
     ManageUsersRoute,
     ProductPageRoute,
+    UserProfileRoute,
+    NotificationRoute,
+    SignUpRoute,
+    ManageProductsRoute
 } from "./routes";
 import PrivateRoute from './components/PrivateRoute';
 import {UserProvider} from "./Contexts/authenticatedUserContext";
-import ProductPageComponent from "./components/ProductPageComponent";
 
 const App: React.FC = () => {
     return (
@@ -27,6 +30,7 @@ const App: React.FC = () => {
                 <BrowserRouter>
                     <Routes>
                         <Route path={LoginsRoute.url} Component={LoginsRoute.component}/>
+                        <Route path={SignUpRoute.url} Component={SignUpRoute.component}/>
                         <Route path={CartRoute.url} Component={CartRoute.component}/>
                         <Route path={HomePageRoute.url} Component={HomePageRoute.component}/>
                         <Route path={ProductPageRoute.url} element={<ProductPageRoute.component/>}/>
@@ -35,6 +39,9 @@ const App: React.FC = () => {
                             <Route path={ManageUsersRoute.url} Component={ManageUsersRoute.component}/>
                             <Route path={LogoutsRoute.url} Component={LogoutsRoute.component}/>
                             <Route path={OrderHistoryRoute.url} Component={OrderHistoryRoute.component}/>
+                            <Route path={UserProfileRoute.url} Component={UserProfileRoute.component}/>
+                            <Route path={NotificationRoute.url} Component={NotificationRoute.component}/>
+                            <Route path={ManageProductsRoute.url} Component={ManageProductsRoute.component}/>
                         </Route>
                         {/* end of protected routes */}
                     </Routes>

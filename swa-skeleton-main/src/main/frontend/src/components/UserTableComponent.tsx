@@ -20,6 +20,7 @@ import {
     createUserxRoleArrayFromStrings, UserxValidationResult
 } from '../utilities/userxUtilities';
 import {CheckboxChangeEvent} from "primereact/checkbox";
+import styles from "./PixelButton.module.css";
 
 /**
  * Component for managing users.
@@ -212,10 +213,10 @@ const UserTable = () => {
     }
 
 
-    return (<Card title="User List" className="m-4">
+    return (<Card title="USER LIST" className="product-card">
             <Toast ref={toast} />
             {/* Button that opens a new user dialog on click */}
-            <Button label="Add User" icon="pi pi-plus" className="p-button-raised p-button-rounded"
+            <Button label="ADD USER" icon="pi pi-plus" className={`${styles.btn} ${styles.btn_yellow}`}
                     style={{marginBottom: "10px"}} onClick={openNewUserDialog}/>
             <UserListComponent users={users} loading={loading} onEditUser={openEditDialog}/>
 

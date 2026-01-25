@@ -15,6 +15,7 @@ import { FilterService } from "primereact/api";
 import { InputNumber } from "primereact/inputnumber";
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from "../utilities/routes.paths";
+import styles from "./PixelButton.module.css"
 
 FilterService.register('custom_range', (value, filters) => {
     const [from, to] = filters ?? [null, null];
@@ -68,8 +69,9 @@ const CartComponent: React.FC = () => {
     };
     const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         confirmPopup({
+            className:"pixel-confirmpopup pixel-icon",
             target: event.currentTarget,
-            message:`Are you sure you want to remove ${item.productName}?`,
+            message:`ARE YOU SURE YOU WANT TO REMOVE ${item.productName}?`,
             icon:"pi pi-exclamation-triangle",
             acceptIcon:"pi pi-check",
             rejectIcon:"pi pi-times",
@@ -81,9 +83,10 @@ const CartComponent: React.FC = () => {
     const actionBodyTemplate = (rowData: CartItemDTO) => {
         return (
             <div>
-                <Button icon="pi pi-plus" size="small" severity="secondary" onClick={() => handleIncrease(rowData)} text/>
-                <Button icon="pi pi-minus" size="small" severity="secondary" onClick={(event) => handleDecrease(event, rowData)} text/>
+                <Button className={`${styles.btn} ${styles.btn_red}`} icon="pi pi-minus" size="small" onClick={(event) => handleDecrease(event, rowData)} text/>
+                <Button className={`${styles.btn} ${styles.btn_green}`} icon="pi pi-plus" size="small" onClick={() => handleIncrease(rowData)} text/>
                 <Button
+                    className={`${styles.btn} ${styles.btn_grey}`}
                     icon="pi pi-trash"
                     severity="danger"
                     outlined
@@ -111,7 +114,7 @@ const CartComponent: React.FC = () => {
         );
     };
 
-    return (<Card title="Shopping cart" className="m-4">
+    return (<Card title="MY SHOPPING CART" className="product-card">
             <ConfirmPopup/>
             <ScrollTop/>
             <div>
@@ -129,17 +132,16 @@ const CartComponent: React.FC = () => {
                             maxWidth:"400px",
                             boxShadow:"0 4px 8px rgba(0,0,0,0.1)"}}
                         >
-                            <i className="pi pi-shopping-cart" style={{ fontSize: '2.5rem' }}/>
-                            <h2>Your cart is empty!</h2>
-                            <p>Looks like you haven’t added anything yet.</p>
-                            <Divider type="dashed"/>
+                            <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue" style={{ fontSize: '2.5rem' }}/>
+                            <h2 style={{color: 'black'}}> YOUR CART IS EMPTY!</h2>
+                            <p>LOOKS LIME YOU HAVEN'T ADDED ANYTHING YET.</p>
+                            <Divider className="pixel-divider-dashed"/>
                             <Button
-                                label="Go shopping"
+                                className={`${styles.btn} ${styles.btn_yellow}`}
+                                label="GO SHOPPING"
                                 icon="pi pi-cart-plus"
                                 severity="success"
                                 onClick={() => window.location.href = "/"}
-                                text raised
-                                rounded
                             />
                         </div>
                     </div>
@@ -151,27 +153,27 @@ const CartComponent: React.FC = () => {
                             alignItems:"center",
                             marginBottom:"30px"
                         }}>
-                            <i className="pi pi-shopping-cart" style={{ fontSize: '4rem', color: 'var(--primary-color)' }} />
+                            <i className="pi pi-shopping-cart pixel-icon pixel-icon-blue"  style={{ fontSize: '4rem' }}/>
                         </div>
                         <DataTable<CartItemDTO[]>
                             value={cartWithTotals}
                             dataKey="productId"
                             stripedRows
                             filterDisplay="row"
-                            emptyMessage="Nothing found."
+                            emptyMessage="NO DUCKS FOUND MATCHING YOUR CRITERIA. 🦆"
                         >
                             <Column
                                 field="productName"
-                                header="Product"
+                                header="PRODUCT"
                                 sortable
                             />
                             <Column
-                                header="Image"
+                                header="IMAGE"
                                 body={imageBodyTemplate}
                             />
                             <Column
                                 field="amount"
-                                header="Amount"
+                                header="AMOUNT"
                                 body={amountBodyTemplate}
                                 sortable
                                 filter
@@ -182,7 +184,7 @@ const CartComponent: React.FC = () => {
                             />
                             <Column
                                 field="pricePerUnit"
-                                header="Price per unit"
+                                header="PRICE PER UNIT"
                                 body={priceBodyTemplate}
                                 sortable
                                 filter
@@ -193,7 +195,7 @@ const CartComponent: React.FC = () => {
                             />
                             <Column
                                 field="totalPrice"
-                                header="Total price"
+                                header="TOTAL PRICE"
                                 body={totalBodyTemplate}
                                 sortable
                                 filter
@@ -206,13 +208,14 @@ const CartComponent: React.FC = () => {
                                 body={actionBodyTemplate}
                             />
                         </DataTable>
-                        <Divider type="dashed"/>
+                        <Divider className="pixel-divider-dashed"/>
                         <div style={{
                             display:"flex",
                             justifyContent:"center",
                             alignItems:"center"
                         }}>
                             <Message
+                                className="pixel-message pixel-message-info"
                                 severity="info"
                                 content={
                                     <div>
@@ -222,16 +225,16 @@ const CartComponent: React.FC = () => {
                                 }
                             />
                         </div>
-                        <Divider type="dashed" align="center">
-                            <Button
-                                icon="pi pi-money-bill"
-                                label="Proceed to checkout"
-                                size="large"
-                                severity="success"
-                                raised
-                                onClick={handleCheckout}
-                            />
-                        </Divider>
+                        <Divider className="pixel-divider-dashed" align="center"/>
+                        <Button
+                            className={`${styles.btn} ${styles.btn_green}`}
+                            icon="pi pi-money-bill"
+                            label="PROCEED TO CHECKOUT"
+                            size="large"
+                            severity="success"
+                            raised
+                            onClick={handleCheckout}
+                        />
                     </>
                 )}
             </div>

@@ -8,7 +8,7 @@ import CartComponent from "../components/CartComponent";
 class Cart extends React.Component {
     render() {
         return (
-            <div>
+            <div scroll-container>
                 <NavbarComponent/>
                 <CartComponent/>
                 <FooterComponent/>
