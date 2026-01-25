@@ -62,7 +62,7 @@ public class ProductController {
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
         Product product = productCreateMapper.mapFrom(productCreateDTO);
         Product savedProduct = productService.saveProduct(product);
-        return ResponseEntity.ok(productMapper.mapTo(savedProduct));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.mapTo(savedProduct));
     }
 
 
