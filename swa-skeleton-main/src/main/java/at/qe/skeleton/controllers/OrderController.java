@@ -1,6 +1,5 @@
 package at.qe.skeleton.controllers;
 
-import at.qe.skeleton.dtos.CartDTO;
 import at.qe.skeleton.dtos.OrderDTO;
 import at.qe.skeleton.exceptions.InsufficientStockException;
 import at.qe.skeleton.exceptions.OrderNotFoundException;
@@ -35,14 +34,14 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createOrder(@RequestBody CartDTO cartDto) {
+    public ResponseEntity<?> createOrder(@RequestBody at.qe.skeleton.dtos.CheckoutRequestDTO checkoutRequest) {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         try {
-            OrderDTO orderDto = orderService.placeOrder(currentUser, cartDto);
+            OrderDTO orderDto = orderService.placeOrder(currentUser, checkoutRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
         } catch (InsufficientStockException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

@@ -15,6 +15,7 @@ import SignUpView from "./views/SignUpView";
 import Notification from "./views/Notification";
 import ManageProducts from "./views/ManageProducts";
 import ContactView from "./views/ContactView";
+import CheckoutView from "./views/CheckoutView";
 
 /**
  * Define the routes of the application.
@@ -46,6 +47,11 @@ export const SignUpRoute = {
 export const CartRoute = {
     url: ROUTES.CART,
     component: Cart
+}
+
+export const CheckoutRoute = {
+    url: ROUTES.CHECKOUT,
+    component: CheckoutView
 }
 
 export const ManageProductsRoute = {

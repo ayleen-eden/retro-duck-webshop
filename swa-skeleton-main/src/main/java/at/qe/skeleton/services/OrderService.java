@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.dtos.CartDTO;
 import at.qe.skeleton.dtos.CartItemDTO;
+import at.qe.skeleton.dtos.CheckoutRequestDTO;
 import at.qe.skeleton.dtos.OrderDTO;
 import at.qe.skeleton.exceptions.InsufficientStockException;
 import at.qe.skeleton.exceptions.OrderNotFoundException;
@@ -39,15 +40,22 @@ public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
-    @Transactional(rollbackFor = Exception.class) // Rollback bei jeder Exception
-    public OrderDTO placeOrder(Userx user, CartDTO rawCart) throws InsufficientStockException {
-        CartDTO validatedCart = cartValidationService.validateCart(rawCart)
+    @Transactional(rollbackFor = Exception.class)
+    public OrderDTO placeOrder(Userx user, CheckoutRequestDTO request) throws InsufficientStockException {
+        CartDTO validatedCart = cartValidationService.validateCart(request.cart())
                 .orElseThrow(() -> new RuntimeException("Cart validation failed"));
 
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.IN_PROGRESS);
+
+        order.setShippingName(request.shippingName());
+        order.setShippingStreet(request.shippingStreet());
+        order.setShippingCity(request.shippingCity());
+        order.setShippingPostalCode(request.shippingPostalCode());
+        order.setShippingCountry(request.shippingCountry());
+        order.setPaymentMethod(request.paymentMethod());
 
         List<OrderItem> orderItems = new ArrayList<>();
         double total = 0;
@@ -70,7 +78,7 @@ public class OrderService {
             orderItem.setDiscountAtPurchase(product.getDiscount());
             orderItem.setOrder(order);
             orderItems.add(orderItem);
-            total += (product.getPrice() * product.getDiscount() * itemDto.amount());
+            total += (itemDto.pricePerUnit() * itemDto.amount());
         }
 
         order.setItems(orderItems);
@@ -78,7 +86,6 @@ public class OrderService {
         order.setStatus(OrderStatus.DONE);
 
         Order savedOrder = orderRepository.save(order);
-
         sendInvoiceEmail(savedOrder);
 
         return orderMapper.mapTo(savedOrder);
@@ -117,7 +124,6 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void deleteOrder(Long id, Userx user) throws OrderNotFoundException, UnauthorizedOrderAccessException {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));

@@ -1,10 +1,10 @@
 import globalAxios from "axios";
-import { CartDTO } from "../DTO/cart.types";
-import { OrderDTO } from "../DTO/order.types";
+import {OrderDTO} from "../DTO/order.types";
+import {CheckoutRequestDTO} from "../DTO/checkout.types";
 
 export const OrderApi = {
-    createOrder: async (cart: CartDTO): Promise<OrderDTO> => {
-        const cleanItems = cart.items.map(item => ({
+    createOrder: async (checkoutData: CheckoutRequestDTO): Promise<OrderDTO> => {
+        const cleanItems = checkoutData.cart.items.map(item => ({
             productId: item.productId,
             productName: item.productName,
             productImage: item.productImage,
@@ -12,11 +12,12 @@ export const OrderApi = {
             amount: item.amount
         }));
 
-        const cleanCart = {
-            items: cleanItems
+        const payload = {
+            ...checkoutData, // ... -> Spread-Operator
+            cart: {items: cleanItems}
         };
 
-        const response = await globalAxios.post("/api/orders/", cleanCart);
+        const response = await globalAxios.post("/api/orders/", payload);
         return response.data;
     },
 
