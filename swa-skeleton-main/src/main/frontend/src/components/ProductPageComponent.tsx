@@ -54,6 +54,7 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
 
     useEffect(() => {
         const loadUserAndSubscription = async () => {
+            if(!user) return;
             try {
                 const currentUser = await UserxApi.getCurrentUser();
                 setUser(currentUser);
