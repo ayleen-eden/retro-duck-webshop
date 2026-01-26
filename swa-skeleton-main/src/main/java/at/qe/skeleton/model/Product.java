@@ -21,12 +21,12 @@ public class Product implements Serializable {
     private String description;
 
     @Column(nullable = false)
-    private double price;
+    private Double price;
 
     @Column(nullable = false)
-    private long stock;
+    private Long stock;
 
-    private double discount;
+    private Double discount;
 
     private String imageUrl;
 
