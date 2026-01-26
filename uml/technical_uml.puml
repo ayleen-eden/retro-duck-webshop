@@ -1,0 +1,121 @@
+@startuml
+
+class Notification {
+- id: Long
+- description: String
+- title: String
+- type: NotificationType
+- timestamp: LocalDateTime
+}
+
+Notification - "1 product" Product
+Notification - "1 user" Userx
+
+enum NotificationType {
+RESTOCK,
+OUT_OF_STOCK,
+SALE
+}
+
+enum MailCategory {
+NOTIFICATION,
+ORDER
+}
+
+class Order {
+- id: Long
+- orderDate: LocalDateTime
+- status: OrderStatus
+- totalPrice: Double
+- shippingName: String
+- shippingStreet: String
+- shippingCity: String
+- shippingPostalCode: String
+- shippingCountry: String
+- paymentMethod: String
+}
+
+Order - "1 user" Userx
+Order - "1-* items" OrderItem
+
+class OrderItem {
+- id: Long
+- quantity: Integer
+- priceAtPurchase: Double
+- discountAtPurchase: Double
+}
+
+OrderItem - "1 order" Order
+
+enum OrderStatus {
+NEW,
+IN_PROGRESS,
+DONE
+}
+
+class Product {
+- id: Long
+- name: String
+- description: String
+- price: Double
+- stock: Long
+- discount: Double
+- imageUrl: String
+- categories: Set<ProductCategory>
+}
+
+enum Production {
+AMIGA,
+...
+XBOX_SERIES
+}
+
+class Rating {
+- id: Long
+- timestamp: LocalDateTime
+- rating: RatingScale
+- comment: String
+- username: String
+}
+
+Rating - "1 author" Userx
+Rating - "1 product" Product
+
+enum RatingScale {
+ONE_STAR,
+TWO_STARS,
+THREE_STARS,
+FOUR_STARS,
+FIVE_STARS
+}
+
+class Subscription {
+- id: Long
+}
+
+Subscription - "1 user" Userx
+Subscription - "1 product" Product
+
+enum UserxRole {
+ADMIN,
+MANAGER,
+CUSTOMER
+}
+
+class Userx {
+- id: Long
+- createDate: LocalDateTime
+- updateDate: LocalDateTime
+- username: String
+- password: String
+- firstName: String
+- lastName: String
+- email: String
+- phone: String
+- roles: Set<UserxRole>
+}
+
+Userx - "1 createUser" Userx
+Userx - "1 updateUser" Userx
+
+@enduml
