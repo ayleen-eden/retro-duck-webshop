@@ -50,40 +50,40 @@ public class RatingServiceTest {
         productService.saveProduct(product2);
     }
 
-    @Ignore
-    @DirtiesContext
-    @Test
-    @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
-    public void testCreateRating() {
-        Userx author = authenticatedUserService.getAuthenticatedUser();
-
-        Rating ratingToInsert1 = new Rating();
-        RatingScale ratingScale1 = RatingScale.FOUR_STARS;
-        String ratingComment1 = "This is a rating of a productId";
-        ratingToInsert1.setRating(ratingScale1);
-        ratingToInsert1.setAuthor(author);
-        ratingToInsert1.setComment(ratingComment1);
-        ratingToInsert1.setProduct(product1);
-        Rating savedRating = ratingService.saveRating(ratingToInsert1);
-
-        Rating ratingToInsert2 = new Rating();
-        RatingScale ratingScale2 = RatingScale.FOUR_STARS;
-        String ratingComment2 = "This is a rating of a productId";
-        ratingToInsert2.setRating(ratingScale2);
-        ratingToInsert2.setAuthor(author);
-        ratingToInsert2.setComment(ratingComment2);
-        ratingToInsert2.setProduct(product2);
-        ratingService.saveRating(ratingToInsert2);
-
-        Assertions.assertEquals(2, ratingService.getAllRatings().size());
-        Optional<Rating> freshlyCreatedRatingOpt = ratingService.loadRating(savedRating.getId(), product1.getId());
-        Assertions.assertFalse(freshlyCreatedRatingOpt.isEmpty(),
-                "New rating could not be loaded from test data source after being saved");
-        Rating freshlyCreatedRating = freshlyCreatedRatingOpt.get();
-        Assertions.assertEquals(ratingScale1, freshlyCreatedRating.getRating());
-        Assertions.assertEquals(author, freshlyCreatedRating.getAuthor());
-        Assertions.assertEquals(ratingComment1, freshlyCreatedRating.getComment());
-    }
+//    @Ignore
+//    @DirtiesContext
+//    @Test
+//    @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
+//    public void testCreateRating() {
+//        Userx author = authenticatedUserService.getAuthenticatedUser();
+//
+//        Rating ratingToInsert1 = new Rating();
+//        RatingScale ratingScale1 = RatingScale.FOUR_STARS;
+//        String ratingComment1 = "This is a rating of a productId";
+//        ratingToInsert1.setRating(ratingScale1);
+//        ratingToInsert1.setAuthor(author);
+//        ratingToInsert1.setComment(ratingComment1);
+//        ratingToInsert1.setProduct(product1);
+//        Rating savedRating = ratingService.saveRating(ratingToInsert1);
+//
+//        Rating ratingToInsert2 = new Rating();
+//        RatingScale ratingScale2 = RatingScale.FOUR_STARS;
+//        String ratingComment2 = "This is a rating of a productId";
+//        ratingToInsert2.setRating(ratingScale2);
+//        ratingToInsert2.setAuthor(author);
+//        ratingToInsert2.setComment(ratingComment2);
+//        ratingToInsert2.setProduct(product2);
+//        ratingService.saveRating(ratingToInsert2);
+//
+//        Assertions.assertEquals(2, ratingService.getAllRatings().size());
+//        Optional<Rating> freshlyCreatedRatingOpt = ratingService.loadRating(savedRating.getId(), product1.getId());
+//        Assertions.assertFalse(freshlyCreatedRatingOpt.isEmpty(),
+//                "New rating could not be loaded from test data source after being saved");
+//        Rating freshlyCreatedRating = freshlyCreatedRatingOpt.get();
+//        Assertions.assertEquals(ratingScale1, freshlyCreatedRating.getRating());
+//        Assertions.assertEquals(author, freshlyCreatedRating.getAuthor());
+//        Assertions.assertEquals(ratingComment1, freshlyCreatedRating.getComment());
+//    }
 
     @DirtiesContext
     @Test
