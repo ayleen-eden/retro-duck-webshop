@@ -89,7 +89,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
             name,
             description,
             price,
-            stock: stock || 0,
+            stock: Math.max(0, stock ?? 0),
             discount: discount || 0,
             imageUrl,
             categories: selectedCategories
@@ -106,7 +106,8 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
             onHide={onHide}
             footer={(
                 <div className="pt-3">
-                    <Button label="CANCEL" icon="pi pi-times" onClick={onHide} className={`${styles.btn} ${styles.btn_red}`}/>
+                    <Button label="CANCEL" icon="pi pi-times" onClick={onHide}
+                            className={`${styles.btn} ${styles.btn_red}`}/>
                     <Button
                         label={isNewProduct ? "CREATE PRODUCT" : "SAVE CHANGES"}
                         icon="pi pi-check"
@@ -143,6 +144,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
                         <label htmlFor="stock" className="font-bold">INITIAL STOCK </label>
                         <InputNumber id="stock" value={stock}
                                      onValueChange={(e: InputNumberValueChangeEvent) => setStock(e.value ?? null)}
+                                     min={0}
                                      inputClassName="input-field w-full"/>
                     </div>
                     <div className="flex-1 flex flex-column gap-2" style={{minWidth: '150px'}}>

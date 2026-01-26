@@ -12,9 +12,9 @@ workflow:
   before_script:
     - apk add --update maven
     - apk add --update git
+    - cd swa-skeleton-main
     - mkdir -p ~/.m2
     - cp settings.xml ~/.m2/settings.xml
-    - cd swa-skeleton-main
 
 backend-unit-tests:
   stage: test

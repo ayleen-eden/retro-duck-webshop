@@ -3,11 +3,12 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.RatingAlreadyExistsException;
 import at.qe.skeleton.model.*;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -22,11 +23,11 @@ public class RatingServiceTest {
     @Autowired
     AuthenticatedUserService authenticatedUserService;
 
-    static Product product1;
-    static Product product2;
+    private Product product1;
+    private Product product2;
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    public void setup() {
         product1 = new Product();
         product2 = new Product();
         Set<ProductCategory> productCategory = new HashSet<>();
@@ -43,14 +44,17 @@ public class RatingServiceTest {
         product2.setPrice(0.0);
         product2.setDiscount(0.0);
         product2.setDescription("Test");
+
+        productService.saveProduct(product1);
+        productService.saveProduct(product2);
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
     public void testCreateRating() {
-        productService.saveProduct(product1);
-        productService.saveProduct(product2);
         Userx author = authenticatedUserService.getAuthenticatedUser();
+
         Rating ratingToInsert1 = new Rating();
         RatingScale ratingScale1 = RatingScale.FOUR_STARS;
         String ratingComment1 = "This is a rating of a productId";
@@ -79,17 +83,26 @@ public class RatingServiceTest {
         Assertions.assertEquals(ratingComment1, freshlyCreatedRating.getComment());
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
     public void testUpdateRating() {
         Userx author = authenticatedUserService.getAuthenticatedUser();
+
+        Rating rating = new Rating();
+        rating.setAuthor(author);
+        rating.setProduct(product1);
+        rating.setRating(RatingScale.FOUR_STARS);
+        rating.setComment("Kinda peak");
+        ratingService.saveRating(rating);
+
         Optional<Rating> toBeChangedRatingOpt = ratingService.loadRatingByAuthor(product1.getId(), author.getId());
         Assertions.assertNotNull(toBeChangedRatingOpt, "Rating could not be loaded from repository");
 
         Rating toBeChangedRating = toBeChangedRatingOpt.get();
 
         toBeChangedRating.setRating(RatingScale.FIVE_STARS);
-        String updatedRatingComment = "I changed my mind. This productId is awesome. Absolute Cinema!";
+        String updatedRatingComment = "I changed my mind. This product is awesome. Absolute Cinema!";
         toBeChangedRating.setComment(updatedRatingComment);
 
         ratingService.saveRating(toBeChangedRating);
@@ -101,22 +114,33 @@ public class RatingServiceTest {
         Assertions.assertEquals(updatedRatingComment, freshlyUpdatedRating.getComment());
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
     public void testDuplicateRatingException() {
         Userx author = authenticatedUserService.getAuthenticatedUser();
-        Rating ratingToInsert = new Rating();
+
+        Rating firstRating = new Rating();
         RatingScale ratingScale = RatingScale.ONE_STAR;
-        String ratingComment = "Reviewbomb incoming";
-        ratingToInsert.setAuthor(author);
+        String ratingComment = "It sucks!";
+        firstRating.setRating(ratingScale);
+        firstRating.setAuthor(author);
+        firstRating.setComment(ratingComment);
+        firstRating.setProduct(product1);
+        ratingService.saveRating(firstRating);
+
+        Rating ratingToInsert = new Rating();
+        ratingComment = "Reviewbomb incoming";
         ratingToInsert.setRating(ratingScale);
+        ratingToInsert.setAuthor(author);
         ratingToInsert.setComment(ratingComment);
         ratingToInsert.setProduct(product1);
 
         Assertions.assertThrows(RatingAlreadyExistsException.class, () -> ratingService.saveRating(ratingToInsert));
-        Assertions.assertEquals(2, ratingService.getAllRatings().size());
+        Assertions.assertEquals(1, ratingService.getAllRatings().size());
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
     public void testDeleteRating() {
