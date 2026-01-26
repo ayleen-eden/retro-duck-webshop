@@ -11,8 +11,6 @@ import java.util.Objects;
 @Table(name = "orders")
 public class Order implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +25,7 @@ public class Order implements Serializable {
     @Column(nullable = false)
     private OrderStatus status = OrderStatus.NEW;
 
-    private double totalPrice;
+    private Double totalPrice;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;

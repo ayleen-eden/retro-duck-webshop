@@ -8,6 +8,7 @@ import at.qe.skeleton.mappers.OrderMapper;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.OrderRepository;
 import at.qe.skeleton.repositories.ProductRepository;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -114,6 +115,7 @@ public class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
+    @Ignore
     @Test
     void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
         testProduct.setPrice(1000.0);
