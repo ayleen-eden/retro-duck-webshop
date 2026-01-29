@@ -8,7 +8,7 @@
 
 #root {
   padding-top: 20px;
-  padding-bottom: 50px;
+  padding-bottom: 120px;
 }
 
 .mb-3 {
@@ -721,4 +721,9 @@
 
 .link:hover::after {
   transform: scaleX(1);
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 80px;
 }
