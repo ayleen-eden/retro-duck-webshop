@@ -118,6 +118,7 @@ export function UserProvider({children}: { children: React.ReactNode }) {
                 phone: "",
                 enabled: true,
                 roles: roles.map((role) => role as UserxRole),
+                preferredChannels: [],
             };
         } catch {
             // invalid token -> treat as logged out

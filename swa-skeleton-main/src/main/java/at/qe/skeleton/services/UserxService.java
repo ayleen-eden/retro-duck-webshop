@@ -76,6 +76,9 @@ public class UserxService implements UserDetailsService {
             if (user.getRoles() == null || user.getRoles().isEmpty()) {
                 user.setRoles(java.util.Set.of(UserxRole.CUSTOMER));
             }
+            if (user.getPreferredChannels() == null || user.getPreferredChannels().isEmpty()) {
+                user.setPreferredChannels(java.util.Set.of(NotificationChannelType.EMAIL));
+            }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Userx authUser = authenticatedUserService.getAuthenticatedUser();
             user.setCreateUser(authUser);
@@ -123,6 +126,10 @@ public class UserxService implements UserDetailsService {
         // Passwort nur ändern, wenn es nicht leer ist
         if (dto.password() != null && !dto.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        if (dto.preferredChannels() != null) {
+            user.setPreferredChannels(dto.preferredChannels());
         }
 
         user.setUpdateUser(user); // Metadaten: User hat sich selbst geändert

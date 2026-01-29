@@ -2,7 +2,6 @@ package at.qe.skeleton.events;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.ProductService;
-import at.qe.skeleton.services.StubMailService;
 import at.qe.skeleton.services.SubscriptionService;
 import at.qe.skeleton.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,112 +9,66 @@ import org.springframework.stereotype.Component;
 import org.springframework.context.event.EventListener;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 
 @Component
 public class ProductEventListener {
 
-    private SubscriptionService subscriptionService;
-
-    private NotificationService notificationService;
-
-    private ProductService productService;
-
-    private StubMailService stubMailService;
+    private final SubscriptionService subscriptionService;
+    private final NotificationService notificationService;
+    private final ProductService productService;
 
     @Autowired
-    public ProductEventListener(SubscriptionService subscriptionService, NotificationService notificationService, ProductService productService, StubMailService stubMailService) {
+    public ProductEventListener(SubscriptionService subscriptionService, NotificationService notificationService, ProductService productService) {
         this.subscriptionService = subscriptionService;
         this.notificationService = notificationService;
         this.productService = productService;
-        this.stubMailService = stubMailService;
     }
 
     @EventListener
     public void handleRestock(ProductRestockEvent event) {
-
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
-        String productName = product.getName();
-        Long productStock = product.getStock();
-
-        Collection<Subscription> subs = subscriptionService.getSubscriptionByProductId(product.getId());
-
-        for (Subscription sub : subs) {
-            Notification notification = new Notification();
-            Userx user = sub.getUser();
-
-            String title = String.format("%s RESTOCK", productName);
-            String description = String.format("%s was restocked!\nStock is now %d.", productName, productStock);
-
-            notification.setTitle(title);
-            notification.setDescription(description);
-            notification.setProduct(product);
-            notification.setTimestamp(LocalDateTime.now());
-            notification.setType(NotificationType.RESTOCK);
-            notification.setUser(user);
-
-            notificationService.saveNotification(notification);
-
-            stubMailService.sendMail((user.getFirstName() + " " + user.getLastName()), title, description, MailCategory.NOTIFICATION);
-        }
+        String title = product.getName() + " RESTOCK";
+        String description = product.getName() + " was restocked!\nStock is now " + product.getStock() + ".";
+        notifySubscribers(product, title, description, NotificationType.RESTOCK);
     }
 
     @EventListener
     public void handleSale(ProductSaleEvent event) {
-
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
-        String productName = product.getName();
-        Double productPrice = product.getPrice();
-        Double productDiscount = product.getDiscount();
-        Double newProductPrice = productPrice * (1 - productDiscount);
+        double price = product.getPrice();
+        double discount = product.getDiscount();
+        double newPrice = price * (1 - discount);
 
-        Collection<Subscription> subs = subscriptionService.getSubscriptionByProductId(product.getId());
-
-        for (Subscription sub : subs) {
-            Notification notification = new Notification();
-            Userx user = sub.getUser();
-
-            String title = String.format("%s SALE", productName);
-            String description = String.format("%s is on sale!\nPrice is now %.2f instead of %.2f.", productName, newProductPrice, productPrice);
-
-            notification.setTitle(title);
-            notification.setDescription(description);
-            notification.setProduct(product);
-            notification.setTimestamp(LocalDateTime.now());
-            notification.setType(NotificationType.SALE);
-            notification.setUser(user);
-
-            notificationService.saveNotification(notification);
-
-            stubMailService.sendMail((user.getFirstName() + " " + user.getLastName()), title, description, MailCategory.NOTIFICATION);
-        }
+        String title = product.getName() + " SALE";
+        String description = product.getName() + " is on sale!\nPrice is now " + String.format("%.2f", newPrice)
+                + " instead of " + String.format("%.2f", price) + ".";
+        notifySubscribers(product, title, description, NotificationType.SALE);
     }
 
     @EventListener
     public void handleOutOfStock(ProductOutOfStockEvent event) {
-
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
-        String productName = product.getName();
 
-        Collection<Subscription> subs = subscriptionService.getSubscriptionByProductId(product.getId());
+        String title = product.getName() + " OUT OF STOCK";
+        String description = product.getName() + " is out of stock!\nYou will be notified about restocks.";
+        notifySubscribers(product, title, description, NotificationType.OUT_OF_STOCK);
+    }
 
-        for (Subscription sub : subs) {
-            Notification notification = new Notification();
-            Userx user = sub.getUser();
+    private void notifySubscribers(Product product, String title, String description, NotificationType type) {
+        subscriptionService.getSubscriptionByProductId(product.getId())
+            .forEach(sub -> {
+                Userx user = sub.getUser();
 
-            String title = String.format("%s OUT OF STOCK", productName);
-            String description = String.format("%s is out of stock!\nYou will be notified about restocks.", productName);
+                Notification notification = new Notification();
+                notification.setTitle(title);
+                notification.setDescription(description);
+                notification.setProduct(product);
+                notification.setTimestamp(LocalDateTime.now());
+                notification.setType(type);
+                notification.setUser(user);
 
-            notification.setTitle(title);
-            notification.setDescription(description);
-            notification.setProduct(product);
-            notification.setTimestamp(LocalDateTime.now());
-            notification.setType(NotificationType.OUT_OF_STOCK);
-            notification.setUser(user);
-
-            notificationService.saveNotification(notification);
-
-            stubMailService.sendMail((user.getFirstName() + " " + user.getLastName()), title, description, MailCategory.NOTIFICATION);
-        }
+                notificationService.saveNotification(notification);
+                notificationService.sendNotification(user, title, description);
+            });
     }
 }
