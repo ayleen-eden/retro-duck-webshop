@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import at.qe.skeleton.services.NotificationChannelType;
@@ -55,6 +56,9 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
   @CollectionTable(name = "Userx_PreferredChannels")
   @Enumerated(EnumType.STRING)
   private Set<NotificationChannelType> preferredChannels;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<Order> orders;
   
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
   @CollectionTable(name = "Userx_UserxRole")
@@ -185,6 +189,14 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
 
   public void setPreferredChannels(Set<NotificationChannelType> preferredChannels) {
     this.preferredChannels = preferredChannels;
+  }
+
+  public List<Order> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<Order> orders) {
+    this.orders = orders;
   }
 
   @Override
