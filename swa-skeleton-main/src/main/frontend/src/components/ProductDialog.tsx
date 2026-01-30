@@ -11,7 +11,7 @@ import {MultiSelect, MultiSelectChangeEvent} from 'primereact/multiselect';
 import {ProductDTO} from "../DTO/product.types";
 import {Message} from "primereact/message";
 import {ProductApi} from "../utilities/productApi";
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import '../styles/Login.css';
 
 interface ProductDialogProps {

@@ -83,8 +83,6 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     }, [ratings, productId, loading]);
 
     const createRating = async () => {
-        if(!user) return;
-
         if (ratingValue == undefined || comment == '') {
             toast.current?.show({
                 severity: 'warn',
@@ -110,7 +108,6 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     };
 
     const updateRating = async () => {
-        if(!user) return;
         if (ratingValue == undefined || comment == '') {
             toast.current?.show({
                 severity: 'warn',

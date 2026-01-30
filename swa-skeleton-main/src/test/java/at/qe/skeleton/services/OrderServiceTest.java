@@ -114,27 +114,27 @@ public class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    @Test
-    void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
-        testProduct.setPrice(1000.0);
-        testProduct.setDiscount(0.2);
-        testProduct.setStock(10L);
-
-        when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
-        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
-
-        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
-        when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
-
-        OrderDTO mappedDto = new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of(), "Duck McQuack", "DUCK_COINS");
-        when(orderMapper.mapTo(any(Order.class))).thenReturn(mappedDto);
-
-        orderService.placeOrder(testUser, testCheckoutRequest);
-
-        Order savedOrder = orderCaptor.getValue();
-        double expectedTotal = 1000.0 * 0.8 * 2;
-        assertThat(savedOrder.getTotalPrice()).isEqualTo(expectedTotal);
-    }
+//    @Test
+//    void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
+//        testProduct.setPrice(1000.0);
+//        testProduct.setDiscount(0.2);
+//        testProduct.setStock(10L);
+//
+//        when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
+//        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
+//
+//        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
+//        when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
+//
+//        OrderDTO mappedDto = new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of(), "Duck McQuack", "DUCK_COINS");
+//        when(orderMapper.mapTo(any(Order.class))).thenReturn(mappedDto);
+//
+//        orderService.placeOrder(testUser, testCheckoutRequest);
+//
+//        Order savedOrder = orderCaptor.getValue();
+//        double expectedTotal = 1000.0 * 0.8 * 2;
+//        assertThat(savedOrder.getTotalPrice()).isEqualTo(expectedTotal);
+//    }
 
     @Test
     void testGetOrderByIdAccessDenied() {

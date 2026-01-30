@@ -14,7 +14,7 @@ import {Tag} from 'primereact/tag';
 import {ProductDTO} from '../DTO/product.types';
 import ProductDialog from '../components/ProductDialog';
 import {ProductApi} from '../utilities/productApi';
-import styles from "../components/PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 
 const ManageProducts: React.FC = () => {
     const [products, setProducts] = useState<ProductDTO[]>([]);

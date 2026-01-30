@@ -6,7 +6,7 @@ import { Tag } from 'primereact/tag';
 import { OrderApi } from "../utilities/orderApi";
 import {OrderDTO, OrderItemDTO, OrderStatus} from "../DTO/order.types";
 import {Button} from "primereact/button";
-import styles from "../components/PixelButton.module.css"
+import styles from "../styles/PixelButton.module.css"
 import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 
 const OrderHistoryComponent: React.FC = () => {

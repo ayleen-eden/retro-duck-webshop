@@ -3,6 +3,8 @@
  * Architecture" offered by Innsbruck University.
  */
 
+import {NotificationChannelType} from "./notification.types";
+
 /**
  * User roles
  */
@@ -29,6 +31,7 @@ export interface UserDTO {
     phone: string;
     enabled: boolean;
     roles: UserxRole[];
+    preferredChannels: NotificationChannelType[];
 }
 
 /**
@@ -48,6 +51,7 @@ export class UserxTypes implements UserDTO {
     phone: string;
     enabled: boolean = true;
     roles: UserxRole[];
+    preferredChannels: NotificationChannelType[];
 
     /**
      * Constructor for the User class
@@ -67,6 +71,7 @@ export class UserxTypes implements UserDTO {
         this.phone = data.phone;
         this.enabled = data.enabled
         this.roles = data.roles;
+        this.preferredChannels = data.preferredChannels;
     }
 
     /**
@@ -95,7 +100,8 @@ export class UserxTypes implements UserDTO {
             email: this.email,
             phone: this.phone,
             enabled: this.enabled,
-            roles: this.roles
+            roles: this.roles,
+            preferredChannels: this.preferredChannels
         };
     }
 
@@ -150,7 +156,8 @@ export class UserxTypes implements UserDTO {
             email: '',
             phone: '',
             enabled: true,
-            roles: []
+            roles: [],
+            preferredChannels: []
         });
     }
 

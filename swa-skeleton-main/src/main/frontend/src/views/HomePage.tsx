@@ -18,7 +18,7 @@ import {IconField} from 'primereact/iconfield';
 import {InputIcon} from 'primereact/inputicon';
 import {ProductDTO} from '../DTO/product.types';
 import {useNavigate} from 'react-router-dom';
-import styles from "../components/PixelButton.module.css"
+import styles from "../styles/PixelButton.module.css"
 
 const HomePage: React.FC = () => {
     // --- STATE ---
