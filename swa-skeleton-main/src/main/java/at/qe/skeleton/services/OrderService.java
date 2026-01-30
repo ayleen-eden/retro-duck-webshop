@@ -71,14 +71,18 @@ public class OrderService {
             product.setStock(product.getStock() - itemDto.amount());
             productRepository.save(product);
 
+            double priceAtPurchase = product.getPrice();
+            double discount = product.getDiscount();
+            double finalPricePerUnit = priceAtPurchase * (1 - discount);
+
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
             orderItem.setQuantity(itemDto.amount());
-            orderItem.setPriceAtPurchase(product.getPrice());
-            orderItem.setDiscountAtPurchase(product.getDiscount());
+            orderItem.setPriceAtPurchase(finalPricePerUnit);
+            orderItem.setDiscountAtPurchase(discount);
             orderItem.setOrder(order);
             orderItems.add(orderItem);
-            total += (itemDto.pricePerUnit() * itemDto.amount());
+            total += (finalPricePerUnit * itemDto.amount());
         }
 
         order.setItems(orderItems);
@@ -102,7 +106,16 @@ public class OrderService {
         log.info("To: {}", userEmail);
         log.info("Subject: Your Order Confirmation & Invoice #{}", order.getId());
         log.info("Order Status: {}", order.getStatus());
-        log.info("Total Amount: {} EUR", order.getTotalPrice());
+        log.info("Items:");
+        for (OrderItem item : order.getItems()) {
+            log.info(String.format("  - %s | Quantity: %d | Unit Price: %.2f EUR | Subtotal: %.2f EUR",
+                    item.getProduct().getName(),
+                    item.getQuantity(),
+                    item.getPriceAtPurchase(),
+                    (item.getQuantity() * item.getPriceAtPurchase())
+            ));
+        }
+        log.info(String.format("Total Amount: %.2f EUR", order.getTotalPrice()));
         log.info("Details: Sent as plain-text invoice to customer.");
         log.info("--------------------------------------------------");
     }
