@@ -11,7 +11,7 @@ import {InputMaskChangeEvent} from "primereact/inputmask";
 import {CheckboxChangeEvent} from "primereact/checkbox";
 import {UserxValidationResult} from "../utilities/userxUtilities";
 import {Message} from "primereact/message";
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 
 interface UserDialogProps {
     visible: boolean;

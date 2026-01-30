@@ -16,9 +16,10 @@ public class MailNotificationChannel implements NotificationChannel {
 
     public void send(Userx user, String title, String message) {
         log.info("=STUB EMAIL NOTIFICATION===========================");
-        log.info("To: " + user.getEmail());
+        log.info("To: " + user.getFirstName() + " " + user.getLastName());
+        log.info("Email: " + user.getEmail());
         log.info("Subject: " + title);
-        log.info("Body: \n" + message);
+        log.info("Body: " + message);
         log.info("===================================================");
     }
 }

@@ -7,7 +7,7 @@ import {useSessionStorage} from "primereact/hooks";
 import {Tag} from "primereact/tag";
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
-import styles from "./PixelButton.module.css"
+import styles from "../styles/PixelButton.module.css"
 import {getAllSubscriptionsForUser, subscribe, unsubscribe} from "../utilities/subscriptionApi";
 import {UserxApi} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
@@ -54,7 +54,6 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
 
     useEffect(() => {
         const loadUserAndSubscription = async () => {
-            if(!user) return;
             try {
                 const currentUser = await UserxApi.getCurrentUser();
                 setUser(currentUser);
@@ -73,7 +72,6 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
     }, [productId]);
 
     const handleSubscribeToggle = async () => {
-        if (!user?.id || !productId) return;
         setSubLoading(true);
         try {
             if (subscribed) {
@@ -114,7 +112,7 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
     }
 
     if (!product) {
-        return <div>Product not found.</div>;
+        return <div>DUCK NOT FOUND.</div>;
     }
 
     const currentPrice = product.price;
@@ -141,11 +139,6 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
 
                     <div style={{flex: 1}}>
                         <h1>{product.name}</h1>
-
-                        <div className="mb-3">
-                            {/* TODO: Make Rating variable */}
-                            {/* <Rating value={5} readOnly disabled cancel={false} className="pixel-rating"/> */}
-                        </div>
 
                         <p className="mb-4 text-lg" style={{color: 'white'}}>{product.description}</p>
 

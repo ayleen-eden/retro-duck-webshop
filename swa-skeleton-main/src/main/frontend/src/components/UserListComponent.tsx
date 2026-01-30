@@ -11,7 +11,7 @@ import {DataTable} from "primereact/datatable";
 import {UserxTypes} from "../DTO/userx.types";
 import {Checkbox} from "primereact/checkbox";
 import {rolesBodyTemplate} from "./rolesBodyTemplate";
-import styles from "./PixelButton.module.css"
+import styles from "../styles/PixelButton.module.css"
 
 
 interface UserListProps {

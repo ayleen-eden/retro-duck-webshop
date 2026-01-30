@@ -51,7 +51,9 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
   private String email;
   private String phone;
 
-  @ElementCollection
+  @ElementCollection(targetClass = NotificationChannelType.class, fetch = FetchType.EAGER)
+  @CollectionTable(name = "Userx_PreferredChannels")
+  @Enumerated(EnumType.STRING)
   private Set<NotificationChannelType> preferredChannels;
   
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)

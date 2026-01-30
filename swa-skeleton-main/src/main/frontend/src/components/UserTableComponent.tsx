@@ -20,7 +20,7 @@ import {
     createUserxRoleArrayFromStrings, UserxValidationResult
 } from '../utilities/userxUtilities';
 import {CheckboxChangeEvent} from "primereact/checkbox";
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 
 /**
  * Component for managing users.

@@ -6,7 +6,7 @@ import {Card} from "primereact/card";
 import {UserxTypes} from "../DTO/userx.types";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import {Button} from "primereact/button";
 import {dummyNotifications} from "./DebugNotification";
 import {getProductById} from "../utilities/productApi";

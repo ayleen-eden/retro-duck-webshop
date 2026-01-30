@@ -7,7 +7,7 @@ import {Password} from 'primereact/password';
 import {Toast} from 'primereact/toast';
 import {UserxApi, UserProfileUpdateDTO} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
-import styles from "../components/PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import '../styles/Login.css';
 
 const UserProfile: React.FC = () => {

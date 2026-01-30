@@ -28,7 +28,7 @@ public class ProductEventListener {
     public void handleRestock(ProductRestockEvent event) {
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
         String title = product.getName() + " RESTOCK";
-        String description = product.getName() + " was restocked!\nStock is now " + product.getStock() + ".";
+        String description = product.getName() + " was restocked! Stock is now " + product.getStock() + ".";
         notifySubscribers(product, title, description, NotificationType.RESTOCK);
     }
 
@@ -40,7 +40,7 @@ public class ProductEventListener {
         double newPrice = price * (1 - discount);
 
         String title = product.getName() + " SALE";
-        String description = product.getName() + " is on sale!\nPrice is now " + String.format("%.2f", newPrice)
+        String description = product.getName() + " is on sale! Price is now " + String.format("%.2f", newPrice)
                 + " instead of " + String.format("%.2f", price) + ".";
         notifySubscribers(product, title, description, NotificationType.SALE);
     }
@@ -50,7 +50,7 @@ public class ProductEventListener {
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
 
         String title = product.getName() + " OUT OF STOCK";
-        String description = product.getName() + " is out of stock!\nYou will be notified about restocks.";
+        String description = product.getName() + " is out of stock! You will be notified about restocks.";
         notifySubscribers(product, title, description, NotificationType.OUT_OF_STOCK);
     }
 

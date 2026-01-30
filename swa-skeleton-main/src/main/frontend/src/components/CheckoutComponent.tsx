@@ -10,7 +10,7 @@ import {OrderApi} from '../utilities/orderApi';
 import {ROUTES} from '../utilities/routes.paths';
 import {CartDTO} from '../DTO/cart.types';
 import {CheckoutRequestDTO} from '../DTO/checkout.types';
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import '../styles/Login.css';
 
 const CheckoutComponent: React.FC = () => {
