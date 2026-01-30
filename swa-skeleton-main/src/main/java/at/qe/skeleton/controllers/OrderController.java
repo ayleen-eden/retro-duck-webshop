@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.dtos.CheckoutRequestDTO;
 import at.qe.skeleton.dtos.OrderDTO;
 import at.qe.skeleton.exceptions.InsufficientStockException;
 import at.qe.skeleton.exceptions.OrderNotFoundException;
@@ -34,7 +35,7 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createOrder(@RequestBody at.qe.skeleton.dtos.CheckoutRequestDTO checkoutRequest) {
+    public ResponseEntity<Object> createOrder(@RequestBody CheckoutRequestDTO checkoutRequest) {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -51,7 +52,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<Object> getOrderById(@PathVariable Long id) {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -67,7 +68,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteOrder(@PathVariable Long id) {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
