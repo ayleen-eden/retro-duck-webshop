@@ -14,6 +14,15 @@ import {CheckoutRequestDTO} from '../DTO/checkout.types';
 import styles from "../styles/PixelButton.module.css";
 import '../styles/Login.css';
 
+/**
+ * CheckoutComponent handles the final step of the purchasing process.
+ * <p>
+ * It allows users to provide shipping information, select a payment method,
+ * and review their order summary before submitting. It also provides a feature
+ * to auto-fill details from the user's profile.
+ *
+ * @component
+ */
 const CheckoutComponent: React.FC = () => {
     const navigate = useNavigate();
     const [cart, setCart] = useState<CartDTO>({items: []});
@@ -27,6 +36,10 @@ const CheckoutComponent: React.FC = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [loading, setLoading] = useState(false);
 
+    /**
+     * Effect hook to initialize the cart from local storage on component mount.
+     * Redirects to the cart page if the cart is empty.
+     */
     useEffect(() => {
         const currentCart = getCart();
         setCart(currentCart);
@@ -35,6 +48,11 @@ const CheckoutComponent: React.FC = () => {
         }
     }, [navigate]);
 
+    /**
+     * Fetches the current user's profile data and populates the form fields.
+     * Includes simulated dummy data for address fields as per requirements.
+     * * @async
+     */
     const fillExistingDetails = async () => {
         setLoading(true);
         try {
@@ -60,6 +78,9 @@ const CheckoutComponent: React.FC = () => {
         }
     };
 
+    /**
+     * Configuration for available payment providers.
+     */
     const paymentOptions = [
         {label: 'Credit Card (Visa/Mastercard)', value: 'CREDIT_CARD'},
         {label: 'PayPal', value: 'PAYPAL'},
@@ -67,8 +88,16 @@ const CheckoutComponent: React.FC = () => {
         {label: 'Invoice', value: 'INVOICE'}
     ];
 
+    /**
+     * Calculates the total price of all items in the cart, considering individual product discounts.
+     */
     const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit * (1 - item.productDiscount), 0).toFixed(2);
 
+    /**
+     * Validates form input and submits the order to the backend API.
+     * On success, clears the cart and redirects to the order history.
+     * * @async
+     */
     const handlePlaceOrder = async () => {
         if (!name || !street || !city || !postalCode || !country || !paymentMethod) {
             alert("Please fill in all shipping and payment fields!");

@@ -16,6 +16,15 @@ import ProductDialog from '../components/ProductDialog';
 import {ProductApi} from '../utilities/productApi';
 import styles from "../styles/PixelButton.module.css";
 
+/**
+ * ManageProducts.
+ * <p>
+ * This component provides an administrative interface for managing the product catalog.
+ * It allows authorized users (Managers/Admins) to view all products in a paginated table,
+ * search for specific items, create new products, edit existing ones, and delete items.
+ *
+ * @component
+ */
 const ManageProducts: React.FC = () => {
     const [products, setProducts] = useState<ProductDTO[]>([]);
     const [loading, setLoading] = useState(true);
@@ -27,6 +36,12 @@ const ManageProducts: React.FC = () => {
     const toast = useRef<Toast>(null);
 
     // --- API CALLS ---
+
+    /**
+     * Fetches the current list of products from the backend.
+     * Sets the loading state during the request and handles potential errors via Toast.
+     * @async
+     */
     const loadProducts = async () => {
         setLoading(true);
         try {
@@ -40,10 +55,22 @@ const ManageProducts: React.FC = () => {
         }
     };
 
+    /**
+     * Effect hook to trigger the initial product load when the component mounts.
+     */
     useEffect(() => {
         loadProducts();
     }, []);
 
+    /**
+     * Handles the submission of the product form (create or update).
+     * <p>
+     * Depending on 'isNewProduct', it calls either the create or update API.
+     * After a successful operation, it refreshes the product list.
+     *
+     * @param productData - The product data collected from the ProductDialog.
+     * @async
+     */
     const saveProduct = async (productData: any) => {
         try {
             if (isNewProduct) {
@@ -61,6 +88,12 @@ const ManageProducts: React.FC = () => {
         }
     };
 
+    /**
+     * Deletes a product from the database and refreshes the view.
+     *
+     * @param id - The unique identifier of the product to be deleted.
+     * @async
+     */
     const deleteProduct = async (id: number) => {
         try {
             await ProductApi.deleteProduct(id);
@@ -73,18 +106,32 @@ const ManageProducts: React.FC = () => {
     };
 
     // --- UI HANDLERS ---
+
+    /**
+     * Prepares the UI for creating a new product.
+     */
     const openNew = () => {
         setSelectedProduct(null);
         setIsNewProduct(true);
         setDialogVisible(true);
     };
 
+    /**
+     * Prepares the UI for editing an existing product.
+     * @param product - The product entity to be edited.
+     */
     const openEdit = (product: ProductDTO) => {
         setSelectedProduct(product);
         setIsNewProduct(false);
         setDialogVisible(true);
     };
 
+    /**
+     * Displays a confirmation popup before executing the deletion of a product.
+     *
+     * @param event - The mouse event used to anchor the popup.
+     * @param product - The product entity targeted for deletion.
+     */
     const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, product: ProductDTO) => {
         confirmPopup({
             target: event.currentTarget,
@@ -96,19 +143,24 @@ const ManageProducts: React.FC = () => {
     };
 
     // --- TEMPLATES ---
+
+    /** Renders the product image within a table cell. */
     const imageBodyTemplate = (rowData: ProductDTO) => {
         return <img src={rowData.imageUrl || '/images/duck.png'} alt={rowData.name}
                     style={{width: '50px', height: '50px', objectFit: 'contain'}}
                     onError={(e) => (e.currentTarget.src = '/images/duck.png')}/>;
     };
 
+    /** Formats the price for table display. */
     const priceBodyTemplate = (rowData: ProductDTO) => `${rowData.price.toFixed(2)} €`;
 
+    /** Renders a color-coded tag representing the stock level. */
     const stockBodyTemplate = (rowData: ProductDTO) => (
         <Tag value={rowData.stock} severity={rowData.stock > 0 ? 'success' : 'danger'}
              className={rowData.stock > 0 ? 'pixel-tag pixel-tag-green' : 'pixel-tag pixel-tag-red'}/>
     );
 
+    /** Renders the action buttons (Edit/Delete) for each table row. */
     const actionBodyTemplate = (rowData: ProductDTO) => (
         <div>
             <Button icon="pi pi-pencil" className={`${styles.btn} ${styles.btn_yellow} mr-2`}
@@ -118,7 +170,9 @@ const ManageProducts: React.FC = () => {
         </div>
     );
 
-    // --- TABLE HEADER ---
+    /**
+     * Renders the header section of the DataTable, including the global search and "New" button.
+     */
     const renderHeader = () => {
         return (
             <div className="flex flex-wrap gap-2 align-items-center justify-content-between">

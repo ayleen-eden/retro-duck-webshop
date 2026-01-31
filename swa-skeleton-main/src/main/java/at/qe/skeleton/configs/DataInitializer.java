@@ -1,7 +1,3 @@
-/**
- * For testing purposes:
- * This class is for creating Test-Data. Initializes when Maven starts.
- */
 package at.qe.skeleton.configs;
 
 import at.qe.skeleton.model.Product;
@@ -14,10 +10,26 @@ import org.springframework.context.annotation.Profile;
 
 import java.util.Set;
 
+/**
+ * Data initializer for development and testing purposes.
+ * <p>
+ * This class is responsible for populating the database with initial test data
+ * (primarily products) when the application starts. It is only active when the
+ * {@code dev} Spring profile is used.
+ */
 @Configuration
 @Profile("dev")
 public class DataInitializer {
 
+    /**
+     * Bean for initializing product data upon application startup.
+     * <p>
+     * The {@link ApplicationRunner} checks if the product database is empty.
+     * If no products are present, it creates a set of predefined sample products.
+     *
+     * @param productService the service used to check for existing products and save new ones
+     * @return an {@link ApplicationRunner} that executes the initialization logic
+     */
     @Bean
     ApplicationRunner initData(ProductService productService) {
         return args -> {
@@ -45,6 +57,18 @@ public class DataInitializer {
         };
     }
 
+    /**
+     * Helper method to simplify the creation and persistence of product entities.
+     *
+     * @param productService the service used to persist the product
+     * @param name           the display name of the product
+     * @param description    a detailed text description of the product
+     * @param price          the base price of the product
+     * @param stock          the initial inventory count
+     * @param discount       the discount rate applied to the product (e.g., 0.2 for 20%)
+     * @param category       the primary platform/category for the product
+     * @param imageUrl       the URL string for the product's image
+     */
     private void createProduct(ProductService productService, String name, String description, double price, long stock, double discount, ProductCategory category, String imageUrl) {
         Product p = new Product();
         p.setName(name);
