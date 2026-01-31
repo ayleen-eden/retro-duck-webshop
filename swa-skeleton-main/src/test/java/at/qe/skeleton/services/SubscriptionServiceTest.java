@@ -1,12 +1,9 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.ProductCategory;
 import at.qe.skeleton.model.Subscription;
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.services.AuthenticatedUserService;
-import at.qe.skeleton.services.ProductService;
-import at.qe.skeleton.services.SubscriptionService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -111,15 +109,75 @@ public class SubscriptionServiceTest {
     public void testDeleteSubscription() {
         Userx user = authenticatedUserService.getAuthenticatedUser();
 
-        Collection<Subscription> subscriptions =
-                subscriptionService.getSubscriptionByUserId(user.getId());
+        Subscription subscription =
+                subscriptionService.createSubscription(user, product1);
 
-        for (Subscription s : subscriptions) {
-            subscriptionService.deleteSubscription(s);
-        }
+        subscriptionService.deleteSubscription(subscription);
 
         Assertions.assertTrue(
                 subscriptionService.getSubscriptionByUserId(user.getId()).isEmpty()
         );
     }
+
+
+    @Test
+    @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
+    public void testSaveSubscription() {
+        Userx user = authenticatedUserService.getAuthenticatedUser();
+
+        Subscription subscription = new Subscription();
+        subscription.setUser(user);
+        subscription.setProduct(product1);
+
+        Subscription saved = subscriptionService.saveSubscription(subscription);
+
+        Assertions.assertNotNull(saved.getId());
+        Assertions.assertEquals(user, saved.getUser());
+        Assertions.assertEquals(product1, saved.getProduct());
+    }
+
+    @Test
+    @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
+    public void testGetSubscriptionById() {
+        Userx user = authenticatedUserService.getAuthenticatedUser();
+
+        Subscription created = subscriptionService.createSubscription(user, product1);
+
+        Optional<Subscription> found =
+                subscriptionService.getSubscriptionById(created.getId());
+
+        Assertions.assertTrue(found.isPresent());
+        Assertions.assertEquals(user, found.get().getUser());
+        Assertions.assertEquals(product1, found.get().getProduct());
+    }
+
+    @Test
+    @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
+    public void testGetAllSubscriptions() {
+        Userx user = authenticatedUserService.getAuthenticatedUser();
+
+        subscriptionService.createSubscription(user, product1);
+        subscriptionService.createSubscription(user, product2);
+
+        Collection<Subscription> all =
+                subscriptionService.getAllSubscriptions();
+
+        Assertions.assertEquals(2, all.size());
+    }
+
+    @Test
+    @WithMockUser(username = "user1", authorities = {"CUSTOMER"})
+    public void testGetSubscriptionByProductId() {
+        Userx user = authenticatedUserService.getAuthenticatedUser();
+
+        subscriptionService.createSubscription(user, product1);
+
+        Collection<Subscription> subscriptions =
+                subscriptionService.getSubscriptionByProductId(product1.getId());
+
+        Assertions.assertEquals(1, subscriptions.size());
+        Assertions.assertEquals(product1.getId(),
+                subscriptions.iterator().next().getProduct().getId());
+    }
+
 }

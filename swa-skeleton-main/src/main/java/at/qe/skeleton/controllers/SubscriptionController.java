@@ -2,6 +2,7 @@ package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.SubscriptionDTO;
 import at.qe.skeleton.mappers.SubscriptionMapper;
+import at.qe.skeleton.services.AuthenticatedUserService;
 import at.qe.skeleton.services.SubscriptionService;
 import at.qe.skeleton.services.ProductService;
 import at.qe.skeleton.services.UserxService;
@@ -30,17 +31,20 @@ public class SubscriptionController {
 
     private ProductService productService;
 
+    private AuthenticatedUserService authenticatedUserService;
+
     @Autowired
-    public SubscriptionController(SubscriptionService subscriptionService, ProductService productService, SubscriptionMapper subscriptionMapper) {
+    public SubscriptionController(SubscriptionService subscriptionService, ProductService productService, SubscriptionMapper subscriptionMapper, AuthenticatedUserService authenticatedUserService) {
         this.subscriptionService = subscriptionService;
         this.subscriptionMapper = subscriptionMapper;
         this.productService = productService;
+        this.authenticatedUserService = authenticatedUserService;
     }
 
     @PostMapping
     public ResponseEntity<SubscriptionDTO> subscribe(@RequestParam Long productId) {
 
-        Userx user = (Userx) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Userx user = authenticatedUserService.getAuthenticatedUser();
         Optional<Product> productOpt = productService.getProductById(productId);
 
         if (productOpt.isEmpty()) {
@@ -61,14 +65,20 @@ public class SubscriptionController {
     @DeleteMapping
     public ResponseEntity<Void> unsubscribe(@RequestParam Long productId) {
 
-        Userx user = (Userx) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Userx user = authenticatedUserService.getAuthenticatedUser();
         Product product = productService.getProductById(productId).orElse(null);
 
         if (user == null || product == null) {
             return ResponseEntity.notFound().build();
         }
 
-        subscriptionService.deleteSubscription(subscriptionService.getSubscriptionByUserIdAndProductId(user.getId(), productId));
+        Subscription sub = subscriptionService.getSubscriptionByUserIdAndProductId(user.getId(), productId);
+
+        if (sub == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        subscriptionService.deleteSubscription(sub);
 
         return ResponseEntity.noContent().build();
     }
