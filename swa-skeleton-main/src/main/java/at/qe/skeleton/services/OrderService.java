@@ -23,6 +23,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing the lifecycle of orders.
+ * <p>
+ * This service handles the core business logic for order processing, including
+ * the checkout procedure, stock validation, history retrieval, and secure access
+ * to individual order details.
+ */
 @Service
 public class OrderService {
 
@@ -40,6 +47,19 @@ public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    /**
+     * Processes a checkout request by creating a persistent order for a user.
+     * <p>
+     * This operation validates the current cart state, checks for sufficient product stock,
+     * updates stock levels in the warehouse, and calculates the total price based on
+     * snapshots of current prices and discounts. The operation is transactional to
+     * ensure data consistency between order creation and stock decrement.
+     *
+     * @param user            the authenticated user placing the order.
+     * @param request the DTO containing shipping address and payment details.
+     * @return an {@link OrderDTO} representation of the newly created order.
+     * @throws InsufficientStockException if any product quantity in the cart exceeds available stock.
+     */
     @Transactional(rollbackFor = Exception.class)
     public OrderDTO placeOrder(Userx user, CheckoutRequestDTO request) throws InsufficientStockException {
         CartDTO validatedCart = cartValidationService.validateCart(request.cart())
@@ -120,6 +140,15 @@ public class OrderService {
         log.info("--------------------------------------------------");
     }
 
+    /**
+     * Retrieves a specific order by its ID, verifying ownership for security.
+     *
+     * @param id   the unique identifier of the order.
+     * @param user the authenticated user requesting the order data.
+     * @return the mapped {@link OrderDTO}.
+     * @throws OrderNotFoundException           if the order does not exist in the database.
+     * @throws UnauthorizedOrderAccessException if the requested order does not belong to the user.
+     */
     public OrderDTO getOrderById(Long id, Userx user) throws OrderNotFoundException, UnauthorizedOrderAccessException {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
@@ -130,6 +159,12 @@ public class OrderService {
         return orderMapper.mapTo(order);
     }
 
+    /**
+     * Retrieves the complete order history for a specific user (used to display in the frontend).
+     *
+     * @param user the user whose order history is being requested.
+     * @return a collection of {@link OrderDTO} objects.
+     */
     public Collection<OrderDTO> getOrderHistory(Userx user) {
         return orderRepository.findByUser(user)
                 .stream()
@@ -137,6 +172,16 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Deletes an order from the system after verifying existence and ownership.
+     * Note: For simplicity we decided, that the order can only be deleted by the user himself, and not by any managers or admins.
+     * But orders get deleted automatically if the user is deleted, so there is no need for any other users to access it.
+     *
+     * @param id   the unique identifier of the order to delete.
+     * @param user the authenticated user attempting the deletion.
+     * @throws OrderNotFoundException           if the order does not exist.
+     * @throws UnauthorizedOrderAccessException if the user is not authorized to delete this specific order.
+     */
     public void deleteOrder(Long id, Userx user) throws OrderNotFoundException, UnauthorizedOrderAccessException {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));

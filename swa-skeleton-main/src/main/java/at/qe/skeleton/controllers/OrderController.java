@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+/**
+ * REST Controller for managing order-related operations.
+ * * Provides an API for users to view their order history, retrieve specific
+ * order details, and place new orders via the checkout process.
+ */
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -25,6 +30,10 @@ public class OrderController {
     @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
+    /**
+     * Retrieves the complete order history for the currently authenticated user.
+     * * @return a {@link ResponseEntity} containing a collection of {@link OrderDTO}s.
+     */
     @GetMapping("/")
     public ResponseEntity<Collection<OrderDTO>> getAllOrders() {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();
@@ -34,6 +43,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderHistory(currentUser));
     }
 
+    /**
+     * Processes a checkout request and creates a new order.
+     * * @param checkoutRequest DTO containing shipping and payment information.
+     * @return a {@link ResponseEntity} with the created {@link OrderDTO} or an error message.
+     */
     @PostMapping("/")
     public ResponseEntity<Object> createOrder(@RequestBody CheckoutRequestDTO checkoutRequest) {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();
@@ -51,6 +65,17 @@ public class OrderController {
         }
     }
 
+    /**
+     * Retrieves a specific order by its unique identifier.
+     * <p>
+     * Ownership is verified within the service layer to ensure users can only
+     * view their own orders.
+     *
+     * @param id the unique ID of the order to retrieve.
+     * @return a {@link ResponseEntity} containing the {@link OrderDTO}.
+     * Returns {@code 404 Not Found} with an error message if {@link OrderNotFoundException} occurs,
+     * or {@code 403 Forbidden} with a message if {@link UnauthorizedOrderAccessException} is thrown.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOrderById(@PathVariable Long id) {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();
@@ -67,6 +92,16 @@ public class OrderController {
         }
     }
 
+    /**
+     * Deletes a specific order from the system.
+     * <p>
+     * This operation is only permitted if the order belongs to the authenticated user.
+     *
+     * @param id the unique ID of the order to delete.
+     * @return a {@link ResponseEntity} with {@code 204 No Content} on success.
+     * Returns {@code 404 Not Found} if {@link OrderNotFoundException} is caught,
+     * or {@code 403 Forbidden} if {@link UnauthorizedOrderAccessException} is caught.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteOrder(@PathVariable Long id) {
         Userx currentUser = authenticatedUserService.getAuthenticatedUser();

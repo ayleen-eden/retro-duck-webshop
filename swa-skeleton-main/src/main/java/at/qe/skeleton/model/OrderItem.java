@@ -3,6 +3,12 @@ package at.qe.skeleton.model;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
+/**
+ * Entity representing a specific product position within an {@link Order}.
+ * <p>
+ * This class stores a snapshot of the product's price and discount at the time
+ * of purchase to ensure historical accuracy even if product prices change later.
+ */
 @Entity
 public class OrderItem implements Serializable {
 

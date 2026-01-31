@@ -25,6 +25,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for {@link OrderService}.
+ * <p>
+ * This test suite ensures the correctness of order processing logic, including
+ * successful checkouts, stock management, and access control for retrieving
+ * and deleting orders.
+ */
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {
 
@@ -73,6 +80,10 @@ public class OrderServiceTest {
         );
     }
 
+    /**
+     * Verifies that an order is successfully placed when stock is sufficient.
+     * Checks if the stock is correctly decremented and the order is saved.
+     */
     @Test
     void testPlaceOrderSuccess() throws InsufficientStockException {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
@@ -90,6 +101,10 @@ public class OrderServiceTest {
         verify(orderRepository).save(any(Order.class));
     }
 
+    /**
+     * Ensures that an {@link InsufficientStockException} is thrown when the
+     * product stock is lower than the requested quantity.
+     */
     @Test
     void testPlaceOrderInsufficientStock() {
         testProduct.setStock(1L); // Zu wenig
@@ -103,6 +118,9 @@ public class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
+    /**
+     * Checks if the service throws an error when the cart validation fails.
+     */
     @Test
     void testPlaceOrderCartValidationFails() {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.empty());
@@ -114,6 +132,12 @@ public class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
+//    /**
+//     * Verifies that the total price of an order is correctly calculated when
+//     * a product discount is applied.
+//     *
+//     * @throws InsufficientStockException if stock validation fails.
+//     */
 //    @Test
 //    void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
 //        testProduct.setPrice(1000.0);
@@ -136,6 +160,10 @@ public class OrderServiceTest {
 //        assertThat(savedOrder.getTotalPrice()).isEqualTo(expectedTotal);
 //    }
 
+    /**
+     * Verifies that access is denied when a user tries to retrieve an
+     * order that does not belong to them.
+     */
     @Test
     void testGetOrderByIdAccessDenied() {
         Userx stranger = new Userx();
@@ -152,6 +180,9 @@ public class OrderServiceTest {
                 .hasMessageContaining("Access denied");
     }
 
+    /**
+     * Checks if an {@link OrderNotFoundException} is thrown when requesting a non-existent ID.
+     */
     @Test
     void testGetOrderByIdNotFound() {
         when(orderRepository.findById(999L)).thenReturn(Optional.empty());
@@ -161,6 +192,11 @@ public class OrderServiceTest {
                 .hasMessageContaining("Order not found");
     }
 
+    /**
+     * Verifies that a user can successfully delete their own order.
+     * @throws OrderNotFoundException if order does not exist
+     * @throws UnauthorizedOrderAccessException if the user is not authorized to access this order
+     */
     @Test
     void testDeleteOrderSuccess() throws OrderNotFoundException, UnauthorizedOrderAccessException {
         Order order = new Order();
@@ -174,6 +210,9 @@ public class OrderServiceTest {
         verify(orderRepository, times(1)).delete(order);
     }
 
+    /**
+     * Verifies that deleting an order is forbidden if the user is not the owner.
+     */
     @Test
     void testDeleteOrderAccessDenied() {
         Userx stranger = new Userx();
@@ -193,6 +232,9 @@ public class OrderServiceTest {
         verify(orderRepository, never()).delete(any());
     }
 
+    /**
+     * Ensures correct handling when attempting to delete a non-existent order.
+     */
     @Test
     void testDeleteOrderNotFound() {
         when(orderRepository.findById(999L)).thenReturn(Optional.empty());
@@ -204,6 +246,9 @@ public class OrderServiceTest {
         verify(orderRepository, never()).delete(any());
     }
 
+    /**
+     * Verifies that the order history retrieval returns the correct collection size.
+     */
     @Test
     void testGetOrderHistory() {
         Order order1 = new Order();

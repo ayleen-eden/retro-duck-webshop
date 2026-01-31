@@ -9,6 +9,13 @@ import {Button} from "primereact/button";
 import styles from "../styles/PixelButton.module.css"
 import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 
+/**
+ * Component for displaying the authenticated user's order history.
+ * * * This component fetches all previous orders from the {@link OrderApi}.
+ * * It features an expandable table to show individual items per order.
+ * * It handles order deletion, accounting for backend constraints like
+ * {@code OrderNotFoundException} or {@code UnauthorizedOrderAccessException}.
+ */
 const OrderHistoryComponent: React.FC = () => {
     const [orders, setOrders] = useState<OrderDTO[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -18,6 +25,9 @@ const OrderHistoryComponent: React.FC = () => {
         loadOrders();
     }, []);
 
+    /**
+     * Fetches the order history from the server and updates the state.
+     */
     const loadOrders = async () => {
         setLoading(true);
         try {
@@ -30,6 +40,11 @@ const OrderHistoryComponent: React.FC = () => {
         }
     };
 
+    /**
+     * Triggers a confirmation popup before calling the delete API.
+     * @param event - The click event to anchor the popup.
+     * @param orderId - The ID of the order to be deleted.
+     */
     const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, orderId: number) => {
         confirmPopup({
             className: "pixel-confirmpopup pixel-icon",
@@ -43,6 +58,10 @@ const OrderHistoryComponent: React.FC = () => {
         });
     };
 
+    /**
+     * Executes the deletion via API and refreshes the local list.
+     * @param orderId - ID of the order.
+     */
     const handleDelete = async (orderId: number) => {
         try {
             await OrderApi.deleteOrder(orderId);
@@ -60,7 +79,7 @@ const OrderHistoryComponent: React.FC = () => {
 
     const statusBodyTemplate = (rowData: OrderDTO) => {
         const severity = rowData.status === OrderStatus.DONE ? 'success' :
-            rowData.status === OrderStatus.CANCELLED ? 'danger' : 'info';
+            rowData.status === OrderStatus.NEW ? 'danger' : 'info';
         return <Tag className="pixel-tag pixel-tag-blue" value={rowData.status} severity={severity} />;
     };
 
@@ -72,6 +91,10 @@ const OrderHistoryComponent: React.FC = () => {
         return `${rowData.totalPrice.toFixed(2)} €`;
     };
 
+    /**
+     * Template for rendering the expanded row details (individual order items).
+     * @param data - The OrderDTO for the current row.
+     */
     const rowExpansionTemplate = (data: OrderDTO) => {
         return (
             <div style={{ backgroundColor: 'rgba(0,0,0,0.05)', borderRadius: '8px', padding: '1rem' }}>
