@@ -75,7 +75,6 @@ const deleteRating = async (productId: number, ratingToDelete: RatingDTO) => {
  * @returns Promise<RatingDTO> a promise that resolves with the response data
  * @throws Error if the request fails
  */
-const g
 const getRating = async (productId: number, ratingId: number): Promise<RatingDTO> => {
     try {
         const response = await globalAxios.get(`api/products/${productId}/ratings/${ratingId}`);

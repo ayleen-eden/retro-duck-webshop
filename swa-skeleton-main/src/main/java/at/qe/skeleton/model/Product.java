@@ -55,7 +55,6 @@ public class Product implements Serializable {
     /**
      * The discount applied to the product (e.g., 0.2 for 20% off).
      */
-    private double discount;
     private Double discount;
 
     /**

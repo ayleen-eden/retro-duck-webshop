@@ -32,7 +32,6 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const [selectedRating, setRating] = useState<RatingDTO>(RatingTypes.empty);
     const [sorting, setSorting] = useState<'asc' | 'desc'>('desc')
     const [ratingFilter, setRatingFilter] = useState<number | undefined>(undefined);
-    const [user] = useState<UserxTypes | null>(null);
     const toast = useRef<Toast>(null)
     const [user, setUser] = useState<UserxTypes | null>(null)
 
