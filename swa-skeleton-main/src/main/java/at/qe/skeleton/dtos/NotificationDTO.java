@@ -4,6 +4,9 @@ import at.qe.skeleton.model.NotificationType;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data transfer object for the Notification Entity.
+ */
 public record NotificationDTO(
     Long id,
     Long productId,

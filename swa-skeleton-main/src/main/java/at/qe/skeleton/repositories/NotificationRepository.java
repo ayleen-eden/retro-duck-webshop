@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+/**
+ * Repository for managing {@link Notification} entities.
+ */
 @Repository
 public interface NotificationRepository extends AbstractRepository<Notification, Long> {
 

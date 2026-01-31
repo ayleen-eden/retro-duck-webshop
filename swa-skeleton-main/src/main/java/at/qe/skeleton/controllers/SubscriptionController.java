@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Subscription endpoints exposed by the server.
+ */
 @RestController
 @RequestMapping("/api/subscriptions")
 public class SubscriptionController {

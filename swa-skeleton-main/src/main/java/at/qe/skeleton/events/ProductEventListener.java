@@ -10,6 +10,13 @@ import org.springframework.context.event.EventListener;
 
 import java.time.LocalDateTime;
 
+/**
+ * Event listener that reacts to product-related domain events and
+ * creates notifications for subscribed users.
+ *
+ * This class is part of the event-driven notification mechanism.
+ */
+
 @Component
 public class ProductEventListener {
 
@@ -24,6 +31,14 @@ public class ProductEventListener {
         this.productService = productService;
     }
 
+    /**
+     * Handles a {@link ProductRestockEvent}.
+     *
+     * Creates and sends a RESTOCK notification to all users subscribed
+     * to the affected product.
+     *
+     * @param event the restock event containing the product identifier
+     */
     @EventListener
     public void handleRestock(ProductRestockEvent event) {
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
@@ -32,6 +47,14 @@ public class ProductEventListener {
         notifySubscribers(product, title, description, NotificationType.RESTOCK);
     }
 
+    /**
+     * Handles a {@link ProductSaleEvent}.
+     *
+     * Creates and sends a SALE notification to all users subscribed
+     * to the affected product.
+     *
+     * @param event the sale event containing the product identifier
+     */
     @EventListener
     public void handleSale(ProductSaleEvent event) {
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
@@ -45,6 +68,14 @@ public class ProductEventListener {
         notifySubscribers(product, title, description, NotificationType.SALE);
     }
 
+    /**
+     * Handles a {@link ProductOutOfStockEvent}.
+     *
+     * Creates and sends an OUT_OF_STOCK notification to all users subscribed
+     * to the affected product.
+     *
+     * @param event the out of stock event containing the product identifier
+     */
     @EventListener
     public void handleOutOfStock(ProductOutOfStockEvent event) {
         Product product = productService.getProductById(event.getProductId()).orElseThrow();
@@ -54,6 +85,14 @@ public class ProductEventListener {
         notifySubscribers(product, title, description, NotificationType.OUT_OF_STOCK);
     }
 
+    /**
+     * Notifies all users subscribed to the given product.
+     *
+     * @param product the product related to the notification
+     * @param title the notification title
+     * @param description the notification message
+     * @param type the notification type
+     */
     private void notifySubscribers(Product product, String title, String description, NotificationType type) {
         subscriptionService.getSubscriptionByProductId(product.getId())
             .forEach(sub -> {
