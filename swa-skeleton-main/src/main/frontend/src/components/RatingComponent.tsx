@@ -33,6 +33,22 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const [sorting, setSorting] = useState<'asc' | 'desc'>('desc')
     const [ratingFilter, setRatingFilter] = useState<number | undefined>(undefined);
     const toast = useRef<Toast>(null)
+    const [user, setUser] = useState<UserxTypes | null>(null)
+
+    useEffect(() => {
+        const determineUser = async () => {
+            try {
+                const authenticated : boolean = await UserxApi.isAuthenticated();
+                if (authenticated) {
+                    const author: UserxTypes = await UserxApi.getCurrentUser();
+                    setUser(author);
+                }
+            } catch (err: any) {
+                console.log("Error determining user: ", err);
+            }
+        }
+        void determineUser();
+    }, []);
 
     useEffect(() => {
         const fetchAllRatingsForProduct = async () => {
@@ -52,11 +68,10 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const sortedRatings = useMemo(() => {
         return [...ratings]
             .filter(rating => {
-                // Filter nur anwenden, wenn ratingFilter gesetzt ist
                 if (ratingFilter !== undefined) {
                     return ratingScaleToNumber(rating.rating) === ratingFilter;
                 }
-                return true; // sonst alle Ratings behalten
+                return true;
             })
             .sort((a, b) =>
                 sorting === "asc"
@@ -68,19 +83,30 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     useEffect(() => {
         if (loading) return;
         const loadUserRating = async () => {
-            const author: UserxTypes = await UserxApi.getCurrentUser();
-            const existingRating = ratings.find(rating => rating.authorId === author.id);
-
-            if (existingRating) {
-                setRating(existingRating);
-            } else {
-                setRating(RatingTypes.empty());
+            if (user != null) {
+                const existingRating = ratings.find(rating => rating.authorId === user.id);
+                if (existingRating) {
+                    setRating(existingRating);
+                } else {
+                    setRating(RatingTypes.empty());
+                }
             }
+
+
         }
         void loadUserRating();
     }, [ratings, productId, loading]);
 
     const createRating = async () => {
+        if (user == null) {
+            toast.current?.show({
+                severity: 'warn',
+                summary: 'You need an account to create a rating!',
+                detail: 'Click on Login to sign up now!',
+                life: 3000
+            });
+            return;
+        }
         if (ratingValue == undefined || comment == '') {
             toast.current?.show({
                 severity: 'warn',
@@ -134,10 +160,6 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         } catch (err: any) {
             console.error('Error updating Rating:', err);
         }
-    }
-
-    const onEditRating = (rating: RatingTypes) => {
-        setRating(rating);
     }
 
     const deleteRating = async () => {
