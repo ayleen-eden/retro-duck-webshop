@@ -2,6 +2,8 @@ package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
 import jdk.jfr.Timestamp;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serial;
@@ -18,7 +20,7 @@ public class Rating implements Persistable<Long>, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Timestamp
+    @UpdateTimestamp
     private LocalDateTime timestamp;
     @Enumerated(EnumType.STRING)
     private RatingScale rating;

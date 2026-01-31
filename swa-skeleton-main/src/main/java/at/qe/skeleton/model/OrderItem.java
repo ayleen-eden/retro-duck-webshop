@@ -24,13 +24,13 @@ public class OrderItem implements Serializable {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private int quantity;
+    private Integer quantity;
 
     @Column(nullable = false)
-    private double priceAtPurchase;
+    private Double priceAtPurchase;
 
     @Column(nullable = false)
-    private double discountAtPurchase;
+    private Double discountAtPurchase;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

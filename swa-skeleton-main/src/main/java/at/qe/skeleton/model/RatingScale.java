@@ -28,8 +28,4 @@ public enum RatingScale {
             default -> throw new IllegalArgumentException("Conversion from Frontend Rating failed");
         };
     }
-
-    public int getStars() {
-        return stars;
-    }
 }

@@ -15,6 +15,7 @@ import java.util.Set;
  */
 @Entity
 public class Product implements Serializable {
+    // ===== Attributes =====
 
     /**
      * Serial version UID for serialization consistency.
@@ -43,18 +44,19 @@ public class Product implements Serializable {
      * The base price of the product without discounts.
      */
     @Column(nullable = false)
-    private double price;
+    private Double price;
 
     /**
      * The current quantity available in the warehouse.
      */
     @Column(nullable = false)
-    private long stock;
+    private Long stock;
 
     /**
      * The discount applied to the product (e.g., 0.2 for 20% off).
      */
     private double discount;
+    private Double discount;
 
     /**
      * URL or path to the product image.
