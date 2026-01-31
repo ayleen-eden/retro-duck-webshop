@@ -73,7 +73,7 @@ XBOX_SERIES
 class Rating {
 - id: Long
 - timestamp: LocalDateTime
-- rating: RatingScale
+- ratingScale: RatingScale
 - comment: String
 - username: String
 }
@@ -102,6 +102,12 @@ MANAGER,
 CUSTOMER
 }
 
+enum NotificationChannelType {
+SMS,
+EMAIL,
+WHATSAPP
+}
+
 class Userx {
 - id: Long
 - createDate: LocalDateTime
@@ -113,6 +119,7 @@ class Userx {
 - email: String
 - phone: String
 - roles: Set<UserxRole>
+- preferredChannels: Set<NotificationChannelType>
 }
 
 Userx - "1 createUser" Userx
