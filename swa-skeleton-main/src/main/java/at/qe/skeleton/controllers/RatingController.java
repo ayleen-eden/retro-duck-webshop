@@ -6,13 +6,18 @@ import at.qe.skeleton.mappers.RatingCreateMapper;
 import at.qe.skeleton.mappers.RatingMapper;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.Rating;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.ProductService;
 import at.qe.skeleton.services.RatingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
@@ -61,6 +66,10 @@ public class RatingController {
 
     @PostMapping("")
     public ResponseEntity<RatingDTO> createRating(@PathVariable Long productId, @Valid @RequestBody RatingCreateDTO ratingDTO) {
+        System.out.println("User Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        System.out.println("Request path: " + ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI());
+        //Das wird anscheinend ausgeführt
+
         if (productService.getProductById(productId).isPresent()) {
             Rating rating = ratingService.saveRating(ratingCreateMapper.mapFrom(ratingDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(ratingMapper.mapTo(rating));

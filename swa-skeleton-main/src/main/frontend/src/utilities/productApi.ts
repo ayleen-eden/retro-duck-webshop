@@ -62,5 +62,6 @@ export const ProductApi = {
     updateProduct,
     deleteProduct,
     getAllProducts,
+    getProductById,
     fetchCategories
 };

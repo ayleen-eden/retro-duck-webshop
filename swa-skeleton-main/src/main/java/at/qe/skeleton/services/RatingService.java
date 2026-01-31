@@ -47,7 +47,7 @@ public class RatingService {
      * @param rating Rating to save
      * @return the updated Rating
      */
-    @PreAuthorize("hasAuthority('CUSTOMER')")
+    //@PreAuthorize("hasAuthority('CUSTOMER')")
     public Rating saveRating(Rating rating) {
         if (rating.isNew()) {
             if (ratingRepository.existsRatingByAuthorAndProduct(rating.getAuthor(), rating.getProduct())) {
