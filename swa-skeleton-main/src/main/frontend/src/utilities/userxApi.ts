@@ -5,6 +5,7 @@
 import globalAxios from "axios";
 import {UserDTO, UserxTypes} from "../DTO/userx.types";
 import {createUserxFromInterfaces} from "./userxUtilities";
+import {NotificationChannelType} from "../DTO/notification.types";
 
 export interface UserProfileUpdateDTO {
     firstName: string;
@@ -12,6 +13,7 @@ export interface UserProfileUpdateDTO {
     email: string;
     phone: string;
     password?: string;
+    preferredChannels?: NotificationChannelType[];
 }
 
 /**

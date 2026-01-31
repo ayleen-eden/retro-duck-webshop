@@ -1,6 +1,7 @@
 package at.qe.skeleton.dtos;
 
 import at.qe.skeleton.model.UserxRole;
+import at.qe.skeleton.services.NotificationChannelType;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -23,5 +24,6 @@ public record UserxDTO (
     String email,
     String phone,
     boolean enabled,
-    Set<UserxRole> roles
+    Set<UserxRole> roles,
+    Set<NotificationChannelType> preferredChannels
 ) {}

@@ -32,6 +32,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const [selectedRating, setRating] = useState<RatingDTO>(RatingTypes.empty);
     const [sorting, setSorting] = useState<'asc' | 'desc'>('desc')
     const [ratingFilter, setRatingFilter] = useState<number | undefined>(undefined);
+    const [user] = useState<UserxTypes | null>(null);
     const toast = useRef<Toast>(null)
     const [user, setUser] = useState<UserxTypes | null>(null)
 
@@ -81,6 +82,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     }, [ratings, sorting, ratingFilter]);
 
     useEffect(() => {
+        if(!user) return;
         if (loading) return;
         const loadUserRating = async () => {
             if (user != null) {
@@ -162,8 +164,13 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         }
     }
 
+    const onEditRating = (rating: RatingTypes) => {
+        if(!user) return;
+        setRating(rating);
+    }
+
     const deleteRating = async () => {
-        if (!selectedRating.id) return;
+        if (!user || !selectedRating.id) return;
 
         try {
             await RatingApi.deleteRating(productId, selectedRating);

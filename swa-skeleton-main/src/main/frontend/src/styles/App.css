@@ -6,6 +6,11 @@
   image-rendering: pixelated;
 }
 
+#root {
+  padding-top: 20px;
+  padding-bottom: 120px;
+}
+
 .mb-3 {
   margin-bottom: 1.5rem;
 }
@@ -716,4 +721,9 @@
 
 .link:hover::after {
   transform: scaleX(1);
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 80px;
 }

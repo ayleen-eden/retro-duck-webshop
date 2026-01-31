@@ -7,10 +7,11 @@ import {Divider} from 'primereact/divider';
 import {useNavigate} from 'react-router-dom';
 import {getCart} from '../utilities/cartUtilities';
 import {OrderApi} from '../utilities/orderApi';
+import {UserxApi} from '../utilities/userxApi';
 import {ROUTES} from '../utilities/routes.paths';
 import {CartDTO} from '../DTO/cart.types';
 import {CheckoutRequestDTO} from '../DTO/checkout.types';
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import '../styles/Login.css';
 
 const CheckoutComponent: React.FC = () => {
@@ -33,6 +34,31 @@ const CheckoutComponent: React.FC = () => {
             navigate(ROUTES.CART);
         }
     }, [navigate]);
+
+    const fillExistingDetails = async () => {
+        setLoading(true);
+        try {
+            const currentUser = await UserxApi.getCurrentUser();
+
+            // Set real profile data
+            setName(`${currentUser.firstName} ${currentUser.lastName}`.trim() || currentUser.username);
+
+            const randomHouseNumber = Math.floor(Math.random() * 200) + 1;
+
+            // Set dummy data for simulated fields (requirement: simulation only)
+            setStreet(`Quackstraße ${randomHouseNumber}`);
+            setCity("Entenhausen");
+            setPostalCode("6020");
+            setCountry("Austrialia");
+            setPaymentMethod('DUCK_COINS')
+
+        } catch (error) {
+            console.error("Failed to load user details", error);
+            alert("Could not load profile details. Please fill manually.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const paymentOptions = [
         {label: 'Credit Card (Visa/Mastercard)', value: 'CREDIT_CARD'},
@@ -82,6 +108,15 @@ const CheckoutComponent: React.FC = () => {
                 <Card title="CHECKOUT DETAILS" className="flex-1 product-card">
                     <div className="flex flex-column gap-3">
 
+                        <Button
+                            type="button"
+                            label="USE MY PROFILE DETAILS"
+                            icon="pi pi-user"
+                            onClick={fillExistingDetails}
+                            className={`${styles.btn} ${styles.btn_blue} mb-2`}
+                            style={{ width: 'fit-content', fontSize: '10px' }}
+                        />
+
                         <h3 style={{marginBottom: '1rem'}}>SHIPPING ADDRESS</h3>
                         <div className="flex flex-column gap-2">
                             <label htmlFor="name" className="font-bold">FULL NAME</label>
@@ -126,7 +161,7 @@ const CheckoutComponent: React.FC = () => {
                                 onChange={(e) => setPaymentMethod(e.value)}
                                 placeholder="SELECT A PAYMENT METHOD"
                                 className="pixel-dropdown w-full"
-                                style={{marginLeft: '1rem'}}
+                                style={{marginLeft: '0'}}
                             />
                         </div>
                     </div>
@@ -161,7 +196,7 @@ const CheckoutComponent: React.FC = () => {
                             className={`${styles.btn} ${styles.btn_green} w-full`}
                             onClick={handlePlaceOrder}
                             disabled={loading}
-                            style={{marginRight: '1rem', marginTop: '1rem'}}
+                            style={{marginTop: '1rem'}}
                         />
                         <Button
                             label="BACK TO CART"

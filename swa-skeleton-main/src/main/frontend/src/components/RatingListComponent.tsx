@@ -8,7 +8,7 @@ import {UserxApi} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
 import {Button} from "primereact/button";
 import ratingComponent from "./RatingComponent";
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 
 interface RatingListProps {
     sortedRatings: RatingTypes[];

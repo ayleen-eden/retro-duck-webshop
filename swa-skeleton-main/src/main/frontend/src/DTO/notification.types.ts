@@ -4,6 +4,12 @@ export enum NotificationType {
     OUT_OF_STOCK = 'OUT_OF_STOCK'
 }
 
+export enum NotificationChannelType {
+    SMS = 'SMS',
+    WHATSAPP ='WHATSAPP',
+    EMAIL = 'EMAIL'
+}
+
 export interface NotificationDTO {
     id: number,
     productId: number,

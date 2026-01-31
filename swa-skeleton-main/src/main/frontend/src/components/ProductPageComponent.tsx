@@ -7,7 +7,7 @@ import {useSessionStorage} from "primereact/hooks";
 import {Tag} from "primereact/tag";
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {addToCart, getCart} from "../utilities/cartUtilities";
-import styles from "./PixelButton.module.css"
+import styles from "../styles/PixelButton.module.css"
 import {getAllSubscriptionsForUser, subscribe, unsubscribe} from "../utilities/subscriptionApi";
 import {UserxApi} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
@@ -62,7 +62,6 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
     }, [productId]);
 
     const handleSubscribeToggle = async () => {
-        if (!user?.id || !productId) return;
         setSubLoading(true);
         try {
             if (subscribed) {
@@ -103,7 +102,7 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
     }
 
     if (!product) {
-        return <div>Product not found.</div>;
+        return <div>DUCK NOT FOUND.</div>;
     }
 
     const imageBox = () => {
@@ -236,8 +235,7 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
                     {imageBox()}
                     <div style={{flex: 1}}>
                         <h1>{product.name}</h1>
-                        <div className="mb-3">
-                        </div>
+
                         <p className="mb-4 text-lg" style={{color: 'white'}}>{product.description}</p>
                         {priceTag()}
                         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>

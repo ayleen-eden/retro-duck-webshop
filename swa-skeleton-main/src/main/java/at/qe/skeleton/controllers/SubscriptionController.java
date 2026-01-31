@@ -27,14 +27,11 @@ public class SubscriptionController {
 
     private ProductService productService;
 
-    private UserxService userService;
-
     @Autowired
-    public SubscriptionController(SubscriptionService subscriptionService, ProductService productService, UserxService userService, SubscriptionMapper subscriptionMapper) {
+    public SubscriptionController(SubscriptionService subscriptionService, ProductService productService, SubscriptionMapper subscriptionMapper) {
         this.subscriptionService = subscriptionService;
         this.subscriptionMapper = subscriptionMapper;
         this.productService = productService;
-        this.userService = userService;
     }
 
     @PostMapping

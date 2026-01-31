@@ -7,6 +7,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Entity representing a customer's order in the system.
+ * <p>
+ * This class serves as the primary container for order data, including the
+ * associated user, the items purchased, status tracking, and shipping information.
+ * It is persisted in the "orders" table.
+ */
 @Entity
 @Table(name = "orders")
 public class Order implements Serializable {

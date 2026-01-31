@@ -14,7 +14,7 @@ import {FilterService} from "primereact/api";
 import {InputNumber} from "primereact/inputnumber";
 import {useNavigate} from 'react-router-dom';
 import {ROUTES} from "../utilities/routes.paths";
-import styles from "./PixelButton.module.css"
+import styles from "../styles/PixelButton.module.css"
 
 FilterService.register('custom_range', (value, filters) => {
     const [from, to] = filters ?? [null, null];
