@@ -1,0 +1,50 @@
+@startuml
+
+actor "Ragnhild die Große" as User
+
+group loop [while adding products == true]
+
+  note over User : User im Frontend drückt auf\n"Add to cart"-Button auf der\nSeite des Produkts.
+  
+  User -> Product : addToCart()
+  
+  Product -> ShoppingCart : addItem(Product)
+  
+  note over ShoppingCart : ShoppingCart erstellt CartItem und\nfügt es seiner Liste hinzu.
+  
+
+end
+
+note over User : User im Frontend drückt auf\n"Checkout"-Button auf der\nSeite seines ShoppingCarts.
+
+User -> ShoppingCart : placeOrder()
+
+ShoppingCart --> Order ** : create
+
+group loop [for each CartItem in ShoppingCart]
+  
+  ShoppingCart -> Product : getStock()
+  
+  Product --> ShoppingCart : stock = getStock()
+    
+  group alt [if stock != 0]
+  
+    ShoppingCart -> Order : addItem()
+    
+  else else
+
+  note over Order : Diese Situation wird durch\nden ShoppingCart verhindert.
+  
+    Order -> User : throw OutOfStockException
+
+  end
+
+end
+
+ShoppingCart -> Order : checkOut()
+  
+Order -> Order : createReceipt()
+
+note right : Hier erstellt Order einen String,\nin dem alle Products mit amount\nund price gelistet werden und\ngibt diesen in der Konsole aus.
+
+@enduml
