@@ -67,7 +67,7 @@ const CheckoutComponent: React.FC = () => {
         {label: 'Invoice', value: 'INVOICE'}
     ];
 
-    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit, 0).toFixed(2);
+    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit * (1 - item.productDiscount), 0).toFixed(2);
 
     const handlePlaceOrder = async () => {
         if (!name || !street || !city || !postalCode || !country || !paymentMethod) {
@@ -114,7 +114,7 @@ const CheckoutComponent: React.FC = () => {
                             icon="pi pi-user"
                             onClick={fillExistingDetails}
                             className={`${styles.btn} ${styles.btn_blue} mb-2`}
-                            style={{ width: 'fit-content', fontSize: '10px' }}
+                            style={{width: 'fit-content', fontSize: '10px'}}
                         />
 
                         <h3 style={{marginBottom: '1rem'}}>SHIPPING ADDRESS</h3>
@@ -127,7 +127,8 @@ const CheckoutComponent: React.FC = () => {
                         <div className="flex flex-column gap-2">
                             <label htmlFor="street" className="font-bold">STREET ADDRESS</label>
                             <InputText id="street" value={street} onChange={(e) => setStreet(e.target.value)}
-                                       className="input-field" placeholder="Quakstreet 404" style={{marginTop: '0.5rem'}}/>
+                                       className="input-field" placeholder="Quakstreet 404"
+                                       style={{marginTop: '0.5rem'}}/>
                         </div>
 
                         <div className="flex gap-3">
@@ -140,7 +141,8 @@ const CheckoutComponent: React.FC = () => {
                             <div className="flex-1 flex flex-column gap-2">
                                 <label htmlFor="city" className="font-bold">CITY</label>
                                 <InputText id="city" value={city} onChange={(e) => setCity(e.target.value)}
-                                           className="input-field" placeholder="Ducksbruck" style={{marginTop: '0.5rem'}}/>
+                                           className="input-field" placeholder="Ducksbruck"
+                                           style={{marginTop: '0.5rem'}}/>
                             </div>
                         </div>
 
@@ -171,23 +173,47 @@ const CheckoutComponent: React.FC = () => {
                 <Card title="ORDER SUMMARY" className="flex-initial md:w-30rem product-card h-fit">
                     <div className="flex flex-column">
                         <ul style={{listStyle: 'none', padding: 0, margin: 0}}>
-                            {cart.items.map(item => (
-                                <li key={item.productId}
-                                    className="flex justify-content-between mb-3 border-bottom-1 surface-border pb-2">
-                                    <div className="flex flex-column">
-                                        <h3 className="font-bold" style={{marginBottom: '1rem'}}>{item.productName} </h3>
-                                        <h5 className="text-sm">QTY: {item.amount} </h5>
-                                        <h5 className="font-bold">{(item.amount * item.pricePerUnit).toFixed(2)} €</h5>
-                                    </div>
-                                </li>
-                            ))}
+                            {cart.items.map(item => {
+                                const originalTotal = item.amount * item.pricePerUnit;
+                                const discountedTotal = originalTotal * (1 - (item.productDiscount || 0));
+                                const hasDiscount = (item.productDiscount || 0) > 0;
+
+                                return (
+                                    <li key={item.productId}
+                                        className="flex justify-content-between mb-3 border-bottom-1 surface-border pb-2">
+                                        <div className="flex flex-column">
+                                            <h3 className="font-bold"
+                                                style={{marginBottom: '0.5rem'}}>{item.productName} </h3>
+                                            <h5 className="text-sm">QTY: {item.amount} </h5>
+                                        </div>
+
+                                        {/* PRICE */}
+                                        <div className="flex flex-column align-items-end">
+                                            {hasDiscount && (
+                                                <span style={{
+                                                    textDecoration: 'line-through',
+                                                    fontSize: '0.8rem',
+                                                    color: '#ff7675',
+                                                    marginBottom: '2px'
+                                                }}>
+                                                    {originalTotal.toFixed(2)} €
+                                                </span>
+                                            )}
+                                            <span className="font-bold"
+                                                  style={{color: hasDiscount ? '#00c853' : 'inherit'}}>
+                                                {discountedTotal.toFixed(2)} €
+                                            </span>
+                                        </div>
+                                    </li>
+                                );
+                            })}
                         </ul>
 
                         <Divider className="pixel-divider-dashed"/>
 
                         <div className="flex justify-content-between text-xl font-bold mt-4 mb-4">
-                            <span>TOTAL</span>
-                            <span> {totalPrice} €</span>
+                            <span style={{color: 'white'}}>TOTAL</span>
+                            <span style={{color: '#FFD700', fontSize: '1.5rem'}}> {totalPrice} €</span>
                         </div>
 
                         <Button
