@@ -34,10 +34,10 @@ public class SMSNotificationChannel implements NotificationChannel {
      */
     public void send(Userx user, String title, String message) {
         log.info("=STUB SMS NOTIFICATION=============================");
-        log.info("To: " + user.getFirstName() + " " + user.getLastName());
-        log.info("Phone number: " + user.getPhone());
-        log.info("Subject: " + title);
-        log.info("Body: " + message);
+        log.info("To: {} {}", user.getFirstName(), user.getLastName());
+        log.info("Phone number: {}", user.getPhone());
+        log.info("Subject: {}", title);
+        log.info("Body: {}", message);
         log.info("===================================================");
     }
 }
