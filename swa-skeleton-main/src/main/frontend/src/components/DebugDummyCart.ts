@@ -8,7 +8,8 @@ export const dummyCart: CartDTO = {
             productImage: "images/mug.png",
             pricePerUnit: 5.99,
             productDiscount: 0.3,
-            amount: 2
+            amount: 2,
+            productStock: 5
         },
         {
             productId: 2,
@@ -16,7 +17,8 @@ export const dummyCart: CartDTO = {
             productImage: "images/tea.png",
             pricePerUnit: 3.49,
             productDiscount: 0,
-            amount: 3
+            amount: 3,
+            productStock: 4
         },
         {
             productId: 3,
@@ -24,7 +26,8 @@ export const dummyCart: CartDTO = {
             productImage: "images/duck.png",
             pricePerUnit: 12.99,
             productDiscount: 0.5,
-            amount: 1
+            amount: 1,
+            productStock: 1
         }
     ]
 };

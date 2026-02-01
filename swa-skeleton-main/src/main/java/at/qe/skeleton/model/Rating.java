@@ -1,7 +1,7 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serial;
@@ -18,10 +18,10 @@ public class Rating implements Persistable<Long>, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Timestamp
+    @UpdateTimestamp
     private LocalDateTime timestamp;
     @Enumerated(EnumType.STRING)
-    private RatingScale rating;
+    private RatingScale ratingScale;
     @Column(nullable = false, length = 50000)
     private String comment;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,12 +43,12 @@ public class Rating implements Persistable<Long>, Serializable {
         this.timestamp = timestamp;
     }
 
-    public RatingScale getRating() {
-        return rating;
+    public RatingScale getRatingScale() {
+        return ratingScale;
     }
 
-    public void setRating(RatingScale rating) {
-        this.rating = rating;
+    public void setRatingScale(RatingScale ratingScale) {
+        this.ratingScale = ratingScale;
     }
 
     public String getComment() {
@@ -89,7 +89,7 @@ public class Rating implements Persistable<Long>, Serializable {
                 comment,
                 author.getUsername(),
                 timestamp.toString(),
-                rating.toString());
+                ratingScale.toString());
     }
 
     @Override

@@ -59,6 +59,17 @@ public class UserxService implements UserDetailsService {
     }
 
     /**
+     * Loads a single user identified by its id without permissions.
+     * This method is only to be used for loading your own user.
+     *
+     * @param id the id to search for
+     * @return the user with the id
+     */
+    public Optional<Userx> loadUserSelf(Long id) {
+        return userRepository.findById(id);
+    }
+
+    /**
      * Saves the user. This method will also set the creation date for new
      * entities or the update date for updated entities. The user
      * requesting this operation will also be stored as the creator
@@ -75,6 +86,9 @@ public class UserxService implements UserDetailsService {
             }
             if (user.getRoles() == null || user.getRoles().isEmpty()) {
                 user.setRoles(java.util.Set.of(UserxRole.CUSTOMER));
+            }
+            if (user.getPreferredChannels() == null || user.getPreferredChannels().isEmpty()) {
+                user.setPreferredChannels(java.util.Set.of(NotificationChannelType.EMAIL));
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Userx authUser = authenticatedUserService.getAuthenticatedUser();
@@ -123,6 +137,10 @@ public class UserxService implements UserDetailsService {
         // Passwort nur ändern, wenn es nicht leer ist
         if (dto.password() != null && !dto.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        if (dto.preferredChannels() != null) {
+            user.setPreferredChannels(dto.preferredChannels());
         }
 
         user.setUpdateUser(user); // Metadaten: User hat sich selbst geändert

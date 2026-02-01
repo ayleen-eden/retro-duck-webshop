@@ -15,16 +15,38 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Service for managing products and their lifecycle.
+ * <p>
+ * This service provides methods for retrieving, saving, and updating products.
+ * It also handles the logic for triggering notification events when product
+ * attributes like stock levels or discounts change.
+ */
 @Service
-@Scope("application")
 public class ProductService {
 
+    /**
+     * Repository for data access to {@link Product} entities.
+     */
     private ProductRepository productRepository;
 
+    /**
+     * Publisher for Spring Application Events to notify other components of changes.
+     */
     private final ApplicationEventPublisher publisher;
 
+    /**
+     * Mapper to convert between {@link Product} entities and {@link ProductDTO}s.
+     */
     private final ProductMapper productMapper;
 
+    /**
+     * Constructor for Dependency Injection.
+     *
+     * @param productRepository the repository for product persistence
+     * @param publisher the event publisher for system-wide notifications
+     * @param productMapper the mapper for DTO conversions
+     */
     @Autowired
     public ProductService(ProductRepository productRepository, ApplicationEventPublisher publisher, ProductMapper productMapper) {
         this.productRepository = productRepository;
@@ -34,24 +56,60 @@ public class ProductService {
 
     // ===== READ =====
 
+    /**
+     * Retrieves all products currently stored in the system.
+     *
+     * @return a collection of all products
+     */
     public Collection<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    /**
+     * Finds a specific product by its unique identifier.
+     *
+     * @param id the ID of the product to find
+     * @return an Optional containing the found product, or empty if not found
+     */
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
 
     // ===== WRITE =====
 
+    /**
+     * Persists a product entity in the database.
+     *
+     * @param product the product entity to save
+     * @return the saved product entity
+     */
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
+    /**
+     * Removes a product from the system by its ID.
+     *
+     * @param id the ID of the product to delete
+     */
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
 
+    /**
+     * Updates an existing product with new details and publishes events based on changes.
+     * <p>
+     * This method compares old and new values for stock and discount to trigger:
+     * <ul>
+     * <li>{@link ProductRestockEvent} if stock is increased</li>
+     * <li>{@link ProductOutOfStockEvent} if stock reaches zero</li>
+     * <li>{@link ProductSaleEvent} if the discount is increased</li>
+     * </ul>
+     *
+     * @param oldProductId the ID of the product to be updated
+     * @param newProduct the DTO containing the updated values
+     * @return the updated product as DTO, or {@code null} if the product does not exist
+     */
     public ProductDTO updateProduct(Long oldProductId, ProductDTO newProduct) {
         Product oldProduct = getProductById(oldProductId).orElse(null);
 
@@ -77,6 +135,7 @@ public class ProductService {
 
         Product updatedProduct = saveProduct(oldProduct);
 
+        // Event logic: Triggered based on state changes
         if (newProduct.stock() != null && newProduct.stock() > previousStock) {
             publisher.publishEvent(new ProductRestockEvent(this, updatedProduct.getId()));
         }

@@ -2,6 +2,7 @@ package at.qe.skeleton.tests;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.UserxRole;
+import jakarta.transaction.Transactional;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
  * This class is part of the skeleton project provided for students of the
  * course "Software Architecture" offered by the University of Innsbruck.
  */
+@Transactional
 public class EqualsImplementationTest {
 
     @Test

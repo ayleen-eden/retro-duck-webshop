@@ -20,6 +20,13 @@ public class CartValidationService {
         this.productService = productService;
     }
 
+    /**
+     * Validates the given cart against current product data.
+     *
+     * @param cart the cart to validate
+     * @return an {@code Optional} containing the validated and updated cart,
+     *         or {@code Optional.empty()} if validation fails
+     */
     public Optional<CartDTO> validateCart(CartDTO cart) {
         Collection<CartItemDTO> updatedItems = new ArrayList<>();
 

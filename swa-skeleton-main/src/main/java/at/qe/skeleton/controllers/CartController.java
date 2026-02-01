@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+/**
+ * Cart validation endpoints exposed by the server.
+ */
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {

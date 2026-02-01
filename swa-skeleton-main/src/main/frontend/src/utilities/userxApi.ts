@@ -5,6 +5,7 @@
 import globalAxios from "axios";
 import {UserDTO, UserxTypes} from "../DTO/userx.types";
 import {createUserxFromInterfaces} from "./userxUtilities";
+import {NotificationChannelType} from "../DTO/notification.types";
 
 export interface UserProfileUpdateDTO {
     firstName: string;
@@ -12,6 +13,7 @@ export interface UserProfileUpdateDTO {
     email: string;
     phone: string;
     password?: string;
+    preferredChannels?: NotificationChannelType[];
 }
 
 /**
@@ -135,6 +137,9 @@ const getUser = async (userId: number): Promise<UserxTypes> => {
 const isAuthenticated = async (): Promise<boolean> => {
     try {
         const res = await globalAxios.get("/api/users/authenticated");
+        if (res.status == 404) {
+            return false;
+        }
         return res.status >= 200 && res.status < 300; // make sure you stay in this range for user is authenticated or modify accordingly
     } catch (err: any) {
         // axios throws for 4xx/5xx; treat all as not authenticated

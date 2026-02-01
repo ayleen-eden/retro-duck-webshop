@@ -18,8 +18,15 @@ import {IconField} from 'primereact/iconfield';
 import {InputIcon} from 'primereact/inputicon';
 import {ProductDTO} from '../DTO/product.types';
 import {useNavigate} from 'react-router-dom';
-import styles from "../components/PixelButton.module.css"
+import styles from "../styles/PixelButton.module.css"
 
+/**
+ * HomePage Component
+ * <p>
+ * This is the main landing page of the application. It displays a searchable,
+ * filterable, and sortable grid of all available products.
+ * * @component
+ */
 const HomePage: React.FC = () => {
     // --- STATE ---
     const [allProducts, setAllProducts] = useState<ProductDTO[]>([]);
@@ -34,7 +41,9 @@ const HomePage: React.FC = () => {
 
     const navigate = useNavigate();
 
-    // --- FILTER OPTIONS ---
+    /**
+     * Configuration for sorting products in the grid.
+     */
     const sortOptions = [
         {label: 'NAME (A-Z)', value: 'name-asc'},
         {label: 'NAME (Z-A)', value: 'name-desc'},
@@ -42,12 +51,19 @@ const HomePage: React.FC = () => {
         {label: 'PRICE (HIGH TO LOW)', value: 'price-desc'}
     ];
 
+    /**
+     * Configuration for availability filtering.
+     */
     const stockOptions = [
         {label: 'ALL PRODUCTS', value: 'all'},
         {label: 'IN STOCK ONLY', value: 'inStock'},
         {label: 'SOLD OUT ONLY', value: 'outOfStock'}
     ];
 
+    /**
+     * Memoized computation to extract unique categories from the product list
+     * for the filter dropdown.
+     */
     const categoryOptions = useMemo(() => {
         const uniqueCats = new Set<string>();
         allProducts.forEach(p => p.categories?.forEach(c => uniqueCats.add(c)));
@@ -55,11 +71,17 @@ const HomePage: React.FC = () => {
     }, [allProducts]);
 
 
-    // --- INITIAL FETCH ---
+    /**
+     * Effect hook to fetch products from the backend on initial mount.
+     */
     useEffect(() => {
         fetchProducts();
     }, []);
 
+    /**
+     * Fetches the product list from the REST API.
+     * @async
+     */
     const fetchProducts = () => {
         fetch('/api/products/')
             .then(response => {
@@ -78,7 +100,12 @@ const HomePage: React.FC = () => {
             });
     };
 
-    // --- FILTER LOGIC ---
+    /**
+     * Effect hook for complex filter and sort logic.
+     * <p>
+     * Re-calculates the 'visibleProducts' array whenever the user changes
+     * search, sort, category, or stock parameters.
+     */
     useEffect(() => {
         let result = [...allProducts];
 
@@ -127,11 +154,19 @@ const HomePage: React.FC = () => {
     }, [allProducts, sortKey, selectedCategories, stockFilter, searchQuery]);
 
 
-    // --- NAVIGATION & RENDERING ---
+    /**
+     * Navigates to the detailed product page.
+     * @param productId - The ID of the product to view.
+     */
     const handleProductClick = (productId: number) => {
         navigate(`/products/${productId}`);
     };
 
+    /**
+     * Renders the image container for a single product card.
+     * @param product - The product entity to render.
+     * @returns A styled div containing the product image.
+     */
     const renderHeader = (product: ProductDTO) => {
         return (
             <div
@@ -181,7 +216,7 @@ const HomePage: React.FC = () => {
                                 id="search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="SEARCH PPRODUCT..."
+                                placeholder="SEARCH PRODUCT..."
                                 className="w-full md:w-20rem"
                             />
                         </IconField>

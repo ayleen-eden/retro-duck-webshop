@@ -1,3 +1,11 @@
+/**
+ * Enumeration representing the different gaming platforms and hardware categories
+ * for products in the retro shop.
+ * <p>
+ * This enum is used to categorize products (e.g., games, consoles, accessories)
+ * based on their respective systems, ranging from classic 8-bit consoles to
+ * modern gaming hardware.
+ */
 export enum ProductCategories {
     AMIGA = `AMIGA`,
     ATARI_2600 = `ATARI_2600`,

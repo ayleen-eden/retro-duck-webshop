@@ -7,12 +7,22 @@ import {Divider} from 'primereact/divider';
 import {useNavigate} from 'react-router-dom';
 import {getCart} from '../utilities/cartUtilities';
 import {OrderApi} from '../utilities/orderApi';
+import {UserxApi} from '../utilities/userxApi';
 import {ROUTES} from '../utilities/routes.paths';
 import {CartDTO} from '../DTO/cart.types';
 import {CheckoutRequestDTO} from '../DTO/checkout.types';
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import '../styles/Login.css';
 
+/**
+ * CheckoutComponent handles the final step of the purchasing process.
+ * <p>
+ * It allows users to provide shipping information, select a payment method,
+ * and review their order summary before submitting. It also provides a feature
+ * to auto-fill details from the user's profile.
+ *
+ * @component
+ */
 const CheckoutComponent: React.FC = () => {
     const navigate = useNavigate();
     const [cart, setCart] = useState<CartDTO>({items: []});
@@ -26,6 +36,10 @@ const CheckoutComponent: React.FC = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [loading, setLoading] = useState(false);
 
+    /**
+     * Effect hook to initialize the cart from local storage on component mount.
+     * Redirects to the cart page if the cart is empty.
+     */
     useEffect(() => {
         const currentCart = getCart();
         setCart(currentCart);
@@ -34,6 +48,39 @@ const CheckoutComponent: React.FC = () => {
         }
     }, [navigate]);
 
+    /**
+     * Fetches the current user's profile data and populates the form fields.
+     * Includes simulated dummy data for address fields as per requirements.
+     * * @async
+     */
+    const fillExistingDetails = async () => {
+        setLoading(true);
+        try {
+            const currentUser = await UserxApi.getCurrentUser();
+
+            // Set real profile data
+            setName(`${currentUser.firstName} ${currentUser.lastName}`.trim() || currentUser.username);
+
+            const randomHouseNumber = Math.floor(Math.random() * 200) + 1;
+
+            // Set dummy data for simulated fields (requirement: simulation only)
+            setStreet(`Quackstraße ${randomHouseNumber}`);
+            setCity("Entenhausen");
+            setPostalCode("6020");
+            setCountry("Austrialia");
+            setPaymentMethod('DUCK_COINS')
+
+        } catch (error) {
+            console.error("Failed to load user details", error);
+            alert("Could not load profile details. Please fill manually.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Configuration for available payment providers.
+     */
     const paymentOptions = [
         {label: 'Credit Card (Visa/Mastercard)', value: 'CREDIT_CARD'},
         {label: 'PayPal', value: 'PAYPAL'},
@@ -41,8 +88,16 @@ const CheckoutComponent: React.FC = () => {
         {label: 'Invoice', value: 'INVOICE'}
     ];
 
-    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit, 0).toFixed(2);
+    /**
+     * Calculates the total price of all items in the cart, considering individual product discounts.
+     */
+    const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * item.pricePerUnit * (1 - item.productDiscount), 0).toFixed(2);
 
+    /**
+     * Validates form input and submits the order to the backend API.
+     * On success, clears the cart and redirects to the order history.
+     * * @async
+     */
     const handlePlaceOrder = async () => {
         if (!name || !street || !city || !postalCode || !country || !paymentMethod) {
             alert("Please fill in all shipping and payment fields!");
@@ -82,6 +137,15 @@ const CheckoutComponent: React.FC = () => {
                 <Card title="CHECKOUT DETAILS" className="flex-1 product-card">
                     <div className="flex flex-column gap-3">
 
+                        <Button
+                            type="button"
+                            label="USE MY PROFILE DETAILS"
+                            icon="pi pi-user"
+                            onClick={fillExistingDetails}
+                            className={`${styles.btn} ${styles.btn_blue} mb-2`}
+                            style={{width: 'fit-content', fontSize: '10px'}}
+                        />
+
                         <h3 style={{marginBottom: '1rem'}}>SHIPPING ADDRESS</h3>
                         <div className="flex flex-column gap-2">
                             <label htmlFor="name" className="font-bold">FULL NAME</label>
@@ -92,7 +156,8 @@ const CheckoutComponent: React.FC = () => {
                         <div className="flex flex-column gap-2">
                             <label htmlFor="street" className="font-bold">STREET ADDRESS</label>
                             <InputText id="street" value={street} onChange={(e) => setStreet(e.target.value)}
-                                       className="input-field" placeholder="Quakstreet 404" style={{marginTop: '0.5rem'}}/>
+                                       className="input-field" placeholder="Quakstreet 404"
+                                       style={{marginTop: '0.5rem'}}/>
                         </div>
 
                         <div className="flex gap-3">
@@ -105,7 +170,8 @@ const CheckoutComponent: React.FC = () => {
                             <div className="flex-1 flex flex-column gap-2">
                                 <label htmlFor="city" className="font-bold">CITY</label>
                                 <InputText id="city" value={city} onChange={(e) => setCity(e.target.value)}
-                                           className="input-field" placeholder="Ducksbruck" style={{marginTop: '0.5rem'}}/>
+                                           className="input-field" placeholder="Ducksbruck"
+                                           style={{marginTop: '0.5rem'}}/>
                             </div>
                         </div>
 
@@ -126,7 +192,7 @@ const CheckoutComponent: React.FC = () => {
                                 onChange={(e) => setPaymentMethod(e.value)}
                                 placeholder="SELECT A PAYMENT METHOD"
                                 className="pixel-dropdown w-full"
-                                style={{marginLeft: '1rem'}}
+                                style={{marginLeft: '0'}}
                             />
                         </div>
                     </div>
@@ -136,23 +202,47 @@ const CheckoutComponent: React.FC = () => {
                 <Card title="ORDER SUMMARY" className="flex-initial md:w-30rem product-card h-fit">
                     <div className="flex flex-column">
                         <ul style={{listStyle: 'none', padding: 0, margin: 0}}>
-                            {cart.items.map(item => (
-                                <li key={item.productId}
-                                    className="flex justify-content-between mb-3 border-bottom-1 surface-border pb-2">
-                                    <div className="flex flex-column">
-                                        <h3 className="font-bold" style={{marginBottom: '1rem'}}>{item.productName} </h3>
-                                        <h5 className="text-sm">QTY: {item.amount} </h5>
-                                        <h5 className="font-bold">{(item.amount * item.pricePerUnit).toFixed(2)} €</h5>
-                                    </div>
-                                </li>
-                            ))}
+                            {cart.items.map(item => {
+                                const originalTotal = item.amount * item.pricePerUnit;
+                                const discountedTotal = originalTotal * (1 - (item.productDiscount || 0));
+                                const hasDiscount = (item.productDiscount || 0) > 0;
+
+                                return (
+                                    <li key={item.productId}
+                                        className="flex justify-content-between mb-3 border-bottom-1 surface-border pb-2">
+                                        <div className="flex flex-column">
+                                            <h3 className="font-bold"
+                                                style={{marginBottom: '0.5rem'}}>{item.productName} </h3>
+                                            <h5 className="text-sm">QTY: {item.amount} </h5>
+                                        </div>
+
+                                        {/* PRICE */}
+                                        <div className="flex flex-column align-items-end">
+                                            {hasDiscount && (
+                                                <span style={{
+                                                    textDecoration: 'line-through',
+                                                    fontSize: '0.8rem',
+                                                    color: '#ff7675',
+                                                    marginBottom: '2px'
+                                                }}>
+                                                    {originalTotal.toFixed(2)} €
+                                                </span>
+                                            )}
+                                            <span className="font-bold"
+                                                  style={{color: hasDiscount ? '#00c853' : 'inherit'}}>
+                                                {discountedTotal.toFixed(2)} €
+                                            </span>
+                                        </div>
+                                    </li>
+                                );
+                            })}
                         </ul>
 
                         <Divider className="pixel-divider-dashed"/>
 
                         <div className="flex justify-content-between text-xl font-bold mt-4 mb-4">
-                            <span>TOTAL</span>
-                            <span> {totalPrice} €</span>
+                            <span style={{color: 'white'}}>TOTAL</span>
+                            <span style={{color: '#FFD700', fontSize: '1.5rem'}}> {totalPrice} €</span>
                         </div>
 
                         <Button
@@ -161,7 +251,7 @@ const CheckoutComponent: React.FC = () => {
                             className={`${styles.btn} ${styles.btn_green} w-full`}
                             onClick={handlePlaceOrder}
                             disabled={loading}
-                            style={{marginRight: '1rem', marginTop: '1rem'}}
+                            style={{marginTop: '1rem'}}
                         />
                         <Button
                             label="BACK TO CART"

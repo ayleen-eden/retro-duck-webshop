@@ -8,6 +8,13 @@ import {ROUTES} from '../utilities/routes.paths';
 import '../styles/Login.css';
 import { UserxApi } from '../utilities/userxApi';
 
+/**
+ * Component for user registration.
+ * * This component manages the registration form state and performs the
+ * API call to the backend. It specifically handles conflict responses
+ * (HTTP 409) which are triggered by the backend's {@code UsernameDuplicateException}
+ * when a chosen username is already in use.
+ */
 const SignUpComponent: React.FC = () => {
     const [userData, setUserData] = useState({
         username: '',

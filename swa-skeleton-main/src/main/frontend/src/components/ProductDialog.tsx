@@ -11,17 +11,34 @@ import {MultiSelect, MultiSelectChangeEvent} from 'primereact/multiselect';
 import {ProductDTO} from "../DTO/product.types";
 import {Message} from "primereact/message";
 import {ProductApi} from "../utilities/productApi";
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import '../styles/Login.css';
 
+/**
+ * Interface for the ProductDialog component props.
+ */
 interface ProductDialogProps {
+    /** Whether the dialog is currently visible */
     visible: boolean;
+    /** The product data to edit, or null if creating a new product */
     product: ProductDTO | null;
+    /** Flag to indicate if the operation is a new creation or an update */
     isNewProduct: boolean;
+    /** Callback function to close the dialog */
     onHide: () => void;
+    /** Callback function to handle the final payload submission */
     onSubmit: (product: any) => void;
 }
 
+/**
+ * ProductDialog Component.
+ * <p>
+ * Provides a modal interface containing a form to enter or modify product details.
+ * It handles internal validation, fetches category options from the API, and
+ * resets the state depending on whether a new product is being added or an
+ * existing one is being edited.
+ * * @component
+ */
 const ProductDialog: React.FC<ProductDialogProps> = ({
                                                          visible,
                                                          product,
@@ -39,6 +56,10 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
     const [categoryOptions, setCategoryOptions] = useState<{ label: string, value: string }[]>([]);
     const [error, setError] = useState<string | null>(null);
 
+    /**
+     * Effect hook to load all available product categories from the backend
+     * on component mount.
+     */
     useEffect(() => {
         const loadCategories = async () => {
             try {
@@ -51,6 +72,11 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
         void loadCategories();
     }, []);
 
+    /**
+     * Effect hook to synchronize the form state with the selected product.
+     * Resets fields if 'isNewProduct' is true, otherwise populates them with
+     * the product data.
+     */
     useEffect(() => {
         if (visible) {
             if (product && !isNewProduct) {
@@ -74,6 +100,10 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
         }
     }, [visible, product, isNewProduct]);
 
+    /**
+     * Validates the form data and constructs the payload for the onSubmit callback.
+     * Checks for mandatory fields (name and price).
+     */
     const handleFormSubmit = () => {
         if (!name.trim()) {
             setError("Name is required.");
@@ -89,7 +119,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
             name,
             description,
             price,
-            stock: stock || 0,
+            stock: Math.max(0, stock ?? 0),
             discount: discount || 0,
             imageUrl,
             categories: selectedCategories
@@ -106,7 +136,8 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
             onHide={onHide}
             footer={(
                 <div className="pt-3">
-                    <Button label="CANCEL" icon="pi pi-times" onClick={onHide} className={`${styles.btn} ${styles.btn_red}`}/>
+                    <Button label="CANCEL" icon="pi pi-times" onClick={onHide}
+                            className={`${styles.btn} ${styles.btn_red}`}/>
                     <Button
                         label={isNewProduct ? "CREATE PRODUCT" : "SAVE CHANGES"}
                         icon="pi pi-check"
@@ -143,6 +174,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
                         <label htmlFor="stock" className="font-bold">INITIAL STOCK </label>
                         <InputNumber id="stock" value={stock}
                                      onValueChange={(e: InputNumberValueChangeEvent) => setStock(e.value ?? null)}
+                                     min={0}
                                      inputClassName="input-field w-full"/>
                     </div>
                     <div className="flex-1 flex flex-column gap-2" style={{minWidth: '150px'}}>

@@ -5,12 +5,11 @@ import java.time.LocalDateTime;
 
 /**
  * Data transfer object for the RatingTypes Entity.
- *
  */
 public record RatingDTO (
     Long id,
     LocalDateTime timestamp,
-    RatingScale rating,
+    RatingScale ratingScale,
     String comment,
     Long authorId,
     String username,

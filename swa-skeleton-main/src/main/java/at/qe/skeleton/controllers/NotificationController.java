@@ -13,6 +13,9 @@ import java.util.Collection;
 
 import org.springframework.http.ResponseEntity;
 
+/**
+ * Notification endpoints exposed by the server.
+ */
 @RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {

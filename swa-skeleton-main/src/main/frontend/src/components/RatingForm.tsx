@@ -3,7 +3,7 @@ import {RatingDTO, RatingTypes} from "../DTO/rating.types";
 import {Tag} from "primereact/tag";
 import {Rating} from "primereact/rating";
 import {Button} from "primereact/button";
-import styles from "./PixelButton.module.css";
+import styles from "../styles/PixelButton.module.css";
 import {InputTextarea} from "primereact/inputtextarea";
 
 interface RatingFormProps {
@@ -29,6 +29,9 @@ const RatingForm: React.FC<RatingFormProps> = (
         deleteRating
     }) => {
 
+    /**
+     * Rating form logic
+     */
     return (
         <div>
             <Tag className="pixel-tag pixel-tag-blue" value="Tell us what you think of this product!"

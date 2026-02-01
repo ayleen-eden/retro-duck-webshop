@@ -17,6 +17,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * REST Controller for product management.
+ * <p>
+ * Provides API endpoints for public product browsing as well as
+ * restricted administrative tasks like creating, editing, or deleting products.
+ */
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -25,6 +31,13 @@ public class ProductController {
     private final ProductMapper productMapper;
     private final ProductCreateMapper productCreateMapper;
 
+    /**
+     * Constructor for dependency injection.
+     * * @param productService service for business logic
+     *
+     * @param productMapper       mapper for product entities to DTOs
+     * @param productCreateMapper mapper for creation DTOs to entities
+     */
     @Autowired
     public ProductController(ProductService productService, ProductMapper productMapper, ProductCreateMapper productCreateMapper) {
         this.productService = productService;
@@ -34,20 +47,35 @@ public class ProductController {
 
     // ===== GET =====
 
-    // Load all products (allowed: everyone)
+    /**
+     * Retrieves all products available in the shop.
+     * Accessible by everyone.
+     * * @return a collection of all products as {@link ProductDTO}s
+     */
     @GetMapping("/")
     public ResponseEntity<Collection<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts().stream().map(productMapper::mapTo).collect(Collectors.toList()));
     }
 
-    // Load single product (allowed: everyone)
+    /**
+     * Retrieves a single product by its unique ID.
+     * Accessible by everyone.
+     * * @param id the unique ID of the product
+     *
+     * @return the found product as {@link ProductDTO}
+     * @throws ResponseStatusException if the product is not found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         return ResponseEntity.ok(productMapper.mapTo(product));
     }
 
-    // Load all categories (allowed: everyone)
+    /**
+     * Retrieves all possible product categories defined in the system.
+     * Accessible by everyone.
+     * * @return an array of all {@link ProductCategory} values
+     */
     @GetMapping("/categories")
     public ResponseEntity<ProductCategory[]> getCategories() {
         return ResponseEntity.ok(ProductCategory.values());
@@ -56,7 +84,13 @@ public class ProductController {
 
     // ===== POST =====
 
-    // Create product (allowed: admin, manager)
+    /**
+     * Creates a new product record.
+     * Restricted to users with administrative roles (ADMIN, MANAGER).
+     * * @param productCreateDTO the data transfer object for the new product
+     *
+     * @return the created product as {@link ProductDTO} with status 201
+     */
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
@@ -68,7 +102,14 @@ public class ProductController {
 
     // ===== PATCH =====
 
-    // Edit product (allowed: admin, manager)
+    /**
+     * Partially updates an existing product.
+     * Restricted to users with administrative roles (ADMIN, MANAGER).
+     * * @param id the ID of the product to update
+     *
+     * @param productDTO the updated fields
+     * @return the updated product as {@link ProductDTO}
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         return ResponseEntity.ok(productService.updateProduct(id, productDTO));
@@ -77,7 +118,13 @@ public class ProductController {
 
     // ===== DELETE =====
 
-    // Delete product (allowed: admin, manager)
+    /**
+     * Deletes a specific product from the system.
+     * Restricted to users with administrative roles (ADMIN, MANAGER).
+     * * @param id the ID of the product to delete
+     *
+     * @throws ResponseStatusException if the product does not exist
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
