@@ -8,7 +8,6 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.AuthenticatedUserService;
 import at.qe.skeleton.services.ProductService;
 import at.qe.skeleton.services.SubscriptionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -33,9 +32,6 @@ public class SubscriptionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockitoBean
     private SubscriptionService subscriptionService;
@@ -72,8 +68,6 @@ public class SubscriptionControllerTest {
         subscription.setId(1L);
         subscription.setUser(user);
         subscription.setProduct(product);
-
-        SubscriptionDTO subscriptionDTO = new SubscriptionDTO(1L, 1L, 1L);
 
         Mockito.when(productService.getProductById(1L)).thenReturn(Optional.of(product));
         Mockito.when(subscriptionService.createSubscription(user, product)).thenReturn(subscription);

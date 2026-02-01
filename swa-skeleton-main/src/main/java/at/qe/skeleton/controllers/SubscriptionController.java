@@ -5,13 +5,11 @@ import at.qe.skeleton.mappers.SubscriptionMapper;
 import at.qe.skeleton.services.AuthenticatedUserService;
 import at.qe.skeleton.services.SubscriptionService;
 import at.qe.skeleton.services.ProductService;
-import at.qe.skeleton.services.UserxService;
 import at.qe.skeleton.model.Subscription;
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.Userx;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 

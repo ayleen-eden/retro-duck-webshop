@@ -6,7 +6,6 @@ package at.qe.skeleton.configs;
 
 import at.qe.skeleton.model.Product;
 import at.qe.skeleton.model.ProductCategory;
-import at.qe.skeleton.services.MailNotificationChannel;
 import at.qe.skeleton.services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

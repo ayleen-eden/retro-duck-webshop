@@ -2,7 +2,6 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Notification;
 import at.qe.skeleton.model.NotificationType;
-import at.qe.skeleton.model.Rating;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.NotificationRepository;
 
