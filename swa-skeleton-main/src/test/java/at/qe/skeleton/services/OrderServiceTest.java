@@ -4,15 +4,15 @@ import at.qe.skeleton.dtos.*;
 import at.qe.skeleton.exceptions.InsufficientStockException;
 import at.qe.skeleton.exceptions.OrderNotFoundException;
 import at.qe.skeleton.exceptions.UnauthorizedOrderAccessException;
-import at.qe.skeleton.mappers.OrderMapper;
+import at.qe.skeleton.mappers.*;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.OrderRepository;
-import at.qe.skeleton.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.ArgumentCaptor;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collection;
@@ -36,12 +36,18 @@ public class OrderServiceTest {
 
     @Mock
     private OrderRepository orderRepository;
+
     @Mock
-    private ProductRepository productRepository;
+    private ProductService productService;
+
     @Mock
     private CartValidationService cartValidationService;
+
     @Mock
     private OrderMapper orderMapper;
+
+    @Mock
+    private ProductMapper productMapper;
 
     @InjectMocks
     private OrderService orderService;
@@ -86,7 +92,7 @@ public class OrderServiceTest {
     @Test
     void testPlaceOrderSuccess() throws InsufficientStockException {
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
-        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
+        when(productService.getProductById(1L)).thenReturn(Optional.of(testProduct));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
 
         OrderDTO mappedDto = new OrderDTO(1L, null, OrderStatus.DONE, 2000.0, List.of(), "Duck McQuak", "DUCK_COINS");
@@ -96,7 +102,7 @@ public class OrderServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(testProduct.getStock()).isEqualTo(3);
-        verify(productRepository).save(testProduct);
+        verify(productService).saveProduct(testProduct);
         verify(orderRepository).save(any(Order.class));
     }
 
@@ -108,7 +114,7 @@ public class OrderServiceTest {
     void testPlaceOrderInsufficientStock() {
         testProduct.setStock(1L); // Zu wenig
         when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
-        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
+        when(productService.getProductById(1L)).thenReturn(Optional.of(testProduct));
 
         assertThatThrownBy(() -> orderService.placeOrder(testUser, testCheckoutRequest))
                 .isInstanceOf(InsufficientStockException.class)
@@ -131,33 +137,33 @@ public class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-//    /**
-//     * Verifies that the total price of an order is correctly calculated when
-//     * a product discount is applied.
-//     *
-//     * @throws InsufficientStockException if stock validation fails.
-//     */
-//    @Test
-//    void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
-//        testProduct.setPrice(1000.0);
-//        testProduct.setDiscount(0.2);
-//        testProduct.setStock(10L);
-//
-//        when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
-//        when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(testProduct));
-//
-//        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
-//        when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
-//
-//        OrderDTO mappedDto = new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of(), "Duck McQuack", "DUCK_COINS");
-//        when(orderMapper.mapTo(any(Order.class))).thenReturn(mappedDto);
-//
-//        orderService.placeOrder(testUser, testCheckoutRequest);
-//
-//        Order savedOrder = orderCaptor.getValue();
-//        double expectedTotal = 1000.0 * 0.8 * 2;
-//        assertThat(savedOrder.getTotalPrice()).isEqualTo(expectedTotal);
-//    }
+    /**
+     * Verifies that the total price of an order is correctly calculated when
+     * a product discount is applied.
+     *
+     * @throws InsufficientStockException if stock validation fails.
+     */
+    @Test
+    void testPlaceOrderCalculatesTotalPriceWithDiscount() throws InsufficientStockException {
+        testProduct.setPrice(1000.0);
+        testProduct.setDiscount(0.2);
+        testProduct.setStock(10L);
+
+        when(cartValidationService.validateCart(any())).thenReturn(Optional.of(testCart));
+        when(productService.getProductById(1L)).thenReturn(Optional.of(testProduct));
+
+        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
+        when(orderRepository.save(orderCaptor.capture())).thenAnswer(i -> i.getArguments()[0]);
+
+        OrderDTO mappedDto = new OrderDTO(1L, null, OrderStatus.DONE, 1600.0, List.of(), "Duck McQuack", "DUCK_COINS");
+        when(orderMapper.mapTo(any(Order.class))).thenReturn(mappedDto);
+
+        orderService.placeOrder(testUser, testCheckoutRequest);
+
+        Order savedOrder = orderCaptor.getValue();
+        double expectedTotal = 1000.0 * 0.8 * 2;
+        assertThat(savedOrder.getTotalPrice()).isEqualTo(expectedTotal);
+    }
 
     /**
      * Verifies that access is denied when a user tries to retrieve an

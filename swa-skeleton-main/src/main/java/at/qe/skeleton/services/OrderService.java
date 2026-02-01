@@ -36,20 +36,24 @@ public class OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
-    @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
     private ProductService productService;
 
-    @Autowired
     private CartValidationService cartValidationService;
 
-    @Autowired
     private OrderMapper orderMapper;
 
-    @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    public OrderService(OrderRepository orderRepository, ProductService productService, CartValidationService cartValidationService, OrderMapper orderMapper, ProductMapper productMapper) {
+        this.orderRepository = orderRepository;
+        this.productService = productService;
+        this.cartValidationService = cartValidationService;
+        this.orderMapper = orderMapper;
+        this.productMapper = productMapper;
+    }
 
     /**
      * Processes a checkout request by creating a persistent order for a user.

@@ -167,7 +167,7 @@ public class RatingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ratingId))
                 .andExpect(jsonPath("$.comment").value("Actually, it's even better now!"))
-                .andExpect(jsonPath("$.rating").value("FIVE_STARS"));
+                .andExpect(jsonPath("$.ratingScale").value("FIVE_STARS"));
     }
 
     @Test
