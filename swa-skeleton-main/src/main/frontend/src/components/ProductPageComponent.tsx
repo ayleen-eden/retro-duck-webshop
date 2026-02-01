@@ -9,7 +9,6 @@ import {addToCart, getCart} from "../utilities/cartUtilities";
 import styles from "../styles/PixelButton.module.css"
 import {getAllSubscriptionsForUser, subscribe, unsubscribe} from "../utilities/subscriptionApi";
 import {UserxApi} from "../utilities/userxApi";
-import {UserxTypes} from "../DTO/userx.types";
 import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 import {ProductApi} from "../utilities/productApi";
 
