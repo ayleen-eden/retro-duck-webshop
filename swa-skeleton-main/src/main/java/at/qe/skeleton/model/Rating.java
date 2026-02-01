@@ -85,7 +85,7 @@ public class Rating implements Persistable<Long>, Serializable {
 
     @Override
     public String toString() {
-        return "%s\n Rated %s Stars\n Written by User %s at %s\n".formatted(
+        return "%s\n Rated %s Stars\n Written by User %s at %s%n".formatted(
                 comment,
                 author.getUsername(),
                 timestamp.toString(),
