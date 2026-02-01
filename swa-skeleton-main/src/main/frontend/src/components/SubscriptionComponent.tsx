@@ -14,7 +14,11 @@ import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 import {Checkbox} from "primereact/checkbox";
 import {Splitter, SplitterPanel} from "primereact/splitter";
 import {NotificationChannelType} from "../DTO/notification.types";
+import {Divider} from "primereact/divider";
 
+/**
+ * Subscription management page.
+ */
 export const SubscriptionComponent: React.FC = () => {
 
     const USE_DUMMY = false;
@@ -31,6 +35,9 @@ export const SubscriptionComponent: React.FC = () => {
             return;
         }
 
+        /**
+         * Handles loading state and API errors.
+         */
         const loadEverything = async () => {
             try {
                 const currentUser = await UserxApi.getCurrentUser();
@@ -51,12 +58,25 @@ export const SubscriptionComponent: React.FC = () => {
         loadEverything();
     }, []);
 
+    /**
+     * Unsubscribes the user from a product.
+     *
+     * @param productId - ID of the product to unsubscribe from
+     */
     const handleUnsubscribe = async (productId: number) => {
         if (!user?.id) return;
         await unsubscribe(productId);
         setSubscriptions(prev => prev.filter(sub => sub.productId !== productId));
     };
 
+    /**
+     * Opens a confirmation popup before unsubscribing.
+     *
+     * If accepted, triggers handleUnsubscribe().
+     *
+     * @param event - Mouse event used to anchor the popup
+     * @param item - Product ID of the subscription to remove
+     */
     const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, item: number) => {
         confirmPopup({
             className:"pixel-confirmpopup pixel-icon",
@@ -70,6 +90,12 @@ export const SubscriptionComponent: React.FC = () => {
         });
     };
 
+    /**
+     * Renders the unsubscribe action button for each subscription row.
+     *
+     * @param rowData - Subscription represented by the row
+     * @returns TSX unsubscribe button
+     */
     const actionBodyTemplate = (rowData: SubscriptionDTO) => (
         <Button
             label="UNSUBSCRIBE"
@@ -79,6 +105,11 @@ export const SubscriptionComponent: React.FC = () => {
         />
     );
 
+    /**
+     * Toggles a notification channel preference for the current user.
+     *
+     * @param type - Notification channel type to toggle
+     */
     const toggleChannel = async (type: NotificationChannelType) => {
         if (!user) return;
 
@@ -107,37 +138,32 @@ export const SubscriptionComponent: React.FC = () => {
 
     return (
         <div>
-            <Splitter>
-                <SplitterPanel className="flex align-items-center justify-content-center" size={25} minSize={25}>
-                    <Card title="NOTIFICATION CHANNELS" className="product-card">
-                        <div className="flex align-items-center" style={{marginBottom: '1rem'}}>
-                            <Checkbox checked={channels.includes(NotificationChannelType.SMS)} style={{marginRight: '0.5rem'}} className="pixel-checkbox" onChange={() => toggleChannel(NotificationChannelType.SMS)}/>
-                            <label>SMS</label>
-                        </div>
-                        <div className="flex align-items-center" style={{marginBottom: '1rem'}}>
-                            <Checkbox checked={channels.includes(NotificationChannelType.WHATSAPP)} style={{marginRight: '0.5rem'}} className="pixel-checkbox" onChange={() => toggleChannel(NotificationChannelType.WHATSAPP)}/>
-                            <label>WHATSAPP</label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox checked={channels.includes(NotificationChannelType.EMAIL)} style={{marginRight: '0.5rem'}} className="pixel-checkbox" onChange={() => toggleChannel(NotificationChannelType.EMAIL)}/>
-                            <label>EMAIL</label>
-                        </div>
-                    </Card>
-                </SplitterPanel>
-                <SplitterPanel className="flex align-items-center justify-content-center" size={75} minSize={75}>
-                    <Card title="MY SUBSCRIPTIONS" className="product-card">
-                        <ConfirmPopup/>
-                        <DataTable
-                            value={subscriptions}
-                            stripedRows
-                            emptyMessage="YOU HAVE NO SUBSCRIPTIONS."
-                        >
-                            <Column header="PRODUCT" body={(rowData: SubscriptionDTO) => <ProductCell productId={rowData.productId} />}/>
-                            <Column header="ACTION" body={actionBodyTemplate} />
-                        </DataTable>
-                    </Card>
-                </SplitterPanel>
-            </Splitter>
+            <Card title="NOTIFICATION CHANNELS" className="product-card">
+                <div className="flex align-items-center" style={{marginBottom: '1rem'}}>
+                    <Checkbox checked={channels.includes(NotificationChannelType.SMS)} style={{marginRight: '0.5rem'}} className="pixel-checkbox" onChange={() => toggleChannel(NotificationChannelType.SMS)}/>
+                    <label>SMS</label>
+                </div>
+                <div className="flex align-items-center" style={{marginBottom: '1rem'}}>
+                    <Checkbox checked={channels.includes(NotificationChannelType.WHATSAPP)} style={{marginRight: '0.5rem'}} className="pixel-checkbox" onChange={() => toggleChannel(NotificationChannelType.WHATSAPP)}/>
+                    <label>WHATSAPP</label>
+                </div>
+                <div className="flex align-items-center">
+                    <Checkbox checked={channels.includes(NotificationChannelType.EMAIL)} style={{marginRight: '0.5rem'}} className="pixel-checkbox" onChange={() => toggleChannel(NotificationChannelType.EMAIL)}/>
+                    <label>EMAIL</label>
+                </div>
+            </Card>
+            <Divider className="pixel-divider-dashed"/>
+            <Card title="MY SUBSCRIPTIONS" className="product-card">
+                <ConfirmPopup/>
+                <DataTable
+                    value={subscriptions}
+                    stripedRows
+                    emptyMessage="YOU HAVE NO SUBSCRIPTIONS."
+                >
+                    <Column header="PRODUCT" body={(rowData: SubscriptionDTO) => <ProductCell productId={rowData.productId} />}/>
+                    <Column header="ACTION" body={actionBodyTemplate} />
+                </DataTable>
+            </Card>
         </div>
     );
 };

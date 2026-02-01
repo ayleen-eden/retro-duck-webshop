@@ -24,6 +24,9 @@ FilterService.register('custom_range', (value, filters) => {
     return from <= value && value <= to;
 });
 
+/**
+ * Shopping cart component.
+ */
 const CartComponent: React.FC = () => {
     const USE_DUMMY = false;
 
@@ -46,16 +49,44 @@ const CartComponent: React.FC = () => {
 
     const totalPrice = cart.items.reduce((sum, item) => sum + item.amount * (item.pricePerUnit * (1 - item.productDiscount)), 0).toFixed(2);
 
+    /**
+     * Navigates the user to the checkout page.
+     *
+     * Triggered when the "Proceed to Checkout" button is clicked.
+     */
     const handleProceedToCheckout = () => {
         navigate(ROUTES.CHECKOUT);
     };
 
+    /**
+     * Removes an item completely from the cart.
+     *
+     * @param item - The cart item to remove
+     *
+     * Removes the full quantity of the given item.
+     */
     const handleRemove = (item: CartItemDTO) => {
         setCart(prev => removeFromCart(prev, item, item.amount));
     };
+
+    /**
+     * Increases the quantity of a cart item by one.
+     *
+     * @param item - The cart item to increase
+     */
     const handleIncrease = (item: CartItemDTO) => {
         setCart(prev => addToCart(prev, item, 1));
     };
+
+    /**
+     * Decreases the quantity of a cart item by one.
+     *
+     * If the item quantity is 1, a confirmation popup is shown
+     * before removing it entirely.
+     *
+     * @param event - Mouse click event (required for confirmation popup target)
+     * @param item - The cart item to decrease
+     */
     const handleDecrease = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         if (item.amount === 1) {
             confirmDelete(event, item)
@@ -63,6 +94,15 @@ const CartComponent: React.FC = () => {
             setCart(prev => removeFromCart(prev, item, 1));
         }
     };
+
+    /**
+     * Opens a confirmation popup before permanently removing an item.
+     *
+     * If accepted, the item is removed completely from the cart.
+     *
+     * @param event - Mouse event used to position the popup
+     * @param item - The cart item to delete
+     */
     const confirmDelete = (event: React.MouseEvent<HTMLButtonElement>, item: CartItemDTO) => {
         confirmPopup({
             className: "pixel-confirmpopup pixel-icon",
@@ -77,6 +117,17 @@ const CartComponent: React.FC = () => {
         });
     };
 
+    /**
+     * Renders action buttons for a cart item row.
+     *
+     * Provides:
+     * - Decrease quantity button
+     * - Increase quantity button
+     * - Delete button (with confirmation)
+     *
+     * @param rowData - The cart item represented by the row
+     * @returns TSX element containing action buttons
+     */
     const actionBodyTemplate = (rowData: CartItemDTO) => {
         return (
             <div>
@@ -94,14 +145,87 @@ const CartComponent: React.FC = () => {
         );
     };
 
+    /**
+     * Renders the product image inside the table.
+     *
+     * @param rowData - The cart item represented by the row
+     * @returns TSX image element
+     */
     const imageBodyTemplate = (rowData: CartItemDTO) => {
         return (<img src={rowData.productImage} alt={rowData.productName}
                      style={{width: 50, height: 50, objectFit: 'cover'}}/>);
     };
+
+    /**
+     * Displays the item quantity.
+     *
+     * @param rowData - The cart item represented by the row
+     * @returns Quantity value
+     */
     const amountBodyTemplate = (rowData: CartItemDTO) => rowData.amount;
+
+    /**
+     * Displays the unit price including discount.
+     *
+     * @param rowData - The cart item represented by the row
+     * @returns Formatted price string in Euro
+     */
     const priceBodyTemplate = (rowData: CartItemDTO) => `${(rowData.pricePerUnit * (1 - rowData.productDiscount)).toFixed(2)} €`;
+
+    /**
+     * Displays the total price for a cart item (quantity × discounted unit price).
+     *
+     * @param rowData - The cart item represented by the row
+     * @returns Formatted total price string in Euro
+     */
     const totalBodyTemplate = (rowData: CartItemDTO) => `${(rowData.amount * (rowData.pricePerUnit * (1 - rowData.productDiscount))).toFixed(2)} €`;
 
+    /**
+     * Renders a button that redirects the user to the shop homepage.
+     *
+     * Used when the cart is empty.
+     *
+     * @returns TSX button element
+     */
+    const goShoppingButtonTemplate = () => {
+        return (
+            <Button
+                className={`${styles.btn} ${styles.btn_yellow}`}
+                label="GO SHOPPING"
+                icon="pi pi-cart-plus"
+                severity="success"
+                onClick={() => window.location.href = "/"}
+            />
+        )
+    }
+
+    /**
+     * Renders the checkout navigation button.
+     *
+     * @returns TSX button element
+     */
+    const proceedToCheckoutButtonTemplate = () => {
+        return (
+            <Button
+                className={`${styles.btn} ${styles.btn_green}`}
+                icon="pi pi-arrow-right"
+                label="PROCEED TO CHECKOUT"
+                size="large"
+                severity="success"
+                raised
+                onClick={handleProceedToCheckout}
+            />
+        )
+    }
+
+    /**
+     * Custom numeric range filter component for DataTable columns.
+     *
+     * Allows filtering values between a "from" and "to" range.
+     *
+     * @param options - PrimeReact filter options object
+     * @returns JSX filter input elements
+     */
     const numericRangeFilterTemplate = (options: any) => {
         const [from, to] = options.value ?? [null, null];
 
@@ -138,13 +262,7 @@ const CartComponent: React.FC = () => {
                             <h2 style={{color: 'black'}}> YOUR CART IS EMPTY!</h2>
                             <p>LOOKS LIME YOU HAVEN'T ADDED ANYTHING YET.</p>
                             <Divider className="pixel-divider-dashed"/>
-                            <Button
-                                className={`${styles.btn} ${styles.btn_yellow}`}
-                                label="GO SHOPPING"
-                                icon="pi pi-cart-plus"
-                                severity="success"
-                                onClick={() => window.location.href = "/"}
-                            />
+                            {goShoppingButtonTemplate()}
                         </div>
                     </div>
                 ) : (
@@ -228,15 +346,7 @@ const CartComponent: React.FC = () => {
                             />
                         </div>
                         <Divider className="pixel-divider-dashed" align="center"/>
-                        <Button
-                            className={`${styles.btn} ${styles.btn_green}`}
-                            icon="pi pi-arrow-right"
-                            label="PROCEED TO CHECKOUT"
-                            size="large"
-                            severity="success"
-                            raised
-                            onClick={handleProceedToCheckout}
-                        />
+                        {proceedToCheckoutButtonTemplate()}
                     </>
                 )}
             </div>

@@ -2,6 +2,11 @@ import React from "react";
 import {Card} from "primereact/card";
 import logo from "../logo.svg";
 
+/**
+ * Contact page component.
+ *
+ * @returns TSX element representing the contact page
+ */
 export const ContactComponent: React.FC = () => {
     return (
         <Card title="CONTACT" className="product-card">

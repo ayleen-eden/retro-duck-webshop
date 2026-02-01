@@ -16,8 +16,15 @@ import {FilterMatchMode} from "primereact/api";
 import {Dropdown} from "primereact/dropdown";
 import {ProductCell} from "./ProductCell";
 
+/**
+ * Notification page component.
+ */
 export const NotificationComponent: React.FC = () => {
 
+    /**
+     * Active DataTable filters.
+     * Currently supports filtering notifications by type.
+     */
     const [filters, setFilters] = useState({
         type: { value: null, matchMode: FilterMatchMode.EQUALS }
     });
@@ -25,10 +32,21 @@ export const NotificationComponent: React.FC = () => {
     const USE_DUMMY = false;
 
     const [user, setUser] = useState<UserxTypes | null>(null);
+
     const [notifications, setNotifications] = useState<NotificationDTO[]>(USE_DUMMY ? dummyNotifications : []);
+
     const [loading, setLoading] = useState<boolean>(true);
+
+    /**
+     * Currently selected notification for detail view.
+     * Used to populate the dialog content.
+     */
     const [selectedNotification, setSelectedNotification] = useState<NotificationDTO | null>(null);
     const [detailsVisible, setDetailsVisible] = useState(false);
+
+    /**
+     * Available notification types used for filtering.
+     */
     const [types] = useState([
         { name: "SALE", code: "SALE" },
         { name: "OUT_OF_STOCK", code: "OUT_OF_STOCK" },
@@ -42,6 +60,11 @@ export const NotificationComponent: React.FC = () => {
             return;
         }
 
+        /**
+         * Loads current user and their associated notifications.
+         *
+         * Sets loading state appropriately during execution.
+         */
         const loadEverything = async () => {
             try {
                 const currentUser = await UserxApi.getCurrentUser();
@@ -61,9 +84,28 @@ export const NotificationComponent: React.FC = () => {
         loadEverything();
     }, []);
 
+    /**
+     * Renders the notification title column.
+     *
+     * @param rowData - The notification represented by the row
+     * @returns Notification title string
+     */
     const titleTemplate = (rowData: NotificationDTO) => rowData.title;
 
+    /**
+     * Formats and renders the notification timestamp.
+     *
+     * @param rowData - The notification represented by the row
+     * @returns Formatted date string
+     */
     const timestampTemplate = (rowData: NotificationDTO) => new Date(rowData.timestamp).toDateString();
+
+    /**
+     * Renders the "Details" button for a notification.
+     *
+     * @param rowData - The notification represented by the row
+     * @returns TSX element containing the details button
+     */
     const descriptionBodyTemplate = (rowData: NotificationDTO)=> {
         return (
             <div>
@@ -72,8 +114,21 @@ export const NotificationComponent: React.FC = () => {
             </div>
         )
     }
+
+    /**
+     * Renders the notification type column.
+     *
+     * @param rowData - The notification represented by the row
+     * @returns Notification type string
+     */
     const typeTemplate = (rowData: NotificationDTO) => rowData.type;
 
+    /**
+     * Custom dropdown filter for the notification type column.
+     *
+     * @param options - PrimeReact filter options object
+     * @returns JSX dropdown component for filtering
+     */
     const typeFilterTemplate = (options: any) => {
         return (
             <Dropdown
@@ -108,6 +163,11 @@ export const NotificationComponent: React.FC = () => {
                 <Column header="DETAILS" body={descriptionBodyTemplate}/>
             </DataTable>
 
+            {/**
+            * Dialog displaying the full notification description.
+            *
+            * Visible when a notification is selected via the Details button.
+            */}
             <Dialog
                 header="DETAILS"
                 visible={detailsVisible}
