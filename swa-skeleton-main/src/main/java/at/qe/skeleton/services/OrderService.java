@@ -11,7 +11,6 @@ import at.qe.skeleton.mappers.OrderMapper;
 import at.qe.skeleton.mappers.ProductMapper;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.OrderRepository;
-import at.qe.skeleton.repositories.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +35,15 @@ public class OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    private ProductService productService;
+    private final ProductService productService;
 
-    private CartValidationService cartValidationService;
+    private final CartValidationService cartValidationService;
 
-    private OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
 
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
     @Autowired
     public OrderService(OrderRepository orderRepository, ProductService productService, CartValidationService cartValidationService, OrderMapper orderMapper, ProductMapper productMapper) {
