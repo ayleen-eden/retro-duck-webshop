@@ -66,10 +66,6 @@ public class RatingController {
 
     @PostMapping("")
     public ResponseEntity<RatingDTO> createRating(@PathVariable Long productId, @Valid @RequestBody RatingCreateDTO ratingDTO) {
-        System.out.println("User Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        System.out.println("Request path: " + ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI());
-        //Das wird anscheinend ausgeführt
-
         if (productService.getProductById(productId).isPresent()) {
             Rating rating = ratingService.saveRating(ratingCreateMapper.mapFrom(ratingDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(ratingMapper.mapTo(rating));

@@ -79,14 +79,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/h2-console/**").access(devOnly())
                             .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                             .requestMatchers("/authentication/**").permitAll()
-
-                            // PRODUCTS
-                            // Read (for everyone)
-                            //Rules that don't work. Customer can't create Ratings...
-                            //.requestMatchers(HttpMethod.POST, "/api/products/*/ratings").hasAnyAuthority("CUSTOMER") //This rule doesn't work
-                            //.requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products/**").permitAll()
                             .requestMatchers( "/api/products").permitAll()
-
                             .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                             .requestMatchers("/api/**").permitAll()
                             .anyRequest().authenticated()
