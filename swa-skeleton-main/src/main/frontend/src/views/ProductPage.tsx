@@ -7,10 +7,12 @@ import {FooterComponent} from "../components/FooterComponent";
 import {useParams} from "react-router-dom";
 import RatingComponent from "../components/RatingComponent";
 
+/**
+ * Single product page view using productId to fetch data
+ */
+
 const ProductPage: React.FC =() => {
     const {productId} = useParams<{ productId: string }>();
-
-
         return (
             <div>
                 <NavbarComponent/>
