@@ -75,11 +75,12 @@
 	Die Ausarbeitung des Backends war relativ simpel, deshalb habe ich GenAI des weiteren nur dazu verwendet, States und Effects in TypeScript besser zu verstehen. Allgemein war im Frontend die \href{https://primereact.org}{React Dokumentation} eine weitaus bessere Hilfe als GenAI.
 	
 	\chapter{Matteo Volperino}
-	
-	Ich habe GenAI hauptsächlich für TypeScript verwendet. Seies kleine Syntaktische Sachen oder auch einfach UI Design-Aspekte die ich umsetzten wollte.
-	Dadurch habe ich flex und flex-box kennengelernt und mit diesen habe ich die Produktseite gestaltet. Ansonsten war ich relativ sparsam. Bei API Problemen
-	hat mir die KI recht gut geholfen, aber bei einem Forbidden Fehler hat er mir leider keine Problemlösung gegeben und hat sich teilweise im Kreis gedreht.
-	Das Problem wurde von (unserer CTO) Ayleen Edenhauser gefunden und es handelte sich um einen Authorisierungsfehler einer User-Funktion, welche \texttt{@PreAuthorize} nutzte.
+
+	Ich habe GenAI hauptsächlich für TypeScript genutzt, sei es für kleinere syntaktische Fragen oder für die Umsetzung von UI-Design-Aspekten. Dadurch habe ich Flexbox kennengelernt und diese Technik zur Gestaltung der Produktseite eingesetzt.
+	Insgesamt habe ich GenAI eher sparsam verwendet. Beim Debugging von API-Problemen war die KI größtenteils hilfreich. Bei einem Forbidden-Fehler konnte sie jedoch keine konkrete Lösung liefern und drehte sich teilweise im Kreis.
+	Das zugrunde liegende Problem wurde schließlich von unserer CTO, Ayleen Edenhauser, identifiziert. Es handelte sich um einen Autorisierungsfehler in einer User-Funktion, die @PreAuthorize und User mit der Customer-Rolle nicht ausführen konnten.
+	Wir wollten von Anfang an Bilder anzeigen, waren uns jedoch nicht sicher, wie dies am effizientesten umgesetzt werden könnte. ChatGPT schlug vor, die Bilder entweder als BLOBs direkt in der Datenbank zu speichern oder die URLs der Bilder separat abzulegen.
+	Wir entschieden uns für Letzteres und nutzten dabei Links zu Bildern aus dem Internet.
 	
 	\chapter{Jakob Oberhofer}
 	
