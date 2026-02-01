@@ -1,13 +1,9 @@
-import {RatingScale, ratingScaleToNumber, RatingTypes} from "../DTO/rating.types";
+import {ratingScaleToNumber, RatingTypes} from "../DTO/rating.types";
 import React, {useState} from "react";
-import {Divider} from "primereact/divider";
 import {Tag} from "primereact/tag";
 import {Fieldset} from "primereact/fieldset";
 import {Rating} from "primereact/rating";
-import {UserxApi} from "../utilities/userxApi";
-import {UserxTypes} from "../DTO/userx.types";
 import {Button} from "primereact/button";
-import ratingComponent from "./RatingComponent";
 import styles from "../styles/PixelButton.module.css";
 
 interface RatingListProps {
@@ -27,6 +23,10 @@ const RatingListComponent: React.FC<RatingListProps> = (
         setRatingFilter,
     }) => {
 
+    /**
+     * Display message if a ratingFilter is applied and no rating exists
+     * @param ratingFilter rating filter set by the ratings component
+     */
     const filterMessage = (ratingFilter: number | undefined): string => {
         switch (ratingFilter) {
             case 1:
@@ -44,6 +44,10 @@ const RatingListComponent: React.FC<RatingListProps> = (
         }
     };
 
+    /**
+     * Fieldset displaying the user, rating and review
+     * @param rating ratingTypes element from each user that rated the product
+     */
     const fieldsetTemplate = (rating: RatingTypes) => {
         return (
             <Fieldset
@@ -55,7 +59,7 @@ const RatingListComponent: React.FC<RatingListProps> = (
                                     </span>
                         <Rating
                             style={{marginTop: '0.25rem', marginBottom: '0.25rem', marginLeft: '3.75rem'}}
-                            value={ratingScaleToNumber(rating.rating)}
+                            value={ratingScaleToNumber(rating.ratingScale)}
                             readOnly
                             cancel={false}
                         />
@@ -73,7 +77,9 @@ const RatingListComponent: React.FC<RatingListProps> = (
         );
     };
 
-
+    /**
+     * Filter buttons and list of ratings
+     */
     return (
         <>
             <div style={{textAlign: "center", marginTop: "0.75rem"}}>

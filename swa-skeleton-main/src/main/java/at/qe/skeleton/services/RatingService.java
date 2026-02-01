@@ -24,7 +24,7 @@ public class RatingService {
      * Returns a collection of all ratings for every product on the site.
      * Can be useful for a potential Manager view
      *
-     * @return the rating collection
+     * @return the ratingScale collection
      */
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public Collection<Rating> getAllRatings() { return ratingRepository.findAll(); }
@@ -33,7 +33,7 @@ public class RatingService {
      * Returns a collection of all ratings for a certain product.
      *
      * @param productId productId where the ratings are stored
-     * @return the rating collection for a certain product
+     * @return the ratingScale collection for a certain product
      */
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public Collection<Rating> getAllRatingsByProduct(Long productId) {
@@ -51,7 +51,7 @@ public class RatingService {
     public Rating saveRating(Rating rating) {
         if (rating.isNew()) {
             if (ratingRepository.existsRatingByAuthorAndProduct(rating.getAuthor(), rating.getProduct())) {
-                throw new RatingAlreadyExistsException("User " + rating.getUsername() + "already submitted a rating");
+                throw new RatingAlreadyExistsException("User " + rating.getUsername() + "already submitted a ratingScale");
             }
         } else {
             rating.setTimestamp(LocalDateTime.now());
@@ -60,9 +60,9 @@ public class RatingService {
     }
 
     /**
-     * Deletes the rating.
+     * Deletes the ratingScale.
      *
-     * @param rating the rating to delete
+     * @param rating the ratingScale to delete
      */
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public void deleteRating(Rating rating) {
@@ -71,12 +71,12 @@ public class RatingService {
     }
 
     /**
-     * Loads a rating by its productId and ratingId.
+     * Loads a ratingScale by its productId and ratingId.
      * This uses the productId to be inline with the API specification.
      *
      * @param productId productId where the ratings are stored
      * @param ratingId global ratingId
-     * @return the rating for the product with the id
+     * @return the ratingScale for the product with the id
      */
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public Optional<Rating> loadRating(Long productId, Long ratingId) {
@@ -84,12 +84,12 @@ public class RatingService {
     }
 
     /**
-     * Loads a rating by its productId and authorId. Preferred method.
+     * Loads a ratingScale by its productId and authorId.
      * This uses the productId to be inline with the API specification.
      *
      * @param productId productId where the ratings are stored
      * @param authorId global authorId
-     * @return the rating for the product from the author
+     * @return the ratingScale for the product from the author
      */
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public Optional<Rating> loadRatingByAuthor(Long productId, Long authorId) {

@@ -2,8 +2,9 @@ import {RatingDTO, RatingTypes} from "../DTO/rating.types";
 import globalAxios from "axios";
 import {createRatingFromInterfaces} from "./ratingUtilities";
 
-//TODO: Make this Api consistent with userx >w<
-
+/**
+ * This file provides utility functions for CRUD operations on ratings.
+ */
 
 /**
  * Fetch all ratings for a product from the backend

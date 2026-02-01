@@ -29,6 +29,9 @@ const RatingForm: React.FC<RatingFormProps> = (
         deleteRating
     }) => {
 
+    /**
+     * Rating form logic
+     */
     return (
         <div>
             <Tag className="pixel-tag pixel-tag-blue" value="Tell us what you think of this product!"

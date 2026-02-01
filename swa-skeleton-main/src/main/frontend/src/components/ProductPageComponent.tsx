@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import {dummyProduct1} from "./DebugProducts"; // Fallback
 import {ProductDTO} from "../DTO/product.types";
 import {Card} from "primereact/card";
 import {Button} from "primereact/button";
@@ -10,7 +9,6 @@ import {addToCart, getCart} from "../utilities/cartUtilities";
 import styles from "../styles/PixelButton.module.css"
 import {getAllSubscriptionsForUser, subscribe, unsubscribe} from "../utilities/subscriptionApi";
 import {UserxApi} from "../utilities/userxApi";
-import {UserxTypes} from "../DTO/userx.types";
 import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 import {ProductApi} from "../utilities/productApi";
 
@@ -22,11 +20,13 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
     const [product, setProduct] = useState<ProductDTO | null>(null); // Startet leer
     const [loading, setLoading] = useState<boolean>(true);
     const [quantity, setQuantity] = useSessionStorage<number>(1, 'quantity');
-    const [user, setUser] = useState<UserxTypes | null>(null);
     const [subscribed, setSubscribed] = useState(false);
     const [subLoading, setSubLoading] = useState(false);
 
 
+    /**
+     * Fetches product based on productId from the backend
+     */
     useEffect(() => {
         if (!productId) return;
         const loadProductInfo = async () => {
@@ -36,18 +36,20 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
             } catch (err: any) {
                 console.error('Error fetching product:', err);
             } finally {
+                setQuantity(1);
                 setLoading(false);
             }
         }
         void loadProductInfo();
     }, [productId]);
 
+    /**
+     * Loads existing subscription status
+     */
     useEffect(() => {
         const loadUserAndSubscription = async () => {
             try {
                 const currentUser = await UserxApi.getCurrentUser();
-                setUser(currentUser);
-
                 if (currentUser.id && productId) {
                     const subs = await getAllSubscriptionsForUser(currentUser.id);
                     const isSubscribed = subs.some(sub => sub.productId === Number(productId));
@@ -57,10 +59,12 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
                 console.error("Failed to load subscription info:", err);
             }
         };
-
         void loadUserAndSubscription();
     }, [productId]);
 
+    /**
+     * Logic for the subscribe toggle
+     */
     const handleSubscribeToggle = async () => {
         setSubLoading(true);
         try {
@@ -78,6 +82,10 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         }
     };
 
+    /**
+     * Dialog for subscription cancelation
+     * @param event Mouse Event when clicked on button
+     */
     const confirmSubToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
         if (!subscribed) {
             handleSubscribeToggle();
@@ -105,6 +113,9 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         return <div>DUCK NOT FOUND.</div>;
     }
 
+    /**
+     * Product image rendering
+     */
     const imageBox = () => {
         return (
             <div style={{
@@ -122,6 +133,9 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         )
     }
 
+    /**
+     * Display logic for the price tag and discount
+     */
     const priceTag = () => {
         const currentPrice: number = product.price;
         const hasDiscount: boolean = product.discount > 0;
@@ -158,6 +172,9 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         );
     }
 
+    /**
+     * Display logic for the product amount + and - buttons
+     */
     const amountButtons = () => {
         return (
             <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
@@ -180,6 +197,9 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         )
     }
 
+    /**
+     * Display logic for the stock information
+     */
     const stockInfo = () => {
         return (
             <div>
@@ -193,6 +213,9 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         );
     }
 
+    /**
+     * Logic for the "Add to cart" and "Notification" button
+     */
     const actionButtons = () => {
         return (
             <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
@@ -216,6 +239,9 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         )
     }
 
+    /**
+     * Logic to List and display the categories
+     */
     const listingCategories = () => {
         return (
             <div className="mt-4 flex gap-2">
@@ -227,6 +253,9 @@ const ProductPageComponent: React.FC<ProductComponentProps> = ({productId}) => {
         )
     }
 
+    /**
+     * Product page card
+     */
     return (
         <div className="p-4">
             <ConfirmPopup/>

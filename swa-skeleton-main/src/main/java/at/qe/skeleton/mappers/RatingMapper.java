@@ -34,7 +34,7 @@ public class RatingMapper implements DTOMapper<Rating, RatingDTO>{
         RatingDTO dto = new RatingDTO(
                 rating.getId(),
                 rating.getTimestamp(),
-                rating.getRating(),
+                rating.getRatingScale(),
                 rating.getComment(),
                 rating.getAuthor().getId(),
                 rating.getAuthor().getUsername(),
@@ -58,7 +58,7 @@ public class RatingMapper implements DTOMapper<Rating, RatingDTO>{
         Product product = productService.getProductById(ratingDto.productId()).orElseThrow(() -> new RuntimeException("Product not found"));
         Userx author = userxService.loadUser(ratingDto.authorId()).orElseThrow(() -> new RuntimeException("Author (user) not found"));
 
-        rating.setRating(ratingDto.rating());
+        rating.setRatingScale(ratingDto.ratingScale());
         rating.setComment(ratingDto.comment());
         rating.setProduct(product);
         rating.setAuthor(author);

@@ -216,7 +216,7 @@ const HomePage: React.FC = () => {
                                 id="search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="SEARCH PPRODUCT..."
+                                placeholder="SEARCH PRODUCT..."
                                 className="w-full md:w-20rem"
                             />
                         </IconField>

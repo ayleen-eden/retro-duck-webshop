@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
  * Reduced data tranfer object for the RatingTypes Entity in the create endpoint.
  */
 public record RatingCreateDTO(
-        RatingScale rating,
+        RatingScale ratingScale,
         @NotBlank
         String comment,
         Long authorId,

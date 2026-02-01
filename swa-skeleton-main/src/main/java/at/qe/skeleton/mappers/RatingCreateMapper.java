@@ -29,7 +29,7 @@ public class RatingCreateMapper implements DTOMapper<Rating, RatingCreateDTO>{
     @Override
     public Rating mapFrom(RatingCreateDTO dto) {
         Rating rating = new Rating();
-        rating.setRating(dto.rating());
+        rating.setRatingScale(dto.ratingScale());
         rating.setComment(dto.comment());
 
         Product product = productService.getProductById(dto.productId()).orElseThrow(() -> new RuntimeException("Product not found"));
