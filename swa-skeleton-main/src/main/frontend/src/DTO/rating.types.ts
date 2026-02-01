@@ -10,6 +10,10 @@ export enum RatingScale {
     FIVE_STARS = "FIVE_STARS"
 }
 
+/**
+ * Auxillary function to convert ratingScale from the backend to a number
+ * @param rating ratingScale of the existing rating
+ */
 export function ratingScaleToNumber(rating: RatingScale | undefined): number {
     switch (rating) {
         case RatingScale.ONE_STAR:
@@ -28,13 +32,34 @@ export function ratingScaleToNumber(rating: RatingScale | undefined): number {
 }
 
 /**
+ * Auxillary function to convert number from the rating component to ratingScale
+ * @param ratingValue numeric value for the rating
+ */
+export function numberToRatingScale(ratingValue: number | undefined): (RatingScale | undefined) {
+    switch (ratingValue) {
+        case 1:
+            return RatingScale.ONE_STAR;
+        case 2:
+            return RatingScale.TWO_STARS;
+        case 3:
+            return RatingScale.THREE_STARS;
+        case 4:
+            return RatingScale.FOUR_STARS;
+        case 5:
+            return RatingScale.FIVE_STARS;
+        default:
+            return undefined;
+    }
+}
+
+/**
  * Rating DTO
  */
 
 export interface RatingDTO {
     id?: number;
     timestamp?: Date | null;
-    rating?: RatingScale;
+    ratingScale?: RatingScale;
     comment: String;
     authorId?: number;
     username: String;
@@ -44,7 +69,7 @@ export interface RatingDTO {
 export class RatingTypes implements RatingDTO {
     id?: number;
     timestamp?: Date | null;
-    rating?: RatingScale;
+    ratingScale?: RatingScale;
     comment: String;
     authorId?: number;
     username: String;
@@ -53,7 +78,7 @@ export class RatingTypes implements RatingDTO {
     constructor(data: RatingDTO) {
         this.id = data.id;
         this.timestamp = data.timestamp ? new Date(data.timestamp): null;
-        this.rating = data.rating;
+        this.ratingScale = data.ratingScale;
         this.comment = data.comment;
         this.authorId = data.authorId;
         this.username = data.username;
@@ -64,7 +89,7 @@ export class RatingTypes implements RatingDTO {
         return {
             id: this.id,
             timestamp: this.timestamp,
-            rating: this.rating,
+            ratingScale: this.ratingScale,
             comment: this.comment,
             authorId: this.authorId,
             username: this.username,
@@ -72,9 +97,9 @@ export class RatingTypes implements RatingDTO {
         };
     }
 
-    toCreateJSON(): Pick<RatingDTO, 'rating' | 'comment' | 'authorId' | 'username' |'productId'> {
+    toCreateJSON(): Pick<RatingDTO, 'ratingScale' | 'comment' | 'authorId' | 'username' |'productId'> {
         return {
-            rating: RatingScale[this.rating as RatingScale],
+            ratingScale: RatingScale[this.ratingScale as RatingScale],
             comment: this.comment,
             authorId: this.authorId,
             username: this.username,
@@ -82,10 +107,10 @@ export class RatingTypes implements RatingDTO {
         };
     }
 
-    toUpdateJSON(): Pick<RatingDTO, 'id' | 'rating' | 'comment' | 'authorId' | 'username' | 'productId'> {
+    toUpdateJSON(): Pick<RatingDTO, 'id' | 'ratingScale' | 'comment' | 'authorId' | 'username' | 'productId'> {
         return {
             id: this.id,
-            rating: this.rating,
+            ratingScale: this.ratingScale,
             comment: this.comment,
             authorId: this.authorId,
             username: this.username,
@@ -97,7 +122,7 @@ export class RatingTypes implements RatingDTO {
         return new RatingTypes({
             id: undefined,
             timestamp: null,
-            rating: undefined,
+            ratingScale: undefined,
             comment: '',
             authorId: undefined,
             username: '',

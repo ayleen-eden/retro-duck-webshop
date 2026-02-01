@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public record RatingDTO (
     Long id,
     LocalDateTime timestamp,
-    RatingScale rating,
+    RatingScale ratingScale,
     String comment,
     Long authorId,
     String username,

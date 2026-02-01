@@ -1,24 +1,12 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {RatingDTO, RatingScale, ratingScaleToNumber, RatingTypes} from "../DTO/rating.types";
+import {numberToRatingScale, RatingDTO, ratingScaleToNumber, RatingTypes} from "../DTO/rating.types";
 import {RatingApi} from "../utilities/ratingApi";
 import {createRatingFromInterfaces} from "../utilities/ratingUtilities";
 import {UserxApi} from "../utilities/userxApi";
 import {UserxTypes} from "../DTO/userx.types";
-import {Divider} from "primereact/divider";
-import {Rating} from "primereact/rating";
-import {Tag} from "primereact/tag";
-import {FilterService} from "primereact/api";
 import RatingForm from "./RatingForm";
 import {Toast} from "primereact/toast";
 import RatingListComponent from "./RatingListComponent";
-
-FilterService.register('custom_range', (value, filters) => {
-    const [from, to] = filters ?? [null, null];
-    if (from === null && to === null) return true;
-    if (from !== null && to === null) return from <= value;
-    if (from === null && to !== null) return value <= to;
-    return from <= value && value <= to;
-});
 
 interface RatingComponentProps {
     productId: number;
@@ -29,12 +17,15 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
     const [ratingValue, setRatingValue] = useState<number | undefined>();
     const [comment, setComment] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedRating, setRating] = useState<RatingDTO>(RatingTypes.empty);
+    const [selectedRating, setRating] = useState<RatingDTO>(RatingTypes.empty());
     const [sorting, setSorting] = useState<'asc' | 'desc'>('desc')
     const [ratingFilter, setRatingFilter] = useState<number | undefined>(undefined);
     const toast = useRef<Toast>(null)
     const [user, setUser] = useState<UserxTypes | null>(null)
 
+    /**
+     * Determine if the user is a guest (This is a bit hacky but works)
+     */
     useEffect(() => {
         const determineUser = async () => {
             try {
@@ -50,6 +41,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         void determineUser();
     }, []);
 
+    /**
+     * Fetch all ratings from the backend to display them in the frontend
+     */
     useEffect(() => {
         const fetchAllRatingsForProduct = async () => {
             try {
@@ -69,20 +63,22 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         return [...ratings]
             .filter(rating => {
                 if (ratingFilter !== undefined) {
-                    return ratingScaleToNumber(rating.rating) === ratingFilter;
+                    return ratingScaleToNumber(rating.ratingScale) === ratingFilter;
                 }
                 return true;
             })
             .sort((a, b) =>
                 sorting === "asc"
-                    ? ratingScaleToNumber(a.rating) - ratingScaleToNumber(b.rating)
-                    : ratingScaleToNumber(b.rating) - ratingScaleToNumber(a.rating)
+                    ? ratingScaleToNumber(a.ratingScale) - ratingScaleToNumber(b.ratingScale)
+                    : ratingScaleToNumber(b.ratingScale) - ratingScaleToNumber(a.ratingScale)
             );
     }, [ratings, sorting, ratingFilter]);
 
+    /**
+     * Load the already written rating from the user if it exists.
+     * The rating form also acts as a way to update the rating later
+     */
     useEffect(() => {
-        if(!user) return;
-        if (loading) return;
         const loadUserRating = async () => {
             if (user != null) {
                 const existingRating = ratings.find(rating => rating.authorId === user.id);
@@ -92,12 +88,13 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
                     setRating(RatingTypes.empty());
                 }
             }
-
-
         }
         void loadUserRating();
-    }, [ratings, productId, loading]);
+    }, [user, ratings, productId]);
 
+    /**
+     * Create rating logic with edge case handling
+     */
     const createRating = async () => {
         if (user == null) {
             toast.current?.show({
@@ -120,7 +117,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         const author: UserxTypes = await UserxApi.getCurrentUser();
         const ratingToSave = new RatingTypes({
             ...selectedRating,
-            rating: numberToRatingScale(ratingValue),
+            ratingScale: numberToRatingScale(ratingValue),
             comment: comment,
             authorId: author.id,
             username: author.username,
@@ -132,6 +129,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         setRatings(prevState => [...prevState, newRating])
     };
 
+    /**
+     * Update rating logic with edge cases. This option only gets executed if the update Button is pressed.
+     */
     const updateRating = async () => {
         if (ratingValue == undefined || comment == '') {
             toast.current?.show({
@@ -148,7 +148,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         try {
             const ratingToUpdate: RatingDTO = {
                 ...selectedRating,
-                rating: numberToRatingScale(ratingValue),
+                ratingScale: numberToRatingScale(ratingValue),
                 comment: comment,
                 authorId: selectedRating.authorId,
                 username: selectedRating.username,
@@ -163,11 +163,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         }
     }
 
-    const onEditRating = (rating: RatingTypes) => {
-        if(!user) return;
-        setRating(rating);
-    }
-
+    /**
+     * Delete logic with edge case handling. Only gets executed with the delete button
+     */
     const deleteRating = async () => {
         if (!user || !selectedRating.id) return;
 
@@ -180,23 +178,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({productId}) => {
         }
     }
 
-    const numberToRatingScale = (ratingValue: number | undefined): RatingScale | undefined => {
-        switch (ratingValue) {
-            case 1:
-                return RatingScale.ONE_STAR;
-            case 2:
-                return RatingScale.TWO_STARS;
-            case 3:
-                return RatingScale.THREE_STARS;
-            case 4:
-                return RatingScale.FOUR_STARS;
-            case 5:
-                return RatingScale.FIVE_STARS;
-            default:
-                return undefined;
-        }
-    }
-
+    /**
+     * Rating component using RatingForm and RatingListComponent
+     */
     return (
         <div>
             <Toast ref={toast} position="top-right"/>

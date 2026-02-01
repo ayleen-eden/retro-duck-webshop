@@ -82,12 +82,10 @@ public class WebSecurityConfig {
 
                             // PRODUCTS
                             // Read (for everyone)
-                            .requestMatchers(HttpMethod.POST, "/api/products/*/ratings").hasAnyAuthority("CUSTOMER") //This rule doesn't work
+                            //Rules that don't work. Customer can't create Ratings...
+                            //.requestMatchers(HttpMethod.POST, "/api/products/*/ratings").hasAnyAuthority("CUSTOMER") //This rule doesn't work
                             //.requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products/**").permitAll()
-                            // Edit (Admin, Manager only)
-                            // TODO: Check if role-names (manager,admin) match
-
-                            .requestMatchers( "/api/products/**").permitAll()
+                            .requestMatchers( "/api/products").permitAll()
 
                             .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                             .requestMatchers("/api/**").permitAll()
