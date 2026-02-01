@@ -27,53 +27,53 @@
 
 \begin{document}
 	\maketitle
-	
+
 	\chapter*{Einleitung}
-	
-	Die Arbeit mit Künstlicher Intelligenz (KI) und Large Language Models (LLMs) wird immer wichtiger und unumgänglicher. Damit wird es auch immer wichtiger zu lernen wie man verantwortungsvoll mit KI umgeht. Im Optimalfall sollte man nach einem gewissenhaften Prompt in der Softwareentwicklung nicht nur einen schlaueren Code sondern auch einen schlaueren Kopf haben, so dass man es als Hilfsmittel für ein besseres Verständnis für ein Thema einsetzt. 
-	
+
+	Die Arbeit mit Künstlicher Intelligenz (KI) und Large Language Models (LLMs) wird immer wichtiger und unumgänglicher. Damit wird es auch immer wichtiger zu lernen wie man verantwortungsvoll mit KI umgeht. Im Optimalfall sollte man nach einem gewissenhaften Prompt in der Softwareentwicklung nicht nur einen schlaueren Code sondern auch einen schlaueren Kopf haben, so dass man es als Hilfsmittel für ein besseres Verständnis für ein Thema einsetzt.
+
 	In diesem Dokument dokumentieren wir relevante Prompts, welche uns in der Softwarearchitektur Projektarbeit weitergeholfen haben.
-	
+
 	\tableofcontents
-	
+
 	\chapter{Ayleen Edenhauser}
-	
+
 	\section{Unterstützung bei APIs/Endpoints}
-	
+
 	\subsection{Kernidee}
-	
+
 	\begin{quote}
 		I'm working on a project. The task is to create a web shop. I'm responsible for the shopping cart. We're using Java + Spring in the backend, Typescript + React in the frontend. The shopping cart is saved only in the browser's local storage. I've implemented basic functions such as \texttt{getCart}, \texttt{addToCart} and \texttt{removeFromCart}. Now I'm working on the API, but the cart only exists in the frontend. How can I tackle this? Usually, there are controllers in the backend, mapping HTTP requests to methods in the backend, but the cart doesn't exist there. What can I do? Do not show me any code.
 	\end{quote}
-	
+
 	\subsubsection{Antwort}
-	
+
 	\href{https://chatgpt.com/s/t_69499ce197148191a4f2e25cf796ae95}{Link zum Chat}.
-	
+
 	\subsection{Beispiel zum Verständnis}
-	
+
 	\begin{quote}
-		Can you give me a code example of how these endpoints could look? 
+		Can you give me a code example of how these endpoints could look?
 	\end{quote}
-	
+
 	\subsubsection{Antwort}
-	
+
 	\href{https://chatgpt.com/s/t_69499ebbed94819190402b415677ac78}{Link zum Chat}.
-	
+
 	\subsection{Lernergebnisse}
-	
+
 	Daraus habe ich gelernt:
-	
+
 	\begin{itemize}
 		\item Der Warenkorb wird im Backend als \textbf{Input} verwendet
 		\item Der Warenkorb arbeitet sehr eng mit \textbf{Bestellungen} zusammen
 		\item Eventuell wird ein \texttt{CartController} im Backend benötigt
 	\end{itemize}
-	
+
 	\section{Weitere Nutzung}
-	
+
 	Die Ausarbeitung des Backends war relativ simpel, deshalb habe ich GenAI des weiteren nur dazu verwendet, States und Effects in TypeScript besser zu verstehen. Allgemein war im Frontend die \href{https://primereact.org}{React Dokumentation} eine weitaus bessere Hilfe als GenAI.
-	
+
 	\chapter{Matteo Volperino}
 
 	Ich habe GenAI hauptsächlich für TypeScript genutzt, sei es für kleinere syntaktische Fragen oder für die Umsetzung von UI-Design-Aspekten. Dadurch habe ich Flexbox kennengelernt und diese Technik zur Gestaltung der Produktseite eingesetzt.
@@ -81,92 +81,98 @@
 	Das zugrunde liegende Problem wurde schließlich von unserer CTO, Ayleen Edenhauser, identifiziert. Es handelte sich um einen Autorisierungsfehler in einer User-Funktion, die @PreAuthorize und User mit der Customer-Rolle nicht ausführen konnten.
 	Wir wollten von Anfang an Bilder anzeigen, waren uns jedoch nicht sicher, wie dies am effizientesten umgesetzt werden könnte. ChatGPT schlug vor, die Bilder entweder als BLOBs direkt in der Datenbank zu speichern oder die URLs der Bilder separat abzulegen.
 	Wir entschieden uns für Letzteres und nutzten dabei Links zu Bildern aus dem Internet.
-	
+
 	\chapter{Jakob Oberhofer}
 
 	Im Rahmen der Entwicklung des Order-Moduls und des User Signups habe ich KI gezielt zur Unterstützung eingesetzt. Der Fokus lag dabei auf der Fehleranalyse, sowie auf der effizienten Erstellung von Testfällen.
 
-	\section{Beispiel 1: Unit-Tests für Geschäftslogik (Testfallideen)}
+	\section{Unit-Tests für Geschäftslogik (Testfallideen)}
 
-	\textbf{Prompt:} \\
-	"Erstelle mir einen JUnit-Test für den \texttt{OrderService}. Der Test soll sicherstellen, dass eine \texttt{InsufficientStockException} geworfen wird, wenn ein Benutzer mehr Produkte bestellt, als im Lager verfügbar sind."
+	\subsection{Prompt}
 
-	\textbf{LLM-Ausgabe:} \\
-	"Codeteil für den Testfall."
+	\begin{quote}
+		Erstelle mir einen JUnit-Test für den \texttt{OrderService}. Der Test soll sicherstellen, dass eine \texttt{InsufficientStockException} geworfen wird, wenn ein Benutzer mehr Produkte bestellt, als im Lager verfügbar sind.
+	\end{quote}
 
-	\textbf{Lernergebnis:} \\
+	\subsubsection{LLM-Ausgabe}
+	$<$Codeteil für den Testfall.$>$
+
+	\subsection{Lernergebnis}
 	Mit weiteren ähnlichen Prompts wie diesem konnte ich mir durch die Verwendung von KI einiges an Schreibarbeit ersparen. Die KI lieferte schnell das Mockito-Grundgerüst. Ich musste jedoch manuell nachbessern. Außerdem konnte mir die KI dabei helfen weitere Testfälle abzudecken auf die ich vielleicht nicht gedacht hätte.
 
-	\section{Beispiel 2: Analyse von Fehlercodes}
+	\section{Analyse von Fehlercodes}
 
-	\textbf{Prompt:} \\
-	"Ich erhalte beim ausführen der Tests/starten des Backends folgenden Error:..."
+	\subsection{Prompt}
 
-	\textbf{LLM-Ausgabe:} \\
-	"Erklärung des Fehlercodes oder Hinweise wo der Fehlerhafte Codeteil liegen könnte."
+	\begin{quote}
+		Ich erhalte beim ausführen der Tests/starten des Backends folgenden Error:...
+	\end{quote}
 
-	\textbf{Lernergebnis:} \\
-	Die KI half hier, Zeit bei der Fehlersuche zu sparen. Außerdem wurden Fehlermeldungen welche teils unverständlich für mich waren so erklärt, dass ich sie schnell verstehen und beheben konnte.
-	
-	\chapter{Leonid Georg Mikhailovic Stommel}
-	
-	\section{Library-Problem bei API-UnitTests}
-	
-	\href{https://gemini.google.com/share/6b4ea303c9ce}{Link zum Chat}.
-	
-	\subsection{Prompting}
-	
-	Die Unit-Tests, welche API-Calls für das Feature ``Products` testet, schlugen fehl und ich konnte bei den sehr langen Fehlermeldungen nicht durchblicken woran es lag, da ich dort sehr schnell die Übersicht verlor.
-	
-	Der LLM habe ich nach Erklärung des Softwarekontextes mein Problem beschrieben und sowohl den Source-Code der Datei \texttt{ProductController.java}, als auch die Fehlermeldungen für alle fehlgeschlagenen Tests mitgegeben.
-	
 	\subsubsection{LLM-Ausgabe}
-	
-	Die LLM schlug mir vor, den \texttt{JwtTokenProvider} als Mock einzubinden. Doch es gab wiederum eine Fehlermeldung, ebenso lang und unübersichtlich. Diese habe ich dann als Antwort geschickt und den Vorschlag bekommen ebenso noch \texttt{JwtConfig} einzubinden. Daraufhin hat es funktioniert. 
-	
+	$<$Erklärung des Fehlercodes oder Hinweise wo der Fehlerhafte Codeteil liegen könnte.$>$
+
+	\subsection{Lernergebnis}
+	Die KI half hier, Zeit bei der Fehlersuche zu sparen. Außerdem wurden Fehlermeldungen welche teils unverständlich für mich waren so erklärt, dass ich sie schnell verstehen und beheben konnte.
+
+	\chapter{Leonid Georg Mikhailovic Stommel}
+
+	\section{Library-Problem bei API-UnitTests}
+
+	\href{https://gemini.google.com/share/6b4ea303c9ce}{Link zum Chat}.
+
+	\subsection{Prompting}
+
+	Die Unit-Tests, welche API-Calls für das Feature ``Products` testet, schlugen fehl und ich konnte bei den sehr langen Fehlermeldungen nicht durchblicken woran es lag, da ich dort sehr schnell die Übersicht verlor.
+
+	Der LLM habe ich nach Erklärung des Softwarekontextes mein Problem beschrieben und sowohl den Source-Code der Datei \texttt{ProductController.java}, als auch die Fehlermeldungen für alle fehlgeschlagenen Tests mitgegeben.
+
+	\subsubsection{LLM-Ausgabe}
+
+	Die LLM schlug mir vor, den \texttt{JwtTokenProvider} als Mock einzubinden. Doch es gab wiederum eine Fehlermeldung, ebenso lang und unübersichtlich. Diese habe ich dann als Antwort geschickt und den Vorschlag bekommen ebenso noch \texttt{JwtConfig} einzubinden. Daraufhin hat es funktioniert.
+
 	Abschließend habe ich die LLM noch nach einem Fazit der Problemlösung und was ich daraus gedanklich mitnehmen kann gefragt.
-	
+
 	\subsection{Lernergebnisse}
-	
+
 	Daraus habe ich gelernt:
-	
+
 	\begin{itemize}
 		\item Erkennen von Kausalitäten bei bestimmten Statements, \linebreak z.B. wenn
 		\texttt{@WebMvcTest(ProductController.}\texttt{class)} nur einen abgekapselten Teil
 		lädt, bedeutet dies auch, dass andere Komponenten fehlen, die explizit
 		eingebunden werden müssen, sofern sie für den Test benötigt werden.
-		
+
 		\item Besseres Verständnis des Mocking-Systems (es werden nicht nur
 		eigene Klassen gemockt, sondern auch weniger offensichtliche Abhängigkeiten).
-		
+
 		\item Sich nicht von jeder Fehlermeldung abschrecken zu lassen und
 		Fehlerausgaben selbst genauer zu analysieren.
 	\end{itemize}
-	
+
 	\section{Generierung von Dummy-Produkten}
-	
+
 	\href{https://gemini.google.com/share/154e58452bd1}{Link zum Chat}.
-	
+
 	\subsection{Prompting}
-	
+
 	Dummy-Daten sind bereits in der Entwicklung einer Software sinnvoll, damit sich so zukünftige Daten visualisieren lassen, die Software getestet wird und auftretende Fehler entlarvt werden können.
-	
+
 	Wir haben uns dazu entschieden Videospiele als Produkte zu nehmen. Für das Einpflegen von Dummy-Daten könnte ich jetzt bei jedem Videospiel alle Metadaten raussuchen, was sehr zeitintensiv wäre und sich je nach Anzahl der Produkte sehr repetitiv und als nicht besonders fordernde Arbeit entlarven würde.
-	
+
 	Was ich stattdessen gemacht habe, ist der LLM 100 Spiele generieren zu lassen. Dabei hatte ich einige Favoriten, wo ich die Titel genannt habe, den Rest habe ich der LLM überlassen.
-	
+
 	\subsubsection{LLM-Ausgabe}
-	
+
 	Das generieren der Titel und Beschreibungen und auch passende Lageranzahl war sehr zufriedenstellend. Das Problem waren die Bilder. Da ich nicht jedes Spiel-Artwork für's testen auf den Server laden wollte, wollte ich, dass die LLM auf öffentliche Ressourcen zugreift. Die Ausgabe sah auch sehr vielversprechend aus, da es Links von wikimedia waren (frei zugänglich). Doch waren davon viele Links ungültig und es konnte kein Bild angezeigt werden. Außerdem wollte die LLM anfänglich ein eigenes Fallback implementieren, bei dem ohne Bild lediglich der Name des Spieletitels angezeigt wird. Jedoch war dies überflüssig, da ich bereits ein Sample-Bild als Fallback für ein fehlendes Bild implementiert habe.
-	
+
 	\subsection{Lernergebnisse}
-	
+
 	Daraus habe ich gelernt:
-	
+
 	\begin{itemize}
 		\item 	LLMs können gut schriftliche Dummy-Informationen generieren.
-		\item 	LLMs generieren oftmals Weblinks, die überhaupt nicht existieren. 
-		\item   LLMs machen oftmals zu viel, was oftmals nicht gut ist. 
+		\item 	LLMs generieren oftmals Weblinks, die überhaupt nicht existieren.
+		\item   LLMs machen oftmals zu viel, was oftmals nicht gut ist.
 	\end{itemize}
-	
+
 \end{document}
