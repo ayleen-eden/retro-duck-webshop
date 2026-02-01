@@ -59,7 +59,7 @@ public class RatingServiceTest {
         Rating ratingToInsert1 = new Rating();
         RatingScale ratingScale1 = RatingScale.FOUR_STARS;
         String ratingComment1 = "This is a rating of a productId";
-        ratingToInsert1.setRating(ratingScale1);
+        ratingToInsert1.setRatingScale(ratingScale1);
         ratingToInsert1.setAuthor(author);
         ratingToInsert1.setComment(ratingComment1);
         ratingToInsert1.setProduct(product1);
@@ -68,7 +68,7 @@ public class RatingServiceTest {
         Rating ratingToInsert2 = new Rating();
         RatingScale ratingScale2 = RatingScale.FOUR_STARS;
         String ratingComment2 = "This is a rating of a productId";
-        ratingToInsert2.setRating(ratingScale2);
+        ratingToInsert2.setRatingScale(ratingScale2);
         ratingToInsert2.setAuthor(author);
         ratingToInsert2.setComment(ratingComment2);
         ratingToInsert2.setProduct(product2);
@@ -79,7 +79,7 @@ public class RatingServiceTest {
         Assertions.assertFalse(freshlyCreatedRatingOpt.isEmpty(),
                 "New rating could not be loaded from test data source after being saved");
         Rating freshlyCreatedRating = freshlyCreatedRatingOpt.get();
-        Assertions.assertEquals(ratingScale1, freshlyCreatedRating.getRating());
+        Assertions.assertEquals(ratingScale1, freshlyCreatedRating.getRatingScale());
         Assertions.assertEquals(author, freshlyCreatedRating.getAuthor());
         Assertions.assertEquals(ratingComment1, freshlyCreatedRating.getComment());
     }
@@ -92,7 +92,7 @@ public class RatingServiceTest {
         Rating rating = new Rating();
         rating.setAuthor(author);
         rating.setProduct(product1);
-        rating.setRating(RatingScale.FOUR_STARS);
+        rating.setRatingScale(RatingScale.FOUR_STARS);
         rating.setComment("Kinda peak");
         ratingService.saveRating(rating);
 
@@ -101,7 +101,7 @@ public class RatingServiceTest {
 
         Rating toBeChangedRating = toBeChangedRatingOpt.get();
 
-        toBeChangedRating.setRating(RatingScale.FIVE_STARS);
+        toBeChangedRating.setRatingScale(RatingScale.FIVE_STARS);
         String updatedRatingComment = "I changed my mind. This product is awesome. Absolute Cinema!";
         toBeChangedRating.setComment(updatedRatingComment);
 
@@ -110,7 +110,7 @@ public class RatingServiceTest {
         Optional<Rating> freshlyUpdatedRatingOpt = ratingService.loadRatingByAuthor(product1.getId(), author.getId());
         Assertions.assertFalse(freshlyUpdatedRatingOpt.isEmpty(), "Updated Rating could not be loaded");
         Rating freshlyUpdatedRating = freshlyUpdatedRatingOpt.get();
-        Assertions.assertEquals(RatingScale.FIVE_STARS, freshlyUpdatedRating.getRating());
+        Assertions.assertEquals(RatingScale.FIVE_STARS, freshlyUpdatedRating.getRatingScale());
         Assertions.assertEquals(updatedRatingComment, freshlyUpdatedRating.getComment());
     }
 
@@ -122,7 +122,7 @@ public class RatingServiceTest {
         Rating firstRating = new Rating();
         RatingScale ratingScale = RatingScale.ONE_STAR;
         String ratingComment = "It sucks!";
-        firstRating.setRating(ratingScale);
+        firstRating.setRatingScale(ratingScale);
         firstRating.setAuthor(author);
         firstRating.setComment(ratingComment);
         firstRating.setProduct(product1);
@@ -130,7 +130,7 @@ public class RatingServiceTest {
 
         Rating ratingToInsert = new Rating();
         ratingComment = "Reviewbomb incoming";
-        ratingToInsert.setRating(ratingScale);
+        ratingToInsert.setRatingScale(ratingScale);
         ratingToInsert.setAuthor(author);
         ratingToInsert.setComment(ratingComment);
         ratingToInsert.setProduct(product1);

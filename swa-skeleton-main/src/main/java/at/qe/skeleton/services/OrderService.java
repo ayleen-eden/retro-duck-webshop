@@ -8,6 +8,7 @@ import at.qe.skeleton.exceptions.InsufficientStockException;
 import at.qe.skeleton.exceptions.OrderNotFoundException;
 import at.qe.skeleton.exceptions.UnauthorizedOrderAccessException;
 import at.qe.skeleton.mappers.OrderMapper;
+import at.qe.skeleton.mappers.ProductMapper;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.OrderRepository;
 import at.qe.skeleton.repositories.ProductRepository;
@@ -39,13 +40,16 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductService productService;
 
     @Autowired
     private CartValidationService cartValidationService;
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private ProductMapper productMapper;
 
     /**
      * Processes a checkout request by creating a persistent order for a user.
@@ -81,7 +85,7 @@ public class OrderService {
         double total = 0;
 
         for (CartItemDTO itemDto : validatedCart.items()) {
-            Product product = productRepository.findByIdWithLock(itemDto.productId())
+            Product product = productService.getProductById(itemDto.productId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
 
             if (product.getStock() < itemDto.amount()) {
@@ -89,7 +93,8 @@ public class OrderService {
             }
 
             product.setStock(product.getStock() - itemDto.amount());
-            productRepository.save(product);
+            productService.updateProduct(product.getId(), productMapper.mapTo(product));
+            productService.saveProduct(product);
 
             double priceAtPurchase = product.getPrice();
             double discount = product.getDiscount();

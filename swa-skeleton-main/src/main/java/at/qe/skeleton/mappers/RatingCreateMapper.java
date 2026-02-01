@@ -33,7 +33,7 @@ public class RatingCreateMapper implements DTOMapper<Rating, RatingCreateDTO>{
         rating.setComment(dto.comment());
 
         Product product = productService.getProductById(dto.productId()).orElseThrow(() -> new RuntimeException("Product not found"));
-        Userx author = userxService.loadUser(dto.authorId()).orElseThrow(() -> new RuntimeException("Author (user) not found"));
+        Userx author = userxService.loadUserSelf(dto.authorId()).orElseThrow(() -> new RuntimeException("Author (user) not found"));
         rating.setAuthor(author);
         rating.setUsername(author.getUsername());
         rating.setProduct(product);

@@ -59,6 +59,17 @@ public class UserxService implements UserDetailsService {
     }
 
     /**
+     * Loads a single user identified by its id without permissions.
+     * This method is only to be used for loading your own user.
+     *
+     * @param id the id to search for
+     * @return the user with the id
+     */
+    public Optional<Userx> loadUserSelf(Long id) {
+        return userRepository.findById(id);
+    }
+
+    /**
      * Saves the user. This method will also set the creation date for new
      * entities or the update date for updated entities. The user
      * requesting this operation will also be stored as the creator
