@@ -23,7 +23,6 @@ import java.util.Optional;
  * attributes like stock levels or discounts change.
  */
 @Service
-@Scope("application")
 public class ProductService {
 
     /**

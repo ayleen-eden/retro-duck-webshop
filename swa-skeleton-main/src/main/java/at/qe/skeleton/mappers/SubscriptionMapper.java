@@ -8,7 +8,9 @@ import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * Mapping between SubscriptionDTO and Subscription.
+ */
 @Service
 public class SubscriptionMapper implements DTOMapper<Subscription, SubscriptionDTO> {
 

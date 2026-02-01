@@ -8,6 +8,9 @@ import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Mapping between NotificationDTO and Notification.
+ */
 @Service
 public class NotificationMapper implements DTOMapper<Notification, NotificationDTO> {
 

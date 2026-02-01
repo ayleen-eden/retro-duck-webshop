@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+/**
+ * Entity representing subscriptions.
+ */
 @Entity
 @Table(name = "subscription", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class Subscription {
