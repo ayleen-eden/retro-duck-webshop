@@ -1,39 +1,45 @@
-SKEL: Skeleton Project
+# G1T2 – Software Architecture Project
 
-This project provides a starting point for development of projects during the
-course "Software Architecture". It is a simple web application offering nearly 
-no "real" functionality. Its main purpose is to help you getting started quickly 
-by providing a suitable starting point.
+## Overview
 
-It utilizes Spring Boot and is configured as a Maven web application project with:
- - all relevant Spring Framework features enabled
- - embedded Tomcat
- - embedded H2 in-memory database (including H2 console)
- - support for React
- - basic functionality for user management and Spring web security
+Welcome to the GitLab repository of **Group 1, Team 2**.  
+This repository contains all artifacts, documentation, and source code related to our Software Architecture project.
 
-This project works with Java 21.
-Execute "mvn spring-boot:run" to start the skeleton project and install 
-required js libraries.
-Change .env.example to .env (can be found in src/main/frontend) and check 
-that the URL is set to "localhost:8080" before starting the frontend.
-Execute "npm start" in the folder src/main/frontend to start the frontend, 
-which you can access at http://localhost:3000/ ([see also frontend README](./src/main/frontend/))
-You can log in with:
-- "admin" and "passwd"
-- "user1" and "passwd"
-- "user2" and "passwd"
-- "elvis" and "passwd"
+---
 
-Feel free to use this skeleton project as you see fit - but keep in mind that
-this project is primarily provided to be used for educational purposes. Don't
-use it for production!
+## Team Members
 
+- **Ayleen Edenhauser** – Contact person
+- Matteo Volperino
+- Jakob Oberhofer
+- Leonid Georg Mikhailovic Stommel
 
-Contributors:
-Christian Sillaber
-Michael Brunner
-Clemens Sauerwein
-Andrea Mussmann
-Alexander Blaas
-Zoe Pfister
+---
+
+## Repository Structure
+
+The project is based on the provided *SWA skeleton*. The most relevant directories are:
+
+- `swa-skeleton-main/`: Main project directory containing the application source code.
+
+- `swa-skeleton-main/docs/`: Contains all finalised documentation, including:
+    - Diagrams (e.g. UML, sequence diagrams)
+    - Interface definitions
+    - Design decisions
+
+---
+
+## Documentation Workflow
+
+- Documentation is developed and refined in the `docs` branch.
+- Once finalised, documents are merged into `swa-skeleton-main/docs`.
+
+This ensures that the `main` branch always contains the latest **approved and submission-ready** documents.
+
+---
+
+## Branching Strategy
+
+- `main`: Stable version containing finalised and hand-in ready artifacts
+- `docs`: Documentation development and refinement
+- feature branches: Used for individual features or tasks

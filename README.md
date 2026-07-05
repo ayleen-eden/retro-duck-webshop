@@ -1,45 +1,35 @@
-# G1T2 – Software Architecture Project
+# The Retro Duck Webshop
 
-## Overview
+*(Image placeholder)*
 
-Welcome to the GitLab repository of **Group 1, Team 2**.  
-This repository contains all artifacts, documentation, and source code related to our Software Architecture project.
+A full-stack e-commerce platform dedicated to retro gaming, built as a collaborative university team project.
 
----
+## What it does
 
-## Team Members
+Retro Duck is a fully functional webshop offering a complete shopping experience. It features secure role-based access control, a product review system, inventory management, and automated user notifications. 
 
-- **Ayleen Edenhauser** – Contact person
-- Matteo Volperino
-- Jakob Oberhofer
-- Leonid Georg Mikhailovic Stommel
+## Tech Stack
 
----
+* **Backend**: Java, Spring Boot, H2
+* **Frontend**: React
+* **Security**: JWT
 
-## Repository Structure
+## Running it
 
-The project is based on the provided *SWA skeleton*. The most relevant directories are:
+### Start the backend
 
-- `swa-skeleton-main/`: Main project directory containing the application source code.
+```bash
+cd swa-skeleton-main
+mvn spring-boot:start
+```
 
-- `swa-skeleton-main/docs/`: Contains all finalised documentation, including:
-    - Diagrams (e.g. UML, sequence diagrams)
-    - Interface definitions
-    - Design decisions
+### Start the frontend
 
----
-
-## Documentation Workflow
-
-- Documentation is developed and refined in the `docs` branch.
-- Once finalised, documents are merged into `swa-skeleton-main/docs`.
-
-This ensures that the `main` branch always contains the latest **approved and submission-ready** documents.
+```bash
+cd swa-skeleton-main/src/main/frontend
+npm start
+```
 
 ---
 
-## Branching Strategy
-
-- `main`: Stable version containing finalised and hand-in ready artifacts
-- `docs`: Documentation development and refinement
-- feature branches: Used for individual features or tasks
+> Developed alongside *Matteo Volperiono*, *Jakob Oberhofer* and *Leonid Georg Mikhailovic Stommel*.
